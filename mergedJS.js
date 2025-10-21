@@ -10,10 +10,9 @@ Ext.ClassManager.getByAlias('controller.uxsohoappmenucontroller').prototype.onTr
       }
     })
 
-    document.querySelectorAll('style[id^="gantt-static"]').forEach(function(styleTag) {
+    document.querySelectorAll('style[id^="gantt-static"]').forEach(function (styleTag) {
       styleTag.remove();
-  });
-
+    });
 
     var divsWithAttribute = document.querySelectorAll('div[cust_object=shutdown_planning]');
     divsWithAttribute.forEach(function (rec) {
@@ -78,13 +77,10 @@ Ext.ClassManager.getByAlias('controller.mainmenubarcontroller').prototype.onLaun
   ////console.log('debug 1');
   if (EAM.Utils.getScreen().userFunction == "DUPLGD" && a.initialConfig.url.indexOf("DUPLGD") < 0) {
 
-
-    document.querySelectorAll('style[id^="gantt-static"]').forEach(function(styleTag) {
+    document.querySelectorAll('style[id^="gantt-static"]').forEach(function (styleTag) {
       styleTag.remove();
-  });
+    });
 
-
-  
     var allComponents = Ext.ComponentQuery.query('[cust_object=shutdown_planning]');
     allComponents.forEach(function (rec) {
       if (Ext.getCmp(rec.id)) {
@@ -156,39 +152,35 @@ Ext.override(Ext.form.field.ComboBox, {
   }
 });
 
-function refreshColumnfilter(){
-  setTimeout(function(){
-    document.querySelectorAll('input[data-column]').forEach(function(input) {
-      
-      input.addEventListener("input", function() {
-          
-          var column = this.getAttribute('data-column');
-          if(this.value==null||this.value===""){
-            delete tGridFilters[column]
-          }
-          else{
-            tGridFilters[column] = this.value
-          }
-          ;  // Met à jour la variable de filtres dynamiques
-          gantt.refreshData();  // Met à jour l'affichage des tâches
-      });
-  });
+function refreshColumnfilter() {
+  setTimeout(function () {
+    document.querySelectorAll('input[data-column]').forEach(function (input) {
 
-},3000)
+      input.addEventListener("input", function () {
+
+        var column = this.getAttribute('data-column');
+        if (this.value == null || this.value === "") {
+          delete tGridFilters[column]
+        } else {
+          tGridFilters[column] = this.value
+        }; // Met Ã  jour la variable de filtres dynamiques
+        gantt.refreshData(); // Met Ã  jour l'affichage des tÃ¢ches
+      });
+    });
+
+  }, 3000)
 }
 
 function onInputHeaderSearch() {
-                            
+
   var column = this.getAttribute('data-column');
-  console.log( 'onInputHeaderSearch()');
-  if(this.value==null||this.value===""){
+  console.log('onInputHeaderSearch()');
+  if (this.value == null || this.value === "") {
     delete tGridFilters[column]
-  }
-  else{
+  } else {
     tGridFilters[column] = this.value
-  }
-  ;  // Met à jour la variable de filtres dynamiques
-  gantt.refreshData();  // Met à jour l'affichage des tâches
+  }; // Met Ã  jour la variable de filtres dynamiques
+  gantt.refreshData(); // Met Ã  jour l'affichage des tÃ¢ches
 }
 
 function view_detail_supplier_trade(_1, _2, _3, _4) {
@@ -197,9 +189,9 @@ function view_detail_supplier_trade(_1, _2, _3, _4) {
   var tasks = gantt.getTaskByTime();
 
   tasks.forEach(function (rec) {
-    if (rec.type == "OP") {
+    if (rec.type == "Activity") {
       if (rec.dds_act_supplier == _1 && rec.dds_act_supplier && Ext.Date.format(rec.start_date, 'm/d/Y') == _4) {
-        if (rec.id.endsWith("#0") && gantt.getChildren(rec.id).length == 0 || !rec.id.endsWith("#0")) {
+        if (  gantt.getChildren(rec.id).length == 0) {
           vXml += "<task>"
           vXml += "<wo>" + rec.id.split("#")[0] + "</wo>"
           vXml += "<equipment>" + rec.equipment + "</equipment>"
@@ -248,7 +240,7 @@ function view_detail_supplier_trade(_1, _2, _3, _4) {
       MADDON_FILTER_OPERATOR_1: "=",
       MADDON_FILTER_JOINER_1: "AND",
       MADDON_FILTER_SEQNUM_1: "1",
-      MADDON_FILTER_VALUE_1: 'TEST'
+      MADDON_FILTER_VALUE_1: vUser
     }
   });
 
@@ -266,7 +258,7 @@ function view_detail_supplier_trade(_1, _2, _3, _4) {
     }).responseData.pageData.values;
 
     vRecord["processaction"] = "insert";
-    vRecord["wspf_10_user_code"] = 'TEST';
+    vRecord["wspf_10_user_code"] = vUser;
     vRecord["wspf_10_c_data"] = vXml;
 
     var vStatus = EAM.Ajax.request({
@@ -314,14 +306,14 @@ function view_detail_supplier_trade(_1, _2, _3, _4) {
         SYSTEM_FUNCTION_NAME: "BSUDSC",
         USER_FUNCTION_NAME: "XUDETF",
         CURRENT_TAB_NAME: "HDR",
-        wspf_10_user_code: 'TEST',
+        wspf_10_user_code: vUser,
         SCROLLROW: "YES",
         pagemode: "view"
       }
     }).responseData.pageData.values;
 
     vRecord["processaction"] = "sync";
-    vRecord["wspf_10_user_code"] = 'TEST';
+    vRecord["wspf_10_user_code"] = vUser;
     vRecord["wspf_10_c_data"] = vXml;
 
     var vStatus = EAM.Ajax.request({
@@ -368,9 +360,9 @@ function view_detail_department_trade(_1, _2, _3, _4) {
   var tasks = gantt.getTaskByTime();
 
   tasks.forEach(function (rec) {
-    if (rec.type == "OP") {
+    if (rec.type == "Activity") {
       if (rec.dds_act_mrc == _1 && Ext.Date.format(rec.start_date, 'm/d/Y') == _4 && (rec.dds_act_supplier == "" || !rec.dds_act_supplier == "")) {
-        if (rec.id.endsWith("#0") && gantt.getChildren(rec.id).length == 0 || !rec.id.endsWith("#0")) {
+        if ( gantt.getChildren(rec.id).length == 0 ) {
           vXml += "<task>"
           vXml += "<wo>" + rec.id.split("#")[0] + "</wo>"
           vXml += "<equipment>" + rec.equipment + "</equipment>"
@@ -419,7 +411,7 @@ function view_detail_department_trade(_1, _2, _3, _4) {
       MADDON_FILTER_OPERATOR_1: "=",
       MADDON_FILTER_JOINER_1: "AND",
       MADDON_FILTER_SEQNUM_1: "1",
-      MADDON_FILTER_VALUE_1: 'TEST'
+      MADDON_FILTER_VALUE_1: vUser
     }
   });
 
@@ -437,7 +429,7 @@ function view_detail_department_trade(_1, _2, _3, _4) {
     }).responseData.pageData.values;
 
     vRecord["processaction"] = "insert";
-    vRecord["wspf_10_user_code"] = 'TEST';
+    vRecord["wspf_10_user_code"] = vUser;
     vRecord["wspf_10_c_data"] = vXml;
 
     var vStatus = EAM.Ajax.request({
@@ -485,14 +477,14 @@ function view_detail_department_trade(_1, _2, _3, _4) {
         SYSTEM_FUNCTION_NAME: "BSUDSC",
         USER_FUNCTION_NAME: "XUDETF",
         CURRENT_TAB_NAME: "HDR",
-        wspf_10_user_code: 'TEST',
+        wspf_10_user_code: vUser,
         SCROLLROW: "YES",
         pagemode: "view"
       }
     }).responseData.pageData.values;
 
     vRecord["processaction"] = "sync";
-    vRecord["wspf_10_user_code"] = 'TEST';
+    vRecord["wspf_10_user_code"] = vUser;
     vRecord["wspf_10_c_data"] = vXml;
 
     var vStatus = EAM.Ajax.request({
@@ -1308,7 +1300,7 @@ function adjust_department_capacity(a, b, c, d, e, vBoilerList) {
         items: [{
             id: "cust_panel_1_sub_1",
             scrollable: true,
-            //region: 'north',     // position for region
+            //region: 'north',   // position for region
             xtype: 'panel',
             height: "50%",
             width: '100%',
@@ -1349,7 +1341,7 @@ function adjust_department_capacity(a, b, c, d, e, vBoilerList) {
           }, {
             id: "cust_panel_1_sub_2",
             scrollable: true,
-            //region: 'north',     // position for region
+            //region: 'north',   // position for region
             xtype: 'panel',
             height: "50%",
             width: '100%',
@@ -1652,8 +1644,7 @@ function adjust_department_capacity(a, b, c, d, e, vBoilerList) {
               }
 
             }
-          },
-          {
+          }, {
             iconCls: 'toolbarNew',
             tooltip: gantt.locale.labels.adj_capac_tooltip_newrec,
             left: "70%",
@@ -1993,7 +1984,7 @@ function adjust_department_capacity(a, b, c, d, e, vBoilerList) {
       }
       if (d.scrollTop + 1 >= d.scrollHeight - h && !a.requestInProgress) {
         a.requestInProgress = !0
-          console.log("on arrive à la fin")
+          console.log("on arrive Ã  la fin")
           var s = Ext.getStore('cust_Grid_SupplierCapacity').gridMetaData;
         if (s.MORERECORDPRESENT === '+') {
           e = {
@@ -2940,7 +2931,7 @@ function adjust_supplier_capacity(a, b, c, d, e, vBoilerList) {
         items: [{
             id: "cust_panel_1_sub_1",
             scrollable: true,
-            //region: 'north',     // position for region
+            //region: 'north',   // position for region
             xtype: 'panel',
             height: "50%",
             width: '100%',
@@ -3017,7 +3008,7 @@ function adjust_supplier_capacity(a, b, c, d, e, vBoilerList) {
           }, {
             id: "cust_panel_1_sub_2",
             scrollable: true,
-            //region: 'north',     // position for region
+            //region: 'north',   // position for region
             xtype: 'panel',
             height: "50%",
             width: '100%',
@@ -3133,7 +3124,7 @@ function adjust_supplier_capacity(a, b, c, d, e, vBoilerList) {
                 var nValue = parseFloat(Ext.getCmp("avail_qty_fld1").getValue())
                 var bTest = true;
               if ((dEnd - dStart) < 0) {
-                Ext.getCmp("cust_date_deb_2").markInvalid(vBoilerList["          adj_date_greater"])
+                Ext.getCmp("cust_date_deb_2").markInvalid(vBoilerList["      adj_date_greater"])
                 bTest = false;
               }
               if (Ext.getCmp("cust_date_deb_1").getValue() == "") {
@@ -3221,7 +3212,7 @@ function adjust_supplier_capacity(a, b, c, d, e, vBoilerList) {
                   });
                 if (EAM.Utils.propertyExists(vGrid, 'responseData.pageData.grid.GRIDRESULT.GRID.DATA')) {
                   if (vGrid.responseData.pageData.grid.GRIDRESULT.GRID.DATA.length > 0) {
-                    EAM.Messaging.showError("Une ligne existe déjà pour ces dates.");
+                    EAM.Messaging.showError("Une ligne existe dÃ©jÃ  pour ces dates.");
                     return false;
                   }
                 }
@@ -3680,7 +3671,7 @@ function adjust_supplier_capacity(a, b, c, d, e, vBoilerList) {
       }
       if (d.scrollTop + 1 >= d.scrollHeight - h && !a.requestInProgress) {
         a.requestInProgress = !0
-          console.log("on arrive à la fin")
+          console.log("on arrive Ã  la fin")
           var s = Ext.getStore('cust_Grid_SupplierCapacity').gridMetaData;
         if (s.MORERECORDPRESENT === '+') {
           e = {
@@ -3882,7 +3873,7 @@ function reload_emplgrid(a, b, c, d, e, f, g) {
 
 }
 function schedule_processSelectedData(records) {
-  // Vérifier s'il y a des enregistrements sélectionnés
+  // VÃ©rifier s'il y a des enregistrements sÃ©lectionnÃ©s
   if (records.length === 0) {
     Ext.Msg.alert('Info', 'No records selected.');
     return;
@@ -3900,7 +3891,7 @@ function schedule_processSelectedData(records) {
 
   var vStmtMsg = "";
 
-  // Parcourir les enregistrements sélectionnés et traiter les données
+  // Parcourir les enregistrements sÃ©lectionnÃ©s et traiter les donnÃ©es
   Ext.Array.each(records, function (record) {
     var vRecordToSCh = EAM.Ajax.request({
       url: "WSJOBS.SCH",
@@ -3913,7 +3904,7 @@ function schedule_processSelectedData(records) {
         SYSTEM_FUNCTION_NAME: 'WSJOBS',
         USER_FUNCTION_NAME: "WSJOBS",
         CURRENT_TAB_NAME: 'SCH',
-        workordernum: vWo,
+        projectCodenum: vWo,
         organization: vOrg
       }
     });
@@ -3994,7 +3985,7 @@ function schedule_processSelectedData(records) {
 
     }
 
-    // Exemple de traitement : mettre à jour la colonne 'test' à 0
+    // Exemple de traitement : mettre Ã  jour la colonne 'test' Ã  0
 
 
     // Afficher les informations dans la console
@@ -4052,7 +4043,7 @@ function schedule_processSelectedData(records) {
 
   Ext.getCmp("cust_Grid_ListOfEmployees").getView().grid.getSelectionModel().deselectAll();
 
-  // Afficher un message après le traitement
+  // Afficher un message aprÃ¨s le traitement
   Ext.Msg.alert('schedule process', vStmtMsg);
 }
 function schedule_editrecord(record) {
@@ -4122,8 +4113,8 @@ function schedule_editrecord(record) {
         ui: "default",
         componentCls: "x-field",
         labelAlign: 'right',
-        labelPad: 1, 
-        value: EAM.utils.Format.number.toClientFormat(record.get('sched_hrs'),'number'),
+        labelPad: 1,
+        value: EAM.utils.Format.number.toClientFormat(record.get('sched_hrs'), 'number'),
         padding: "5px",
         currentAttribute: "required",
         requiredCls: Ext.baseCSSPrefix + 'form-required-field'
@@ -4176,7 +4167,7 @@ function updateEv(a, b) {
       SYSTEM_FUNCTION_NAME: "WSJOBS",
       USER_FUNCTION_NAME: "WSJOBS",
       CURRENT_TAB_NAME: 'SCH',
-      workordernum: Ext.getCmp("cust_sch_wo").getValue(),
+      projectCodenum: Ext.getCmp("cust_sch_wo").getValue(),
       organization: Ext.getCmp('cust_sched_emp').organization,
       acscode: b.get('id'),
       acsactivity: Ext.getCmp("cust_sch_act").getValue(),
@@ -4251,7 +4242,7 @@ function updateEv(a, b) {
                 per_code: rec.per_code,
                 per_desc: rec.per_desc,
                 sched_hrs: rec.acs_hours,
-                acs_date : rec.acs_sched
+                acs_date: rec.acs_sched
               }));
           })
 
@@ -4259,7 +4250,7 @@ function updateEv(a, b) {
       Ext.getStore('cust_Grid_EmployeesSched').totalCount = vGridSch.responseData.pageData.grid.GRIDRESULT.GRID.DATA.length;
     }
 
-    // Afficher un message après le traitement
+    // Afficher un message aprÃ¨s le traitement
     vStmtMsg += '<div style="background-color: green; color: white; padding: 5px; margin-bottom: 5px;">' + b.get('per_code') + ' assigned successfully</div>';
     Ext.Msg.alert('schedule process', vStmtMsg);
     a.close();
@@ -4289,7 +4280,7 @@ function schedule_removerecord(a, b) {
             SYSTEM_FUNCTION_NAME: "WSJOBS",
             USER_FUNCTION_NAME: "WSJOBS",
             CURRENT_TAB_NAME: "SCH",
-            workordernum: Ext.getCmp("cust_sch_wo").getValue(),
+            projectCodenum: Ext.getCmp("cust_sch_wo").getValue(),
             organization: Ext.getCmp('cust_sched_emp').organization,
             acscode: a.get('id'),
             acsactivity: Ext.getCmp("cust_sch_act").getValue(),
@@ -4364,7 +4355,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
 
   var vWO = a,
   vAct = b,
-   dDate = new Date(Ext.Date.format(c, 'm/d/Y'));
+  dDate = new Date(Ext.Date.format(c, 'm/d/Y'));
   //dDate = new Date()
   var vGrid = EAM.Ajax.request({
     url: "GRIDDATA",
@@ -4589,7 +4580,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
     resizable: true,
     layout: {
       type: 'vbox',
-      align: 'stretch' // Aligne les éléments enfants pour remplir la largeur du conteneur
+      align: 'stretch' // Aligne les Ã©lÃ©ments enfants pour remplir la largeur du conteneur
     },
     draggable: true,
     margins: '5 5 5 5',
@@ -4612,7 +4603,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
         items: [{
             id: "cust_sched_emp_f_1",
             scrollable: true,
-            //region: 'north',     // position for region
+            //region: 'north',   // position for region
             xtype: 'panel',
             height: "50%",
             width: '100%',
@@ -4653,7 +4644,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
           }, {
             id: "cust_sched_emp_f_2",
             scrollable: true,
-            //region: 'north',     // position for region
+            //region: 'north',   // position for region
             xtype: 'panel',
             height: "50%",
             width: '100%',
@@ -4919,7 +4910,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
         itemId: 'cust_dockitems1',
         xtype: 'toolbar',
         dock: 'top',
-        height: 50,
+        height: 40,
         split: true,
         layout: {
           type: 'vbox',
@@ -5606,7 +5597,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
     /*selModel: {
     type: 'checkboxmodel',
     flex : 15/100,
-    mode: 'MULTI' // Définit le mode de sélection multiple
+    mode: 'MULTI' // DÃ©finit le mode de sÃ©lection multiple
     },*/
     columns: [{
         header: Ext.getStore("gantt.empfilterfields.store").getById("per_code").data.description,
@@ -5774,13 +5765,13 @@ function schedule_employee(a, b, c, d, e, f, g) {
       clicksToEdit: 1,
       listeners: {
         edit: function (editor, context) {
-          // Sélectionner automatiquement la ligne après l'édition
+          // SÃ©lectionner automatiquement la ligne aprÃ¨s l'Ã©dition
           var grid = context.grid;
           var record = context.record;
           grid.getSelectionModel().select(record, true, true);
           var checkboxModel = grid.getSelectionModel();
 
-          // Sélectionner et cocher la case à cocher
+          // SÃ©lectionner et cocher la case Ã  cocher
           checkboxModel.select(record, true, true);
         }
       }
@@ -5789,7 +5780,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
     width: "100%",
     listeners: {
       deselect: function (selModel, record, index, options) {
-        // Quand une ligne est désélectionnée, mettre à jour la colonne 'test'
+        // Quand une ligne est dÃ©sÃ©lectionnÃ©e, mettre Ã  jour la colonne 'test'
         record.set('to_sched_hrs', 0); // Mettre 0 dans la colonne 'test'
       },
       viewready: function (grid, eOpts) {
@@ -5827,7 +5818,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
   });
 
   vGridPresta.getSelectionModel().on('selectionchange', function (selModel, selections) {
-    console.log('Sélections actuelles:', selections);
+    console.log('SÃ©lections actuelles:', selections);
   });
   vGridPresta.getSelectionModel().on('storechange', function (selModel, selections) {
     console.log('Store actuelles:', selections);
@@ -5843,7 +5834,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
     }
     if (d.scrollTop + 1 >= d.scrollHeight - h && !a.requestInProgress) {
       a.requestInProgress = !0
-        console.log("on arrive à la fin")
+        console.log("on arrive Ã  la fin")
         var s = Ext.getStore('cust_Grid_Employees').gridMetaData;
       if (s.MORERECORDPRESENT === '+') {
         e = {
@@ -5927,7 +5918,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
     /*selModel: {
     type: 'checkboxmodel',
     flex : 15/100,
-    mode: 'MULTI' // Définit le mode de sélection multiple
+    mode: 'MULTI' // DÃ©finit le mode de sÃ©lection multiple
     },*/
     columns: [{
         header: "Agent",
@@ -5939,7 +5930,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
         dataIndex: 'per_desc',
         flex: 30 / 100,
         hidden: false
-      },{
+      }, {
         text: 'Date',
         dataIndex: 'acs_date',
         flex: 10 / 100,
@@ -5947,7 +5938,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
         renderer: function (value, metaData, record) {
           return Ext.Date.format(new Date(value), EAM.AppData.getAppData().dateformat)
         }
-      },{
+      }, {
         text: 'Sched. Hrs',
         dataIndex: 'sched_hrs',
         flex: 5 / 100,
@@ -5961,7 +5952,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
         xtype: 'actioncolumn',
         width: 50,
         items: [{
-            iconCls: 'x-tool-tool-el x-tool-img x-tool-calendar', // Chemin vers l'icône de suppression
+            iconCls: 'x-tool-tool-el x-tool-img x-tool-calendar', // Chemin vers l'icÃ´ne de suppression
             tooltip: 'Edit',
             handler: function (grid, rowIndex, colIndex) {
               var rec = grid.getStore().getAt(rowIndex);
@@ -5974,7 +5965,7 @@ function schedule_employee(a, b, c, d, e, f, g) {
         xtype: 'actioncolumn',
         width: 50,
         items: [{
-            iconCls: 'toolbarDelete', // Chemin vers l'icône de suppression
+            iconCls: 'toolbarDelete', // Chemin vers l'icÃ´ne de suppression
             tooltip: 'Delete',
             handler: function (grid, rowIndex, colIndex) {
               var rec = grid.getStore().getAt(rowIndex);
@@ -6029,7 +6020,7 @@ function click_on_baseline(a, b, c, d, e) {
   var vBoilerList = d;
   var DateSpeMap = e;
   var vId = a.currentTarget.id;
-  var vWoNum = vId.split("#")[0]
+  var vTaskId = vId.split("#")[0]
     var vAct = vId.split("#")[1]
     var vLine = vId.split("#")[3]
 
@@ -6039,7 +6030,7 @@ function click_on_baseline(a, b, c, d, e) {
         SYSTEM_FUNCTION_NAME: "BSUDSC",
         USER_FUNCTION_NAME: "XUDASP",
         CURRENT_TAB_NAME: "HDR",
-        wspf_10_wo: vWoNum,
+        wspf_10_wo: vTaskId,
         wspf_10_wo_act: vAct,
         wspf_10_line: vLine,
         ONLY_DATA_REQUIRED: true,
@@ -6145,7 +6136,7 @@ function click_on_baseline(a, b, c, d, e) {
                   })
                 });
               if (vStatus.success) {
-                var vId = vWoNum + '#' + vAct + '#0';
+                var vId = vTaskId + '#' + vAct + '#0';
 
                 if (DateSpeMap.has(vId)) {
                   var map = DateSpeMap.get(vId);
@@ -6195,7 +6186,7 @@ function click_on_baseline(a, b, c, d, e) {
                     })
                   });
                 if (vStatus.success) {
-                  var vId = vWoNum + '#' + vAct + '#0';
+                  var vId = vTaskId + '#' + vAct + '#0';
 
                   if (DateSpeMap.has(vId)) {
                     var map = DateSpeMap.get(vId);
@@ -6240,7 +6231,7 @@ function getColorRGB(vColor) {
   d = document.createElement("div");
   d.style.color = vColor;
   d.id = "color_test_div";
-  d.cust_object='shutdown_planning';
+  d.cust_object = 'shutdown_planning';
   document.body.appendChild(d)
   //Color in RGB
 
@@ -6264,7 +6255,7 @@ function updateUserData() {
       MADDON_FILTER_OPERATOR_1: "=",
       MADDON_FILTER_JOINER_1: "AND",
       MADDON_FILTER_SEQNUM_1: "1",
-      MADDON_FILTER_VALUE_1: 'TEST'
+      MADDON_FILTER_VALUE_1: vUser
     }
   });
 
@@ -6284,7 +6275,7 @@ function updateUserData() {
 
     vRecord["processaction"] = "insert";
     vRecord["pagemode"] = "display";
-    vRecord["wspf_10_user_code"] = 'TEST';
+    vRecord["wspf_10_user_code"] = vUser;
 
     if (Ext.getCmp("ShowExpired").checked) {
       vRecord["wspf_10_past_wo"] = "-1";
@@ -6305,7 +6296,7 @@ function updateUserData() {
     else if (Ext.getCmp("period").value == '2Year')
       vRecord["wspf_10_nbdays"] = 750;
     vRecord["wspf_10_ddspyid"] = Ext.getCmp('filter').value;
-    vRecord["wspf_10_project_code"] =null;
+    vRecord["wspf_10_project_code"] = null;
 
     var vStatus = EAM.Ajax.request({
       url: "BSUDSC.HDR.insertrecord?pageaction=SAVE",
@@ -6326,13 +6317,13 @@ function updateUserData() {
         SYSTEM_FUNCTION_NAME: "BSUDSC",
         USER_FUNCTION_NAME: "BUDUSR",
         CURRENT_TAB_NAME: "HDR",
-        wspf_10_user_code: 'TEST',
+        wspf_10_user_code: vUser,
         SCROLLROW: "YES",
         pagemode: "view"
       }
     }).responseData.pageData.values;
     vRecord["processaction"] = "sync";
-    vRecord["wspf_10_user_code"] = 'TEST';
+    vRecord["wspf_10_user_code"] = vUser;
     if (Ext.getCmp("ShowExpired").checked) {
       vRecord["wspf_10_past_wo"] = "-1";
     } else {
@@ -6352,7 +6343,7 @@ function updateUserData() {
     else if (Ext.getCmp("period").value == '2Year')
       vRecord["wspf_10_nbdays"] = 720;
     vRecord["wspf_10_ddspyid"] = Ext.getCmp('filter').value;
-    vRecord["wspf_10_project_code"] =null;
+    vRecord["wspf_10_project_code"] = null;
 
     var vStatus = EAM.Ajax.request({
       url: "BSUDSC.HDR.updaterecord?pageaction=SAVE",
@@ -6418,8 +6409,8 @@ function clear_CustomComp() {
     }
   }
 
-  document.querySelectorAll('style[id^="gantt-static"]').forEach(function(styleTag) {
-      styleTag.remove();
+  document.querySelectorAll('style[id^="gantt-static"]').forEach(function (styleTag) {
+    styleTag.remove();
   });
 
 }
@@ -6446,13 +6437,13 @@ function toXml(me, name, val) {
   return '<' + name + '>' + newValue + '</' + name + '>';
 }
 function cust_exportToExcel(vBoilerList) {
-XlsxPopulate.fromBlankAsync()
+  XlsxPopulate.fromBlankAsync()
   .then(workbook => {
 
     const vTitle = "Export Print Out ";
     const sheet = workbook.sheet(0);
 
-    // on créé tous les styles possibles afin de les réutiliser car sinon 1 style par cellule et le fichier peut ne plus s'ouvrir car trop de styles
+    // on crÃ©Ã© tous les styles possibles afin de les rÃ©utiliser car sinon 1 style par cellule et le fichier peut ne plus s'ouvrir car trop de styles
     // les styles vont avec les couleurs d'OT
 
     const defaultStyleData = workbook.styleSheet().createStyle();
@@ -6487,10 +6478,10 @@ XlsxPopulate.fromBlankAsync()
         style: "thin"
       } // Thin right border
     });
-/*thestyle  = defaultStyleObjectStarted;
-              }
-              if(parseFloat(rec.dds_act_percomplete==""?0:rec.dds_act_percomplete)==100){
-                  thestyle  = defaultStyleObjectCompleted;*/ 
+    /*thestyle  = defaultStyleObjectStarted;
+    }
+    if(parseFloat(rec.dds_act_percomplete==""?0:rec.dds_act_percomplete)==100){
+    thestyle  = defaultStyleObjectCompleted;*/
     const defaultStyleWeekEnd = workbook.styleSheet().createStyle();
     defaultStyleWeekEnd.style('wrapText', true);
     defaultStyleWeekEnd.style('bold', true);
@@ -6531,7 +6522,6 @@ XlsxPopulate.fromBlankAsync()
       } // Thin right border
     });
 
-
     const defaultStyleObjectStarted = workbook.styleSheet().createStyle();
     defaultStyleObjectStarted.style('wrapText', true);
     defaultStyleObjectStarted.style('bold', true);
@@ -6551,7 +6541,6 @@ XlsxPopulate.fromBlankAsync()
         style: "thin"
       } // Thin right border
     });
-
 
     const defaultStyleObjectCompleted = workbook.styleSheet().createStyle();
     defaultStyleObjectCompleted.style('wrapText', true);
@@ -6573,45 +6562,53 @@ XlsxPopulate.fromBlankAsync()
       } // Thin right border
     });
 
-    // définition des colonnes données du fichier Excel
+    // dÃ©finition des colonnes donnÃ©es du fichier Excel
     if (Ext.getStore('gantt.exportxlsstylesM.settings')) {
       Ext.getStore('gantt.exportxlsstylesM.settings').destroy();
     }
     var vExportXlsSylesModele = Ext.create('Ext.data.Store', {
       id: 'gantt.exportxlsstylesM.settings',
-      fields: ['id','nom', 'color', 'colortext', 'styleobj'],
+      fields: ['id', 'nom', 'color', 'colortext', 'styleobj'],
       data: []
     });
 
-    vExportXlsSylesModele.add({"id":"OP","nom":"custom", "color":"#D3D3D3","colortext":"#f8f9f9"})
-    gantt.getTaskByTime().forEach(function(task){
-      var vInitColor= task.color;
-      if(vInitColor.indexOf("rgb")==0){
-          vInitColor = task.color.replaceAll("rgb(", "").replaceAll(" ", "").replaceAll(")", "").split(",")
-          vInitColor = "#" + ((1 << 24) + (parseFloat(vInitColor[0]) << 16) + (parseFloat(vInitColor[1]) <<8) +  parseFloat(vInitColor[2])).toString(16).slice(1).toUpperCase();
-          var vColor = task.color;
-      } 
-      else{
-          var vColor = getColorRGB(vInitColor);
+    vExportXlsSylesModele.add({
+      "id": "Activity",
+      "nom": "custom",
+      "color": "#D3D3D3",
+      "colortext": "#f8f9f9"
+    })
+    gantt.getTaskByTime().forEach(function (task) {
+      var vInitColor = task.color;
+      if (vInitColor.indexOf("rgb") == 0) {
+        vInitColor = task.color.replaceAll("rgb(", "").replaceAll(" ", "").replaceAll(")", "").split(",")
+          vInitColor = "#" + ((1 << 24) + (parseFloat(vInitColor[0]) << 16) + (parseFloat(vInitColor[1]) << 8) + parseFloat(vInitColor[2])).toString(16).slice(1).toUpperCase();
+        var vColor = task.color;
+      } else {
+        var vColor = getColorRGB(vInitColor);
       }
-      if(!vExportXlsSylesModele.getById(vInitColor.toUpperCase())){
-          var vPoliceColor="FFFFFF";    
-          
-          var vColorRGB = vColor.replaceAll("rgb(", "").replaceAll(" ", "").replaceAll(")", "").split(",")
-              //var luma = 0.2126 * parseInt(vColorRGB[0]) + 0.7152 *  parseInt(vColorRGB[1])  + 0.0722 *  parseInt(vColorRGB[2]) ;
-          var luma = ((parseInt(vColorRGB[0]) * 299) + (parseInt(vColorRGB[1]) * 587) + (parseInt(vColorRGB[2]) * 114)) / 1000;
-          if (luma > 155) {
-              // pick a different colour
-              vPoliceColor="000000"
-          } else {
-              vPoliceColor="FFFFFF"
-          }
-          vExportXlsSylesModele.add({"id":vInitColor.toUpperCase(),"nom":"custom_"+vInitColor, "color":vInitColor,"colortext":vPoliceColor})
+      if (!vExportXlsSylesModele.getById(vInitColor.toUpperCase())) {
+        var vPoliceColor = "FFFFFF";
 
-      }                
+        var vColorRGB = vColor.replaceAll("rgb(", "").replaceAll(" ", "").replaceAll(")", "").split(",")
+          //var luma = 0.2126 * parseInt(vColorRGB[0]) + 0.7152 *  parseInt(vColorRGB[1])  + 0.0722 *  parseInt(vColorRGB[2]) ;
+          var luma = ((parseInt(vColorRGB[0]) * 299) + (parseInt(vColorRGB[1]) * 587) + (parseInt(vColorRGB[2]) * 114)) / 1000;
+        if (luma > 155) {
+          // pick a different colour
+          vPoliceColor = "000000"
+        } else {
+          vPoliceColor = "FFFFFF"
+        }
+        vExportXlsSylesModele.add({
+          "id": vInitColor.toUpperCase(),
+          "nom": "custom_" + vInitColor,
+          "color": vInitColor,
+          "colortext": vPoliceColor
+        })
+
+      }
 
     })
-
 
     if (Ext.getStore('gantt.exportxlsstyles.settings')) {
       Ext.getStore('gantt.exportxlsstyles.settings').destroy();
@@ -6644,9 +6641,9 @@ XlsxPopulate.fromBlankAsync()
         } // Thin right border
       });
       vExportXlsSyles.add({
-         "id":rec['id'],
-         "nom": rec['nom'],
-         "styleobj": columnStyle
+        "id": rec['id'],
+        "nom": rec['nom'],
+        "styleobj": columnStyle
       })
     }
 
@@ -6656,18 +6653,22 @@ XlsxPopulate.fromBlankAsync()
 
     var dHdrdDate = new Date(Ext.Date.format(dTimeStartDate, 'm/d/Y'));
     var dLastDate = new Date(Ext.Date.format(dTimeEndDate, 'm/d/Y'));
-    // définition des colonnes données du fichier Excel
+    // dÃ©finition des colonnes donnÃ©es du fichier Excel
     if (Ext.getStore('gantt.exportxlscolumns.settings')) {
       Ext.getStore('gantt.exportxlscolumns.settings').destroy();
     }
 
-
-    var vListOfColumns=[];
+    var vListOfColumns = [];
     for (var i = 0, col = gantt.getGridColumns(), l = col.length; i < l; i++) {
-          let _col = col[i];
-          if(_col.typeColumn!="icon"){
-            vListOfColumns.push({"header":_col.header,"data":_col.name,"width":(parseFloat(_col.width)/8),"type":_col.typeColumn})
-          }
+      let _col = col[i];
+      if (_col.typeColumn != "icon") {
+        vListOfColumns.push({
+          "header": _col.header,
+          "data": _col.name,
+          "width": (parseFloat(_col.width) / 8),
+          "type": _col.typeColumn
+        })
+      }
     }
     var vExportXlsColumns = Ext.create('Ext.data.Store', {
       id: 'gantt.exportxlscolumns.settings',
@@ -6675,15 +6676,15 @@ XlsxPopulate.fromBlankAsync()
       data: vListOfColumns
     });
 
-    var vNewColDate = vExportXlsColumns.data.length + 1; //8; // dépend du nb de colonnes données affichées
+    var vNewColDate = vExportXlsColumns.data.length + 1; //8; // dÃ©pend du nb de colonnes donnÃ©es affichÃ©es
 
     var numDateRow = 4;
 
-    var numColDate = vExportXlsColumns.data.length + 1; //8; // dépend du nb de colonnes données affichées
+    var numColDate = vExportXlsColumns.data.length + 1; //8; // dÃ©pend du nb de colonnes donnÃ©es affichÃ©es
 
-    sheet.cell(1, 2).value(vBoilerList["export_excel_from"] +' '+ Ext.Date.format(dTimeStartDate, EAM.AppData.getAppData().dateformat) + ' '+vBoilerList["export_excel_to"]+' ' + Ext.Date.format(dTimeEndDate, EAM.AppData.getAppData().dateformat));
+    sheet.cell(1, 2).value(vBoilerList["export_excel_from"] + ' ' + Ext.Date.format(dTimeStartDate, EAM.AppData.getAppData().dateformat) + ' ' + vBoilerList["export_excel_to"] + ' ' + Ext.Date.format(dTimeEndDate, EAM.AppData.getAppData().dateformat));
     //sheet.cell(1, 2).style({
-    //    fontColor: "FF0000"
+    //  fontColor: "FF0000"
     //});
 
     if (Ext.getStore('gantt.exportxlsstore.settings')) {
@@ -6698,15 +6699,15 @@ XlsxPopulate.fromBlankAsync()
     for (var i = 0, it = gantt.getTaskByTime(), l = it.length; i < l; i++) {
       vLine = [];
       rec = it[i];
-      if (rec.type == "WO") {        
+      if (rec.type == "Project") {
         vExportXlsStore.add(rec)
         vExportXlsStore.getById(rec.id).data.parent = rec.id;
         vExportXlsStore.getById(rec.id).data.type = "1";
-      } // endif "WO"
+      } // endif "Project"
 
 
-      if (rec.type == "OP") {
-        vExportXlsStore.add(rec)        
+      if (rec.type == "Activity") {
+        vExportXlsStore.add(rec)
         vExportXlsStore.getById(rec.id).data.type = "2";
       }
     }
@@ -6729,16 +6730,16 @@ XlsxPopulate.fromBlankAsync()
       //console.log(dHdrdDate);
       sheet.cell(numDateRow - 2, numColDate).value(Ext.Date.format(dHdrdDate, 'Y'));
 
-              sheet.cell(numDateRow - 1, numColDate).value(Ext.Date.format(dHdrdDate, 'm'));
-              sheet.cell(numDateRow, numColDate).value(Ext.Date.format(dHdrdDate, 'd'));
-              sheet.cell(numDateRow - 2, numColDate)._style = defaultStyleBorder;
-              sheet.cell(numDateRow - 1, numColDate)._style = defaultStyleBorder;
-              sheet.cell(numDateRow, numColDate)._style = defaultStyleBorder;
+      sheet.cell(numDateRow - 1, numColDate).value(Ext.Date.format(dHdrdDate, 'm'));
+      sheet.cell(numDateRow, numColDate).value(Ext.Date.format(dHdrdDate, 'd'));
+      sheet.cell(numDateRow - 2, numColDate)._style = defaultStyleBorder;
+      sheet.cell(numDateRow - 1, numColDate)._style = defaultStyleBorder;
+      sheet.cell(numDateRow, numColDate)._style = defaultStyleBorder;
 
-              sheet.column(numColDate).width(3);
+      sheet.column(numColDate).width(3);
 
-              dHdrdDate.setDate(dHdrdDate.getDate() + 1);
-              numColDate++
+      dHdrdDate.setDate(dHdrdDate.getDate() + 1);
+      numColDate++
     }
 
     var vTableYear = [];
@@ -6767,7 +6768,7 @@ XlsxPopulate.fromBlankAsync()
       }
       vNewColDate++;
     }
-   
+
     vTableYear.forEach(function (rec) {
       if (rec.year != undefined) {
         sheet.range(2, rec.firstcol, 2, rec.lastCol).merged(true);
@@ -6789,140 +6790,128 @@ XlsxPopulate.fromBlankAsync()
 
     }
     var numDataRow = 0
-    for (var i = 0, it = vExportXlsStore.data.items, l = it.length; i < l; i++) {
-      try {
-        vLine = [];
-        rec = it[i].data;
-        numDataRow++;
+      for (var i = 0, it = vExportXlsStore.data.items, l = it.length; i < l; i++) {
+        try {
+          vLine = [];
+          rec = it[i].data;
+          numDataRow++;
 
-        let thestyle;
-          if (rec.type == "2") { //objet et non WO (il n'y a que les OT dans l'excel pas de hierarchie avec l'équipement)
-              thestyle = defaultStyleObject;
-              if(parseFloat(rec.dds_act_percomplete==""?0:rec.dds_act_percomplete)>0&&parseFloat(rec.dds_act_percomplete==""?0:rec.dds_act_percomplete)<=99){
-                  thestyle  = defaultStyleObjectStarted;
-              }
-              if(parseFloat(rec.dds_act_percomplete==""?0:rec.dds_act_percomplete)==100){
-                  thestyle  = defaultStyleObjectCompleted;
-              }
-              console.log(rec.id);
-              console.log(thestyle);
-          }
-          else {
-              thestyle = defaultStyleObject;
-
-              var vInitColor= rec['color'];
-              if(vInitColor.indexOf("rgb")==0){
-                  vInitColor = vInitColor.replaceAll("rgb(", "").replaceAll(" ", "").replaceAll(")", "").split(",")
-                  vInitColor = "#" + ((1 << 24) + (parseFloat(vInitColor[0]) << 16) + (parseFloat(vInitColor[1]) <<8) +  parseFloat(vInitColor[2])).toString(16).slice(1).toUpperCase();
-              }
-              let thecolor = vInitColor;
-             
-
-              //on doit trouver le style dans vExportXlsSyles en fonction de la couleur                
-              if(vExportXlsSyles.getById(thecolor)){
-                  thestyle = vExportXlsSyles.getById(thecolor).get('styleobj');
-              }
-              
-              
-          }
-            
-
-        //on parcours les colonnes pour afficher les valeurs
-        for (var j = 0, itv = vExportXlsColumns.data.items, m = itv.length; j < m; j++) {
-          rec2 = itv[j].data;
-          //si la colonne est une date on la formatte
-          if (rec2.type=="DATE") {            
-            let _Value = "";
-            if(Ext.Date.isDate(rec[rec2['data']])){
-              _Value=Ext.Date.format( rec[rec2['data']], EAM.AppData.getAppData().dateformat)
+          let thestyle;
+          if (rec.type == "2") { //objet et non WO (il n'y a que les OT dans l'excel pas de hierarchie avec l'Ã©quipement)
+            thestyle = defaultStyleObject;
+            if (parseFloat(rec.dds_act_percomplete == "" ? 0 : rec.dds_act_percomplete) > 0 && parseFloat(rec.dds_act_percomplete == "" ? 0 : rec.dds_act_percomplete) <= 99) {
+              thestyle = defaultStyleObjectStarted;
             }
-            else{              
-              _Value= rec[rec2['data']] 
-              
+            if (parseFloat(rec.dds_act_percomplete == "" ? 0 : rec.dds_act_percomplete) == 100) {
+              thestyle = defaultStyleObjectCompleted;
             }
-            sheet.cell(numDateRow + numDataRow, j + 1).value(_Value);
+            console.log(rec.id);
+            console.log(thestyle);
           } else {
-            if (rec2.type=="DATETIME") {
+            thestyle = defaultStyleObject;
+
+            var vInitColor = rec['color'];
+            if (vInitColor.indexOf("rgb") == 0) {
+              vInitColor = vInitColor.replaceAll("rgb(", "").replaceAll(" ", "").replaceAll(")", "").split(",")
+                vInitColor = "#" + ((1 << 24) + (parseFloat(vInitColor[0]) << 16) + (parseFloat(vInitColor[1]) << 8) + parseFloat(vInitColor[2])).toString(16).slice(1).toUpperCase();
+            }
+            let thecolor = vInitColor;
+
+            //on doit trouver le style dans vExportXlsSyles en fonction de la couleur
+            if (vExportXlsSyles.getById(thecolor)) {
+              thestyle = vExportXlsSyles.getById(thecolor).get('styleobj');
+            }
+
+          }
+
+          //on parcours les colonnes pour afficher les valeurs
+          for (var j = 0, itv = vExportXlsColumns.data.items, m = itv.length; j < m; j++) {
+            rec2 = itv[j].data;
+            //si la colonne est une date on la formatte
+            if (rec2.type == "DATE") {
               let _Value = "";
-              if(Ext.Date.isDate(rec[rec2['data']])){
-                _Value=Ext.Date.format( rec[rec2['data']], EAM.AppData.getAppData().dateformat+' H:i')
-              }
-              else{              
-                _Value= rec[rec2['data']]                 
+              if (Ext.Date.isDate(rec[rec2['data']])) {
+                _Value = Ext.Date.format(rec[rec2['data']], EAM.AppData.getAppData().dateformat)
+              } else {
+                _Value = rec[rec2['data']]
+
               }
               sheet.cell(numDateRow + numDataRow, j + 1).value(_Value);
             } else {
+              if (rec2.type == "DATETIME") {
+                let _Value = "";
+                if (Ext.Date.isDate(rec[rec2['data']])) {
+                  _Value = Ext.Date.format(rec[rec2['data']], EAM.AppData.getAppData().dateformat + ' H:i')
+                } else {
+                  _Value = rec[rec2['data']]
+                }
+                sheet.cell(numDateRow + numDataRow, j + 1).value(_Value);
+              } else {
                 sheet.cell(numDateRow + numDataRow, j + 1).value(rec[rec2['data']]);
+              }
             }
+            sheet.cell(numDateRow + numDataRow, j + 1)._style = thestyle;
+
           }
-          sheet.cell(numDateRow + numDataRow, j + 1)._style = thestyle;
-          
-        }
-        //on met des bordures aux cellules dates avant d'appliquer le style avec la couleur (qui a aussi une bordure)
-        for (let col = vExportXlsColumns.data.length + 1; col < numColDate; col++) {
-          sheet.cell(numDateRow + numDataRow, col)._style = defaultStyleBorder;
-        }
-        var dTimeStartDate = new Date(gantt.config.start_date);
-        var dTimeEndDate = new Date(gantt.config.end_date);
-        var vTaskStartDate = new Date(Ext.Date.format(rec["start_date"], 'm/d/Y'));
-        if(vTaskStartDate<dTimeStartDate){
-          vTaskStartDate = new Date(dTimeStartDate)
-        }
-        var vTaskEndDate = new Date(Ext.Date.format(rec["end_date"], 'm/d/Y'));
-        if(vTaskEndDate>dTimeEndDate){
-          vTaskEndDate = new Date(dTimeEndDate)
-        }
-
-        if(vTaskStartDate<dTimeStartDate&&vTaskEndDate>dTimeStartDate){
-          var dDiff1 = 0;
-          var dDiff2 = Ext.Date.diffDays(dTimeStartDate, vTaskEndDate);
-        }
-        else{
-          var dDiff1 = Ext.Date.diffDays(dTimeStartDate, vTaskStartDate);
-          var dDiff2 = Ext.Date.diffDays(dTimeStartDate, vTaskEndDate);
-        }
-
-        let vColTask = 0;
-        let vColTaskDate=0;
-        let vColTaskEnd = 0;       
-        let _DateTemp=new Date(dTimeStartDate)
-
-        vColTask = vColTask = vExportXlsColumns.data.length + 1 + dDiff1; //8 + dDiff1;
-        vColTaskEnd = vExportXlsColumns.data.length + 1 + dDiff2; //8 + dDiff2;
-        vColTaskDate = vExportXlsColumns.data.length + 1
-
-        while (_DateTemp <= dTimeEndDate) {
-          if(_DateTemp.getDay()==0||_DateTemp.getDay()==6){
-            sheet.cell(numDateRow + numDataRow, vColTaskDate)._style = defaultStyleWeekEnd;
+          //on met des bordures aux cellules dates avant d'appliquer le style avec la couleur (qui a aussi une bordure)
+          for (let col = vExportXlsColumns.data.length + 1; col < numColDate; col++) {
+            sheet.cell(numDateRow + numDataRow, col)._style = defaultStyleBorder;
           }
-                 
-          _DateTemp.setDate(_DateTemp.getDate()+1);
-          vColTaskDate++
-
-        }  
-        
-        if(dDiff1>=0&&dDiff2>=0){
-          
-         
-          while (vColTask <= vColTaskEnd) {  
-            sheet.cell(numDateRow + numDataRow, vColTask)._style = thestyle;
-            vColTask++;
+          var dTimeStartDate = new Date(gantt.config.start_date);
+          var dTimeEndDate = new Date(gantt.config.end_date);
+          var vTaskStartDate = new Date(Ext.Date.format(rec["start_date"], 'm/d/Y'));
+          if (vTaskStartDate < dTimeStartDate) {
+            vTaskStartDate = new Date(dTimeStartDate)
           }
+          var vTaskEndDate = new Date(Ext.Date.format(rec["end_date"], 'm/d/Y'));
+          if (vTaskEndDate > dTimeEndDate) {
+            vTaskEndDate = new Date(dTimeEndDate)
+          }
+
+          if (vTaskStartDate < dTimeStartDate && vTaskEndDate > dTimeStartDate) {
+            var dDiff1 = 0;
+            var dDiff2 = Ext.Date.diffDays(dTimeStartDate, vTaskEndDate);
+          } else {
+            var dDiff1 = Ext.Date.diffDays(dTimeStartDate, vTaskStartDate);
+            var dDiff2 = Ext.Date.diffDays(dTimeStartDate, vTaskEndDate);
+          }
+
+          let vColTask = 0;
+          let vColTaskDate = 0;
+          let vColTaskEnd = 0;
+          let _DateTemp = new Date(dTimeStartDate)
+
+            vColTask = vColTask = vExportXlsColumns.data.length + 1 + dDiff1; //8 + dDiff1;
+          vColTaskEnd = vExportXlsColumns.data.length + 1 + dDiff2; //8 + dDiff2;
+          vColTaskDate = vExportXlsColumns.data.length + 1
+
+            while (_DateTemp <= dTimeEndDate) {
+              if (_DateTemp.getDay() == 0 || _DateTemp.getDay() == 6) {
+                sheet.cell(numDateRow + numDataRow, vColTaskDate)._style = defaultStyleWeekEnd;
+              }
+
+              _DateTemp.setDate(_DateTemp.getDate() + 1);
+              vColTaskDate++
+
+            }
+
+            if (dDiff1 >= 0 && dDiff2 >= 0) {
+
+              while (vColTask <= vColTaskEnd) {
+                sheet.cell(numDateRow + numDataRow, vColTask)._style = thestyle;
+                vColTask++;
+              }
+            }
+
+        } catch (error) {
+          console.log(error);
         }
 
-      } catch (error) {
-        console.log(error);     
       }
-
-      
-    }
-
-      
-
 
       sheet.freezePanes(3, 4);
 
-    // Télécharger le fichier Excel
+    // TÃ©lÃ©charger le fichier Excel
     workbook.outputAsync().then(function (blob) {
       saveAs(blob, vTitle + "_" + Ext.Date.format(new Date(), "Y-m-d_Hi") + ".xlsx");
     });
@@ -6937,7 +6926,7 @@ function exportToXls() {
   var nCount = 0
     for (i = 0; i < tasks.length; i++) {
 
-      if (tasks[i].type == "OP" && (!gantt.hasChild(tasks[i].id) || tasks[i].parent.endsWith("#0"))) {
+      if (tasks[i].type == "Activity" && (!gantt.hasChild(tasks[i].id) )) {
 
         vXml += "<task>"
         vXml += "<id>" + tasks[i].id + "</id>"
@@ -6946,7 +6935,7 @@ function exportToXls() {
         vXml += toXml(me, 'act_desc', tasks[i].act_desc)
         vXml += "<act_trade>" + tasks[i].act_trade + "</act_trade>"
         vXml += "<actest>" + tasks[i].actest + "</actest>"
-        vXml += "<assignedto>" + tasks[i].assignedto + "</assignedto>"
+        vXml += "<assignedto>" + tasks[i].projmanager + "</assignedto>"
         vXml += "<color>" + tasks[i].color + "</color>"
         vXml += "<dds_act_act>" + tasks[i].id.split('#')[1] + "</dds_act_act>"
         vXml += "<dds_act_assignmentstatus>" + tasks[i].dds_act_assignmentstatus + "</dds_act_assignmentstatus>"
@@ -6987,8 +6976,8 @@ function exportToXls() {
         vXml += "<end_date>" + Ext.Date.format(tasks[i].end_date, 'Y-m-d H:i') + "</end_date>"
         vXml += "<equipment>" + tasks[i].equipment + "</equipment>"
         vXml += "<estimatedhrs>" + tasks[i].estimatedhrs + "</estimatedhrs>"
-        vXml += toXml(me, 'evt_status_desc', tasks[i].evt_status_desc)
-        vXml += "<main_evt_code>" + tasks[i].main_evt_code + "</main_evt_code>"
+        vXml += toXml(me, 'evt_status_desc', tasks[i].prjstatus_desc)
+        vXml += "<project_code>" + tasks[i].proj_code + "</project_code>"
         vXml += toXml(me, 'obj_desc', tasks[i].obj_desc)
         vXml += "<organization>" + tasks[i].organization + "</organization>"
         vXml += "<parent>" + tasks[i].parent + "</parent>"
@@ -7038,7 +7027,7 @@ function exportToXls() {
       MADDON_FILTER_OPERATOR_1: "=",
       MADDON_FILTER_JOINER_1: "AND",
       MADDON_FILTER_SEQNUM_1: "1",
-      MADDON_FILTER_VALUE_1: 'TEST'
+      MADDON_FILTER_VALUE_1: vUser
     }
   });
 
@@ -7056,7 +7045,7 @@ function exportToXls() {
     }).responseData.pageData.values;
 
     vRecord["processaction"] = "insert";
-    vRecord["wspf_10_user_code"] = 'TEST';
+    vRecord["wspf_10_user_code"] = vUser;
     vRecord["wspf_10_start_date"] = Ext.Date.format(new Date(gantt.config.start_date), 'm/d/Y');
     vRecord["wspf_10_end_date"] = Ext.Date.format(new Date(gantt.config.end_date), 'm/d/Y');
     vRecord["wspf_10_c_data"] = vXml;
@@ -7080,7 +7069,7 @@ function exportToXls() {
       var vPeriodEnd = Ext.Date.format(new Date(gantt.config.end_date), 'Y-m-d');
       d.periodStart = vPeriodStart;
       d.periodEnd = vPeriodEnd;
-      d.usercode = 'TEST';
+      d.usercode = vUser;
       d.reportname = "DUPLGD";
       d.reportparameters = "SEL_STARTDATE=periodStart,SEL_ENDDATE=periodEnd,R5_USER=usercode";
       EAM.Utils.runSingleRecordReportActual(vFormPanel.getScreen(), "PREVIEW", d, null, d.reportname, "REPC");
@@ -7095,14 +7084,14 @@ function exportToXls() {
         SYSTEM_FUNCTION_NAME: "BSUDSC",
         USER_FUNCTION_NAME: "BUEPPO",
         CURRENT_TAB_NAME: "HDR",
-        wspf_10_user_code: 'TEST',
+        wspf_10_user_code: vUser,
         SCROLLROW: "YES",
         pagemode: "view"
       }
     }).responseData.pageData.values;
 
     vRecord["processaction"] = "sync";
-    vRecord["wspf_10_user_code"] = 'TEST';
+    vRecord["wspf_10_user_code"] = vUser;
     vRecord["wspf_10_start_date"] = Ext.Date.format(new Date(gantt.config.start_date), 'm/d/Y');
     vRecord["wspf_10_end_date"] = Ext.Date.format(new Date(gantt.config.end_date), 'm/d/Y');
     vRecord["wspf_10_c_data"] = vXml;
@@ -7128,7 +7117,7 @@ function exportToXls() {
       var vPeriodEnd = Ext.Date.format(new Date(gantt.config.end_date), 'Y-m-d');
       d.periodStart = vPeriodStart;
       d.periodEnd = vPeriodEnd;
-      d.usercode = 'TEST';
+      d.usercode = vUser;
       d.reportname = "DUPLGD";
       d.reportparameters = "SEL_STARTDATE=periodStart,SEL_ENDDATE=periodEnd,R5_USER=usercode";
       EAM.Utils.runSingleRecordReportActual(vFormPanel.getScreen(), "PREVIEW", d, null, d.reportname, "REPC");
@@ -7137,195 +7126,178 @@ function exportToXls() {
 
 }
 function undo(undoStack, redoStack) {
-  if (Ext.getStore('gantt.undo.store').data.items.length === 0) 
-          return;
+  if (Ext.getStore('gantt.undo.store').data.items.length === 0)
+    return;
 
   //const lastAction = undoStack.pop();
-  var lastActionRecord =  Ext.getStore('gantt.undo.store').last()
-  var lastAction = lastActionRecord.data;
+  var lastActionRecord = Ext.getStore('gantt.undo.store').last()
+    var lastAction = lastActionRecord.data;
 
-
-
-
- 
-  
   //redoStack.push(lastAction);
-  if(lastAction.parentTaskId!=null){
+  if (lastAction.parentTaskId != null) {
     var lParentTask = lastAction.parentTaskId;
     var InitParentTask = lastAction.parentTaskId;
-    var LastRow=false;
-   
-    while((lParentTask==InitParentTask||lastAction.taskid==InitParentTask.split('_')[0])&&!LastRow){
+    var LastRow = false;
 
-      sessionStorage.setItem("undoactionupdate", "OK");  
+    while ((lParentTask == InitParentTask || lastAction.taskid == InitParentTask.split('_')[0]) && !LastRow) {
+
+      sessionStorage.setItem("undoactionupdate", "OK");
       const OldTask = Ext.JSON.decode(lastAction.task);
       const OldStartDate = new Date(OldTask.start_date);
       const OldEndDate = new Date(OldTask.end_date);
       const OldPrevtartDate = new Date(OldTask.prev_start);
       const OldPrevEndDate = new Date(OldTask.prev_end);
-      /*if(OldPrevtartDate.getTime() != gantt.getTask(lastAction.taskid).start_date.getTime() || 
-        OldStartDate.getTime() != OldPrevtartDate.getTime() || 
-        OldPrevEndDate.getTime() != gantt.getTask(lastAction.taskid).end_date.getTime() ||
-        OldEndDate.getTime() != OldPrevEndDate.getTime())*/ {
-            OldTask.prev_start = gantt.getTask(lastAction.taskid).start_date;
-            OldTask.start_date = OldPrevtartDate;
-            OldTask.prev_end = gantt.getTask(lastAction.taskid).end_date;
-            OldTask.end_date = OldPrevEndDate;
-          
-          
-          gantt.updateTask(lastAction.taskid, OldTask);                               
-          sessionStorage.removeItem("undoactionupdate");
-          gantt.refreshData();
-          Ext.getStore('gantt.undo.store').remove(lastActionRecord);
-          Ext.getStore('gantt.redo.store').add(lastActionRecord);
-          
-            
-        }
+      /*if(OldPrevtartDate.getTime() != gantt.getTask(lastAction.taskid).start_date.getTime() ||
+      OldStartDate.getTime() != OldPrevtartDate.getTime() ||
+      OldPrevEndDate.getTime() != gantt.getTask(lastAction.taskid).end_date.getTime() ||
+      OldEndDate.getTime() != OldPrevEndDate.getTime())*/
+      {
+        OldTask.prev_start = gantt.getTask(lastAction.taskid).start_date;
+        OldTask.start_date = OldPrevtartDate;
+        OldTask.prev_end = gantt.getTask(lastAction.taskid).end_date;
+        OldTask.end_date = OldPrevEndDate;
+
+        gantt.updateTask(lastAction.taskid, OldTask);
+        sessionStorage.removeItem("undoactionupdate");
+        gantt.refreshData();
+        Ext.getStore('gantt.undo.store').remove(lastActionRecord);
+        Ext.getStore('gantt.redo.store').add(lastActionRecord);
+
+      }
       if (Ext.getStore('gantt.undo.store').data.items.length > 0) {
-        lastActionRecord =  Ext.getStore('gantt.undo.store').last();
+        lastActionRecord = Ext.getStore('gantt.undo.store').last();
         lastAction = lastActionRecord.data;
         lParentTask = lastAction.parentTaskId;
+      } else {
+        LastRow = true;
       }
-      else{
-        LastRow=true;
-      }
-      
+
     }
 
-
-  }
-  else{
+  } else {
     switch (lastAction.type) {
-      case "changepostpone":
-            sessionStorage.setItem("undoactionchangepostpone", "OK");
-            Ext.getCmp("PostPoneOp").setValue(!lastAction.value)
-            break;  
-      case "add":
-            
-            gantt.deleteTask(lastAction.taskid);
-            break;
-      case "addLink":
-                if (gantt.isLinkExists(lastAction.task.id)) {
-                  sessionStorage.setItem("undoactionupdateLink", "OK"); 
-                    gantt.deleteLink(lastAction.task.id);
-                    sessionStorage.removeItem("undoactionupdateLink");
-                }
-            break;
-      case "update":  
-            sessionStorage.setItem("undoactionupdate", "OK");  
-            const OldTask = Ext.JSON.decode(lastAction.task);
-            const OldStartDate = new Date(OldTask.start_date);
-            const OldEndDate = new Date(OldTask.end_date);
-            const OldPrevtartDate = new Date(OldTask.prev_start);
-            const OldPrevEndDate = new Date(OldTask.prev_end);
+    case "changepostpone":
+      sessionStorage.setItem("undoactionchangepostpone", "OK");
+      Ext.getCmp("PostPoneOp").setValue(!lastAction.value)
+      break;
+    case "add":
 
-            
-                        {
-                                 OldTask.prev_start = gantt.getTask(lastAction.taskid).start_date;
-                                 OldTask.start_date = OldPrevtartDate;
-                                 OldTask.prev_end = gantt.getTask(lastAction.taskid).end_date;
-                                 OldTask.end_date = OldPrevEndDate;
-                                
-                               
-                                gantt.updateTask(lastAction.taskid, OldTask);                               
-                                sessionStorage.removeItem("undoactionupdate");
-                                gantt.refreshData();
-                               
-                                 
-                             }
-            break;
-        case "delete":
+      gantt.deleteTask(lastAction.taskid);
+      break;
+    case "addLink":
+      if (gantt.isLinkExists(lastAction.task.id)) {
+        sessionStorage.setItem("undoactionupdateLink", "OK");
+        gantt.deleteLink(lastAction.task.id);
+        sessionStorage.removeItem("undoactionupdateLink");
+      }
+      break;
+    case "update":
+      sessionStorage.setItem("undoactionupdate", "OK");
+      const OldTask = Ext.JSON.decode(lastAction.task);
+      const OldStartDate = new Date(OldTask.start_date);
+      const OldEndDate = new Date(OldTask.end_date);
+      const OldPrevtartDate = new Date(OldTask.prev_start);
+      const OldPrevEndDate = new Date(OldTask.prev_end);
+      {
+        OldTask.prev_start = gantt.getTask(lastAction.taskid).start_date;
+        OldTask.start_date = OldPrevtartDate;
+        OldTask.prev_end = gantt.getTask(lastAction.taskid).end_date;
+        OldTask.end_date = OldPrevEndDate;
 
-            gantt.addTask(lastAction.task);
-            
-            break;
-        case "deleteLink":
-            sessionStorage.setItem("undoactionupdateLink", "OK");
-            gantt.addLink(lastAction.task);            
-            sessionStorage.removeItem("undoactionupdateLink");  
-            break;
+        gantt.updateTask(lastAction.taskid, OldTask);
+        sessionStorage.removeItem("undoactionupdate");
+        gantt.refreshData();
+
+      }
+      break;
+    case "delete":
+
+      gantt.addTask(lastAction.task);
+
+      break;
+    case "deleteLink":
+      sessionStorage.setItem("undoactionupdateLink", "OK");
+      gantt.addLink(lastAction.task);
+      sessionStorage.removeItem("undoactionupdateLink");
+      break;
     }
     Ext.getStore('gantt.undo.store').remove(lastActionRecord);
     Ext.getStore('gantt.redo.store').add(lastActionRecord);
-  }   
+  }
   if (Ext.getStore('gantt.undo.store').data.items.length === 0) {
-      var vSave = document.getElementById("savebtn");
-      vSave.style.background = "";
+    var vSave = document.getElementById("savebtn");
+    vSave.style.background = "";
   }
 }
 // Redo function
 function redo(undoStack, redoStack) {
-  if (Ext.getStore('gantt.redo.store').data.items.length === 0) return;
+  if (Ext.getStore('gantt.redo.store').data.items.length === 0)
+    return;
 
   //const lastAction = redoStack.pop();
-  var lastActionRecord =  Ext.getStore('gantt.redo.store').last()
-  var lastAction = lastActionRecord.data;
+  var lastActionRecord = Ext.getStore('gantt.redo.store').last()
+    var lastAction = lastActionRecord.data;
 
   var existsChildren = false
 
-  var ListOfChildren=[];
+    var ListOfChildren = [];
 
-  
-
-  Ext.getStore('gantt.redo.store').data.items.forEach(function(rec){
-    if(rec.data.parentTaskId!=null&&rec.data.parentTaskId!=""){
-      if(rec.data.parentTaskId===lastAction.parentTaskId){
+  Ext.getStore('gantt.redo.store').data.items.forEach(function (rec) {
+    if (rec.data.parentTaskId != null && rec.data.parentTaskId != "") {
+      if (rec.data.parentTaskId === lastAction.parentTaskId) {
         ListOfChildren.push(rec.data.id);
-      } 
+      }
 
-    }  
-    
+    }
+
   });
-  if(ListOfChildren.length>1){
-    existsChildren=true;
+  if (ListOfChildren.length > 1) {
+    existsChildren = true;
   }
 
-
-  
-
-  if(lastAction.parentTaskId!=null||existsChildren){
+  if (lastAction.parentTaskId != null || existsChildren) {
     /*if(lastAction.parentTaskId!=null){
-      var lParentTask = lastAction.parentTaskId;
-      var InitParentTask = lastAction.parentTaskId;
-      var LastRow=false;
-    
-      while((lParentTask==InitParentTask||lastAction.taskid==InitParentTask.split('_')[0])&&!LastRow){
+    var lParentTask = lastAction.parentTaskId;
+    var InitParentTask = lastAction.parentTaskId;
+    var LastRow=false;
 
-        sessionStorage.setItem("redoactionupdate", "OK");  
-        var OldTask = Ext.JSON.decode(lastAction.task);
-      var OldStartDate = new Date(OldTask.start_date);
-      var OldEndDate = new Date(OldTask.end_date);
-      var OldPrevtartDate = new Date(OldTask.prev_start);
-      var OldPrevEndDate = new Date(OldTask.prev_end);
-       {
-              OldTask.prev_start = gantt.getTask(lastAction.taskid).start_date;
-              OldTask.start_date = OldPrevtartDate;
-              OldTask.prev_end = gantt.getTask(lastAction.taskid).end_date;
-              OldTask.end_date = OldPrevEndDate;
-            
-            
-            gantt.updateTask(lastAction.taskid, OldTask);                               
-            sessionStorage.removeItem("redoactionupdate");
-            gantt.refreshData();
-            
-            Ext.getStore('gantt.redo.store').remove(lastActionRecord);
-            Ext.getStore('gantt.undo.store').add(lastActionRecord);
-            
-              
-          }
-        if (Ext.getStore('gantt.undo.store').data.items.length > 0) {
-          lastActionRecord =  Ext.getStore('gantt.undo.store').last();
-          lastAction = lastActionRecord.data;
-          lParentTask = lastAction.parentTaskId;
-        }
-        else{
-          LastRow=true;
-        }
-        
-      }
+    while((lParentTask==InitParentTask||lastAction.taskid==InitParentTask.split('_')[0])&&!LastRow){
+
+    sessionStorage.setItem("redoactionupdate", "OK");
+    var OldTask = Ext.JSON.decode(lastAction.task);
+    var OldStartDate = new Date(OldTask.start_date);
+    var OldEndDate = new Date(OldTask.end_date);
+    var OldPrevtartDate = new Date(OldTask.prev_start);
+    var OldPrevEndDate = new Date(OldTask.prev_end);{
+    OldTask.prev_start = gantt.getTask(lastAction.taskid).start_date;
+    OldTask.start_date = OldPrevtartDate;
+    OldTask.prev_end = gantt.getTask(lastAction.taskid).end_date;
+    OldTask.end_date = OldPrevEndDate;
+
+
+    gantt.updateTask(lastAction.taskid, OldTask);
+    sessionStorage.removeItem("redoactionupdate");
+    gantt.refreshData();
+
+    Ext.getStore('gantt.redo.store').remove(lastActionRecord);
+    Ext.getStore('gantt.undo.store').add(lastActionRecord);
+
+
     }
-    if(lastAction.parentTaskId==null&&existsChildren)*/{
-      /*sessionStorage.setItem("redoactionupdate", "OK");  
+    if (Ext.getStore('gantt.undo.store').data.items.length > 0) {
+    lastActionRecord =  Ext.getStore('gantt.undo.store').last();
+    lastAction = lastActionRecord.data;
+    lParentTask = lastAction.parentTaskId;
+    }
+    else{
+    LastRow=true;
+    }
+
+    }
+    }
+    if(lastAction.parentTaskId==null&&existsChildren)*/
+    {
+      /*sessionStorage.setItem("redoactionupdate", "OK");
       var OldTask = Ext.JSON.decode(lastAction.task);
       var OldStartDate = new Date(OldTask.start_date);
       var OldEndDate = new Date(OldTask.end_date);
@@ -7335,105 +7307,100 @@ function redo(undoStack, redoStack) {
       OldTask.start_date = OldPrevtartDate;
       OldTask.prev_end = gantt.getTask(lastAction.taskid).end_date;
       OldTask.end_date = OldPrevEndDate;
-        
-        
-      gantt.updateTask(lastAction.taskid, OldTask);                               
+
+
+      gantt.updateTask(lastAction.taskid, OldTask);
       sessionStorage.removeItem("redoactionupdate");
       gantt.refreshData();
-        
+
       Ext.getStore('gantt.redo.store').remove(lastActionRecord);
       Ext.getStore('gantt.undo.store').add(lastActionRecord);*/
 
-     
-
-
-      
-      ListOfChildren.forEach(function(rec){
+      ListOfChildren.forEach(function (rec) {
 
         var ChildAction = Ext.getStore('gantt.redo.store').getById(rec);
-        
-       
-        if(ChildAction){
+
+        if (ChildAction) {
           sessionStorage.setItem("redoactionupdate", "OK");
-          sessionStorage.setItem("redoactionupdateId", lastAction.parentTaskId);  
+          sessionStorage.setItem("redoactionupdateId", lastAction.parentTaskId);
           var OldTask = Ext.JSON.decode(ChildAction.data.task);
           var OldStartDate = new Date(OldTask.start_date);
           var OldEndDate = new Date(OldTask.end_date);
           var OldPrevtartDate = new Date(OldTask.prev_start);
           var OldPrevEndDate = new Date(OldTask.prev_end);
           OldTask.prev_start = OldPrevtartDate
-          OldTask.start_date = OldStartDate
-          OldTask.prev_end = OldPrevEndDate;
+            OldTask.start_date = OldStartDate
+            OldTask.prev_end = OldPrevEndDate;
           OldTask.end_date = OldEndDate;
-          gantt.updateTask(ChildAction.data.taskid, OldTask);                               
+          gantt.updateTask(ChildAction.data.taskid, OldTask);
           sessionStorage.removeItem("redoactionupdate");
-          sessionStorage.removeItem("redoactionupdateId");              
+          sessionStorage.removeItem("redoactionupdateId");
           gantt.refreshData();
           Ext.getStore('gantt.redo.store').remove(ChildAction);
           Ext.getStore('gantt.undo.store').add(ChildAction);
         }
-        
+
       });
-      
-    }  
-  }
-  else{
+
+    }
+  } else {
     switch (lastAction.type) {
-      case "changepostpone":
-          sessionStorage.setItem("redoactionchangepostpone", "OK");
-          Ext.getCmp("PostPoneOp").setValue(lastAction.value)
-          break;  
-      case "add":
-          gantt.addTask(lastAction.task);
-          break;
-              
-              case "addLink":
-          gantt.addLink(lastAction.task);
-          break;
-                      
-      case "update":
-          sessionStorage.setItem("redoactionupdate", "OK");  
-          const OldTask = Ext.JSON.decode(lastAction.task);
-          const OldStartDate = new Date(OldTask.start_date);
-          const OldEndDate = new Date(OldTask.end_date);
-          const OldPrevtartDate = new Date(OldTask.prev_start);
-          const OldPrevEndDate = new Date(OldTask.prev_end);
-                      /*if(OldPrevtartDate.getTime() != gantt.getTask(lastAction.taskid).start_date.getTime() || 
-                           OldStartDate.getTime() != OldPrevtartDate.getTime() || 
-                           OldPrevEndDate.getTime() != gantt.getTask(lastAction.taskid).end_date.getTime() ||
-                           OldEndDate.getTime() != OldPrevEndDate.getTime())*/ {
-                               OldTask.prev_start = OldPrevtartDate
-                              OldTask.start_date = OldStartDate
-                              OldTask.prev_end = OldPrevEndDate;
-                              OldTask.end_date = OldEndDate;
-                              gantt.updateTask(lastAction.taskid, OldTask);
-                              sessionStorage.removeItem("redoactionupdate");
-                      }
-          break;
-      case "delete":
-          gantt.deleteTask(lastAction.task.id);
-          break;
-      case "deleteLink":           
-          gantt.deleteLink(lastAction.task.id);
-          Ext.getStore('gantt.undo.store').add(lastActionRecord);
-          break;
+    case "changepostpone":
+      sessionStorage.setItem("redoactionchangepostpone", "OK");
+      Ext.getCmp("PostPoneOp").setValue(lastAction.value)
+      break;
+    case "add":
+      gantt.addTask(lastAction.task);
+      break;
+
+    case "addLink":
+      gantt.addLink(lastAction.task);
+      break;
+
+    case "update":
+      sessionStorage.setItem("redoactionupdate", "OK");
+      const OldTask = Ext.JSON.decode(lastAction.task);
+      const OldStartDate = new Date(OldTask.start_date);
+      const OldEndDate = new Date(OldTask.end_date);
+      const OldPrevtartDate = new Date(OldTask.prev_start);
+      const OldPrevEndDate = new Date(OldTask.prev_end);
+      /*if(OldPrevtartDate.getTime() != gantt.getTask(lastAction.taskid).start_date.getTime() ||
+      OldStartDate.getTime() != OldPrevtartDate.getTime() ||
+      OldPrevEndDate.getTime() != gantt.getTask(lastAction.taskid).end_date.getTime() ||
+      OldEndDate.getTime() != OldPrevEndDate.getTime())*/
+      {
+        OldTask.prev_start = OldPrevtartDate
+          OldTask.start_date = OldStartDate
+          OldTask.prev_end = OldPrevEndDate;
+        OldTask.end_date = OldEndDate;
+        gantt.updateTask(lastAction.taskid, OldTask);
+        sessionStorage.removeItem("redoactionupdate");
+      }
+      break;
+    case "delete":
+      gantt.deleteTask(lastAction.task.id);
+      break;
+    case "deleteLink":
+      gantt.deleteLink(lastAction.task.id);
+      Ext.getStore('gantt.undo.store').add(lastActionRecord);
+      break;
     }
     Ext.getStore('gantt.redo.store').remove(lastActionRecord);
   }
-  
+
 }
 
-let tGridFilters={};
-let WOFieldsAttributes={};
+let tGridFilters = {};
+let WOFieldsAttributes = {};
 
-Ext.define('EAM.custom.external_DUPLGR', {
+Ext.define('EAM.custom.external_DUPLGD', {
   extend: 'EAM.custom.AbstractExtensibleFramework',
   getSelectors: function () {
     var vBoilerList = [];
-    var vWOlist;
+    var vProjectList;
     var vEmpSched;
     var vSupplierList;
-    // Liste des tâches à traiter par le plug-in.
+    // Liste des tÃ¢ches Ã  traiter par le plug-in.
     var ArrEvents = [];
     var today = new Date();
     var vModalWindowIsOpen = false;
@@ -7449,27 +7416,28 @@ Ext.define('EAM.custom.external_DUPLGR', {
     let Link_data = [];
     let Link_removedata = [];
 
-    if(Ext.getStore('gantt.undo.store')){
+    if (Ext.getStore('gantt.undo.store')) {
       Ext.getStore('gantt.undo.store').destroy()
     }
     Ext.create('Ext.data.Store', {
       id: 'gantt.undo.store',
       fields: [],
-      data: []});
-    
-    if(Ext.getStore('gantt.redo.store')){
+      data: []
+    });
+
+    if (Ext.getStore('gantt.redo.store')) {
       Ext.getStore('gantt.redo.store').destroy()
     }
     Ext.create('Ext.data.Store', {
       id: 'gantt.redo.store',
       fields: [],
-      data: []});
+      data: []
+    });
 
-      sessionStorage.removeItem("undoactionupdate");
-      sessionStorage.removeItem("undoactionupdateLink");
-      sessionStorage.removeItem("redoactionupdate");
-      sessionStorage.removeItem("redoactionupdateId");
-
+    sessionStorage.removeItem("undoactionupdate");
+    sessionStorage.removeItem("undoactionupdateLink");
+    sessionStorage.removeItem("redoactionupdate");
+    sessionStorage.removeItem("redoactionupdateId");
 
     var vFirstDayOfWeek = parseInt(EAM.AppData._appconfig.map.firstdayofweek)
       var t = []
@@ -7503,7 +7471,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
           var vCurDataspy = Ext.getCmp('filter').value;
           var vCurDdsStillExists = false;
           var vPopUp = Ext.ComponentQuery.query('[isPopup=true]')
-            if (vPopUp[0].gridMeta.GRIDNAME == "BUPLGD") {
+            if (vPopUp[0].gridMeta.GRIDNAME == "PUPRTK") {
               ////console.log("on ferme XUEQP1");
               var vDefaultDataspy = "";
               var n_New_data = [];
@@ -7520,8 +7488,8 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 var vListofWoDDs = EAM.Ajax.request({
                   url: "GRIDDATA",
                   params: {
-                    SYSTEM_FUNCTION_NAME: "BUPLGD",
-                    USER_FUNCTION_NAME: "BUPLGD",
+                    SYSTEM_FUNCTION_NAME: "PUPRTK",
+                    USER_FUNCTION_NAME: "PUPRTK",
                     MADDON_FILTER_ALIAS_NAME_1: "evt_code",
                     MADDON_FILTER_OPERATOR_1: "=",
                     MADDON_FILTER_JOINER_1: "AND",
@@ -7604,12 +7572,6 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
           }
 
-          if (c.field == "prj_code") {
-
-            Ext.getCmp("prj_code").setValue(vFormPanel.getRecord().get("prj_code"));
-
-          }
-
         },
         hyperlinkclosed: function (a, b, c, d) {
           ////console.log("hyperlinkclosed");
@@ -7628,8 +7590,8 @@ Ext.define('EAM.custom.external_DUPLGR', {
             var vListofWoDDs = EAM.Ajax.request({
               url: "GRIDDATA",
               params: {
-                SYSTEM_FUNCTION_NAME: "BUPLGD",
-                USER_FUNCTION_NAME: "BUPLGD",
+                SYSTEM_FUNCTION_NAME: "PUPRTK",
+                USER_FUNCTION_NAME: "PUPRTK",
                 MADDON_FILTER_ALIAS_NAME_1: "evt_code",
                 MADDON_FILTER_OPERATOR_1: "=",
                 MADDON_FILTER_JOINER_1: "AND",
@@ -7699,22 +7661,22 @@ Ext.define('EAM.custom.external_DUPLGR', {
             }
           })
 
-          var vLoad = EAM.Ajax.request({
-            url: "BSUDSC?USER_FUNCTION_NAME=XUJVCS&FUNCTION_CLASS=WEBD",
-            messagingOptions: {
-              deferConfirm: !0,
-              deferWarning: !0,
-              deferError: !0
-            },
-            params: {
-              SYSTEM_FUNCTION_NAME: "BSUDSC",
-              USER_FUNCTION_NAME: "XUJVCS",
-              CURRENT_TAB_NAME: null,
-              FUNCTION_CLASS: "WEBD",
-              removescreenflows: "yes",
-              MENU_MODULE_KEY: 0
-            }
-          })
+            var vLoad = EAM.Ajax.request({
+              url: "BSUDSC?USER_FUNCTION_NAME=XUJVCS&FUNCTION_CLASS=WEBD",
+              messagingOptions: {
+                deferConfirm: !0,
+                deferWarning: !0,
+                deferError: !0
+              },
+              params: {
+                SYSTEM_FUNCTION_NAME: "BSUDSC",
+                USER_FUNCTION_NAME: "XUJVCS",
+                CURRENT_TAB_NAME: null,
+                FUNCTION_CLASS: "WEBD",
+                removescreenflows: "yes",
+                MENU_MODULE_KEY: 0
+              }
+            })
 
           function LoadFileToBody(fileName, fileType, sourceType) {
             if (document.getElementById(fileName + "_" + fileType)) {
@@ -7722,20 +7684,18 @@ Ext.define('EAM.custom.external_DUPLGR', {
             }
             var nodeDHTML = document.createElement(sourceType);
 
-        
-
-              var vFile = EAM.Ajax.request({
-                url: "BSUDSC.HDR",
-                params: {
-                  SYSTEM_FUNCTION_NAME: "BSUDSC",
-                  USER_FUNCTION_NAME: "XUJVCS",
-                  CURRENT_TAB_NAME: "HDR",
-                  wspf_10_source_code: fileName,
-                  pagemode: "view",
-                  SCROLLROW: "YES",
-                  ONLY_DATA_REQUIRED: "true"
-                }
-              }).responseData.pageData.values.wspf_10_source_stmt;
+            var vFile = EAM.Ajax.request({
+              url: "BSUDSC.HDR",
+              params: {
+                SYSTEM_FUNCTION_NAME: "BSUDSC",
+                USER_FUNCTION_NAME: "XUJVCS",
+                CURRENT_TAB_NAME: "HDR",
+                wspf_10_source_code: fileName,
+                pagemode: "view",
+                SCROLLROW: "YES",
+                ONLY_DATA_REQUIRED: "true"
+              }
+            }).responseData.pageData.values.wspf_10_source_stmt;
 
             if (fileType == "js") {
               var _elementScript = document.getElementsByTagName("script")
@@ -7760,7 +7720,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
             nodeDHTML.type = "text/" + fileType;
             nodeDHTML.id = fileName + "_dhtmlx_" + fileType;
-            nodeDHTML.setAttribute("cust_object","shutdown_planning");
+            nodeDHTML.setAttribute("cust_object", "shutdown_planning");
             nodeDHTML.innerHTML = vFile;
             document.getElementsByTagName("head")[0].appendChild(nodeDHTML)
           }
@@ -7821,7 +7781,6 @@ Ext.define('EAM.custom.external_DUPLGR', {
           try {
             if (EAM.Utils.getScreen().userFunction == 'DUPLGD' && Ext.ComponentQuery.query('uxtabpanel')[0]) {
 
-
               var vRecordWOAttributes = EAM.Ajax.request({
                 url: "WSJOBS.HDR",
                 params: {
@@ -7829,27 +7788,23 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   USER_FUNCTION_NAME: "WSJOBS",
                   CURRENT_TAB_NAME: "HDR",
                   CHECK_CF_CHANGEFLAG: true,
-                  workordernum: null,
+                  projectCodenum: null,
                   organization: null,
                   pagemode: "view"
                 }
               });
               WOFieldsAttributes = {};
 
-              if(vRecordWOAttributes.success){
-                if(EAM.Utils.propertyExists(vRecordWOAttributes,'responseData.pageData.attributes')){
-                  for (var key in vRecordWOAttributes.responseData.pageData.attributes){
+              if (vRecordWOAttributes.success) {
+                if (EAM.Utils.propertyExists(vRecordWOAttributes, 'responseData.pageData.attributes')) {
+                  for (var key in vRecordWOAttributes.responseData.pageData.attributes) {
 
-                    WOFieldsAttributes[key]= vRecordWOAttributes.responseData.pageData.attributes[key]
+                    WOFieldsAttributes[key] = vRecordWOAttributes.responseData.pageData.attributes[key]
 
                   }
                 }
 
               }
-
-
-
-
 
               var vFormPanel = EAM.Utils.getScreen().getCurrentTab().getFormPanel();
               //console.log("1")
@@ -7944,11 +7899,11 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 id: 'gantt.period.store',
                 fields: ['code', 'description'],
                 data: [{
-                    "code": "Week",
-                    "description": vBoilerList["header_periodweek"]
-                  },{
                     "code": "Month",
                     "description": vBoilerList["header_periodmonth"]
+                  }, {
+                    "code": "Week",
+                    "description": vBoilerList["header_periodweek"]
                   }, {
                     "code": "Quarter",
                     "description": vBoilerList["header_periodquarter"]
@@ -8002,7 +7957,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     'code': '60',
                     'description': '60'
                   }
-                  ]
+                ]
               });
 
               var vHoursStore = Ext.create('Ext.data.Store', {
@@ -8107,27 +8062,14 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
               // Madhu : TOdo
               var n_New_data = [];
-             /* var vListofWoDDs = EAM.Ajax.request({
-                url: "GRIDDATA",
-                params: {
-                  SYSTEM_FUNCTION_NAME: "BUPLGD",
-                  USER_FUNCTION_NAME: "BUPLGD",
-                  MADDON_FILTER_ALIAS_NAME_1: "evt_code",
-                  MADDON_FILTER_OPERATOR_1: "=",
-                  MADDON_FILTER_JOINER_1: "AND",
-                  MADDON_FILTER_SEQNUM_1: "1",
-                  MADDON_FILTER_VALUE_1: '*'
-                }
-              }).responseData;*/
-
 
               var vListofWoDDs = EAM.Ajax.request({
                 url: "GRIDDATA",
                 params: {
-                  USER_FUNCTION_NAME: "BUPLGD",
+                  USER_FUNCTION_NAME: "PUPRTK",
                   IGNORE_CUSTOMFIELDS: 'YES',
                   CACHE_REQUEST: false,
-                  GRID_NAME: "BUPLGD", 
+                  GRID_NAME: "PUPRTK",
                   FETCH_LABELS: true,
                   COMPONENT_INFO_TYPE: 'EDIT_INFO',
                   GRID_TYPE: '',
@@ -8163,7 +8105,6 @@ Ext.define('EAM.custom.external_DUPLGR', {
               INFORGLOBALS.mod = "expand";
               INFORGLOBALS.refreshresourcegrid = true;
 
-
               try {
                 var vUser = EAM.AppData.getInstallParams().get("user")
               } catch (err) {};
@@ -8176,7 +8117,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   deferConfirm: !0,
                   deferWarning: !0,
                   deferError: !0
-                },                
+                },
                 params: {
                   SYSTEM_FUNCTION_NAME: "1UGFSV",
                   USER_FUNCTION_NAME: "1UGFSV",
@@ -8184,39 +8125,36 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   MADDON_FILTER_OPERATOR_1: "=",
                   MADDON_FILTER_JOINER_1: "AND",
                   MADDON_FILTER_SEQNUM_1: "1",
-                  MADDON_FILTER_VALUE_1: 'TEST'
+                  MADDON_FILTER_VALUE_1: vUser
                 }
               });
 
               var PeriodStartTime = "8";
-                var PeriodMinute= "15"
+              var PeriodMinute = "15"
                 var PeriodEndTime = "18";
-                var PostPoneOp = true;
-                
-                var HighLightCollision = false;
-                var ShowExpired = false;
-                var ShowHours = false;
+              var PostPoneOp = true;
 
-                var vStartViewMode = "4";
-                var ShowExpired = false;
-                
-                var HighLightCollision = false;
-                var Expandcollapse = false;
-                var vPeriodDftValue = "2Year";
-                var vSaveDataspy = vDefaultDataspy;
-                vGridSize = 528;
-                if (PeriodStartTime == "") {
-                  PeriodStartTime = "8"
-                }
-                if (PeriodMinute == "") {
-                  PeriodMinute = "15"
-                }
-                if (PeriodEndTime == "") {
-                  PeriodEndTime = "18"
-                }
-                
-                
+              var HighLightCollision = false;
+              var ShowExpired = false;
+              var ShowHours = false;
 
+              var vStartViewMode = "2";
+              var ShowExpired = false;
+
+              var HighLightCollision = false;
+              var Expandcollapse = false;
+              var vPeriodDftValue = "Month";
+              var vSaveDataspy = vDefaultDataspy;
+              vGridSize = 528;
+              if (PeriodStartTime == "") {
+                PeriodStartTime = "8"
+              }
+              if (PeriodMinute == "") {
+                PeriodMinute = "15"
+              }
+              if (PeriodEndTime == "") {
+                PeriodEndTime = "18"
+              }
 
               if (vExistingSave.responseData.pageData.grid.GRIDRESULT.GRID.DATA.length > 0) {
                 var vRecord2 = EAM.Ajax.request({
@@ -8230,94 +8168,88 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     SYSTEM_FUNCTION_NAME: "BSUDSC",
                     USER_FUNCTION_NAME: "1UGFSV",
                     CURRENT_TAB_NAME: "HDR",
-                    wspf_10_user_code: 'TEST',
+                    wspf_10_user_code: vUser,
                     SCROLLROW: "YES",
                     pagemode: "view"
                   }
                 });
-                
-               if(vRecord2.success){
-                if(EAM.Utils.propertyExists(vRecord2,"responseData.pageData.values")){
-                  var vRecord = vRecord2.responseData.pageData.values;
 
-                  var ShowToolTip = false;
-                  var vPeriodDftValue = "2Year";
-                  var vSaveDataspy = vDefaultDataspy;
-                  var vListOfType = []
-                  vSaveDataspy = vRecord["wspf_10_dataspy"];
-                  var vDdsExists = false;
-                  Ext.getStore("gantt.dataspy.store").data.items.forEach(function (rec) {
-                    if (rec.data.code.toString() === vSaveDataspy.toString()) {
-                      vDdsExists = true;
+                if (vRecord2.success) {
+                  if (EAM.Utils.propertyExists(vRecord2, "responseData.pageData.values")) {
+                    var vRecord = vRecord2.responseData.pageData.values;
+
+                    var ShowToolTip = false;
+                    var vPeriodDftValue = "Month";
+                    var vSaveDataspy = vDefaultDataspy;
+                    var vListOfType = []
+                    vSaveDataspy = vRecord["wspf_10_dataspy"];
+                    var vDdsExists = false;
+                    Ext.getStore("gantt.dataspy.store").data.items.forEach(function (rec) {
+                      if (rec.data.code.toString() === vSaveDataspy.toString()) {
+                        vDdsExists = true;
+                      }
+                    })
+                    if (!vDdsExists) {
+                      vSaveDataspy = vDefaultDataspy;
                     }
-                  })
-                  if (!vDdsExists) {
-                    vSaveDataspy = vDefaultDataspy;
-                  }                 
 
-                  // Madhu - Shift Amazon addition
-                  //var vShiftSaveDataspy = vDefaultDataspy;
-                  vShiftSaveDataspy = vRecord["wspf_10_shiftdataspy"];
-                  INFORGLOBALS.mod = vRecord["wspf_10_expand_collapse"];
-                  vPeriodDftValue = vRecord["wspf_10_period"];
-                  vStartViewMode = vRecord["wspf_10_view_scale"];
-                  if (vRecord["wspf_10_expired_dates"]=="+") {
+                    // Madhu - Shift Amazon addition
+                    //var vShiftSaveDataspy = vDefaultDataspy;
+                    vShiftSaveDataspy = vRecord["wspf_10_shiftdataspy"];
+                    INFORGLOBALS.mod = vRecord["wspf_10_expand_collapse"];
+                    vPeriodDftValue = vRecord["wspf_10_period"];
+                    vStartViewMode = vRecord["wspf_10_view_scale"];
+                    if (vRecord["wspf_10_expired_dates"] == "+") {
                       ShowExpired = true;
-                  } else {
-                    ShowExpired = false;
-                  }
-                  
+                    } else {
+                      ShowExpired = false;
+                    }
 
-                  if (vRecord["wspf_10_show_hours"] == "+") {
-                    ShowHours = true;
-                  } else {
-                    ShowHours = false;
-                  }
-                  if (vRecord["wspf_10_show_tooltip"] == "+") {
-                    ShowToolTip = true;
-                  } else {
-                    ShowToolTip = false;
-                  }
-                  if (vRecord["wspf_10_highlight_collision"] == "+") {
+                    if (vRecord["wspf_10_show_hours"] == "+") {
+                      ShowHours = true;
+                    } else {
+                      ShowHours = false;
+                    }
+                    if (vRecord["wspf_10_show_tooltip"] == "+") {
+                      ShowToolTip = true;
+                    } else {
+                      ShowToolTip = false;
+                    }
+                    if (vRecord["wspf_10_highlight_collision"] == "+") {
                       HighLightCollision = true;
                     } else {
                       HighLightCollision = false;
                     }
 
+                    if (vRecord["wspf_10_postpone_op"] == "+") {
+                      PostPoneOp = true;
+                    } else {
+                      PostPoneOp = false;
+                    }
+                    PeriodStartTime = vRecord["wspf_10_start_time_period"] || "8";
+                    PeriodMinute = vRecord["wspf_10_minute_scale"] || "15";
+                    PeriodEndTime = vRecord["wspf_10_end_time_period"] || "18";
+                    if (PeriodStartTime == "") {
+                      PeriodStartTime = "8"
+                    }
+                    if (PeriodMinute == "") {
+                      PeriodMinute = "15"
+                    }
+                    if (PeriodEndTime == "") {
+                      PeriodEndTime = "18"
+                    }
 
-                  if (vRecord["wspf_10_postpone_op"] == "+") {
-                    PostPoneOp = true;
-                  } else {
-                    PostPoneOp = false;
                   }
-                  PeriodStartTime = vRecord["wspf_10_start_time_period"] || "8";
-                  PeriodMinute= vRecord["wspf_10_minute_scale"] || "15";
-                  PeriodEndTime = vRecord["wspf_10_end_time_period"] || "18";
-                  if (PeriodStartTime == "") {
-                    PeriodStartTime = "8"
-                  }
-                  if (PeriodMinute == "") {
-                    PeriodMinute = "15"
-                  }
-                  if (PeriodEndTime == "") {
-                    PeriodEndTime = "18"
-                  }
-
-
 
                 }
 
-               }
-                
-                
-
               } else {
-                var vStartViewMode = "4";
+                var vStartViewMode = "2";
                 var ShowExpired = false;
-                
+
                 var HighLightCollision = false;
                 var Expandcollapse = false;
-                var vPeriodDftValue = "2Year";
+                var vPeriodDftValue = "Month";
                 var vSaveDataspy = vDefaultDataspy;
                 vGridSize = 528;
                 if (PeriodStartTime == "") {
@@ -8351,730 +8283,10 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
               var sDateSpeStore = Ext.getStore('gantt.datespetype.store')
 
-            /**
-             * Compares two date fields (startField and endField) and marks them invalid if start > end.
-             * @param {Ext.form.field.Date} startField The start date component.
-             * @param {Ext.form.field.Date} endField The end date component.
-             */
-            function checkDateConsistency(startField, endField) {
-                var startDate = startField.getValue();
-                var endDate = endField.getValue();
-
-                // Clear any previous errors
-                startField.clearInvalid();
-                endField.clearInvalid();
-
-                if (startDate && endDate) {
-                    // Compare the dates. In JavaScript, Date objects can be compared directly.
-                    if (startDate > endDate) {
-                        var validationMessage = "Start Date cannot be after End Date.";
-                        
-                        // Mark the fields as invalid and show a tooltip/error message
-                        startField.markInvalid(validationMessage);
-                        endField.markInvalid(validationMessage);
-
-                        // OPTIONAL: Disable the refresh/filter button if validation fails
-                        // Ext.getCmp('refreshGridbtn').setDisabled(true); 
-
-                        // Prevent the filter change if the dates are inconsistent (optional, depending on BeForechangeFilter logic)
-                        // You might need to adjust BeForechangeFilter to read the validation status.
-                        return false;
-                    } else {
-                        // Re-enable the refresh/filter button if it was disabled
-                        // Ext.getCmp('refreshGridbtn').setDisabled(false);
-                        return true;
-                    }
-                }
-                return true; // Valid if one or both are empty
-            }
-
-            function openPopUp(projectId){
-                var fields = ['plp_activite_Field', 'plp_descat_Field', 'plp_predecesseur_Field', 'plp_parent_Field',
-                    'plp_avancement_Field', 'plp_buffer_Field', 'plp_chem_Field', 'plp_datedeb_Field', 
-                    'plp_datefin_Field', 'plp_dateinideb_Field', 'plp_dateinifin_Field', 'plp_datefigdeb_Field', 
-                    'plp_datefigfin_Field', 'plp_etpil_Field', 'plp_pilote_Field', 'plp_lot_Field', 
-                    'plp_eotp_Field', 'plp_eotpdesc_Field', 'plp_commentaire_Field'
-                ];
-            
-                for (var i = 0; i < fields.length; i++) {
-                    if (Ext.getCmp(fields[i])) {
-                    try {
-                        Ext.getCmp(fields[i]).destroy();
-                    } catch (err) {}
-                    }
-                }
-
-                var vRecordProjPlanningUpd = EAM.Ajax.request({
-                    url: "BSUDSC.TAB",
-                    params: {
-                    "CURRENT_TAB_NAME": "U1",
-                    "ONLY_DATA_REQUIRED": "true",
-                    "REFRESH_GRID": "false",
-                    "SYSTEM_FUNCTION_NAME": "J1PRJ",
-                    "THROW_EXCEPTION": "false",
-                    "USER_FUNCTION_NAME": "J1PRJ",
-                    "eamid": EAM.SessionStorage.getEamId(),
-                    "wspf_10_plp_projet": 10081,
-                    "wspf_10_plp_seq": '4090FC6464E2836DE063AE0A0A0AAD04',
-                    "tenant": EAM.AppData.getTenantId(),
-                    "ONLY_DATA_REQUIRED" : true,
-                    "pagemode" : "view",
-                    "processaction" : "get"
-                    }
-                });
-                var PlanningFieldsAttributes = {};
-
-                if(vRecordProjPlanningUpd.success){
-                if(EAM.Utils.propertyExists(vRecordProjPlanningUpd,'responseData.pageData.attributes')){
-                    for (var key in vRecordProjPlanningUpd.responseData.pageData.attributes){
-
-                    PlanningFieldsAttributes[key]= vRecordProjPlanningUpd.responseData.pageData.attributes[key]
-
-                    }
-                }
-
-                }
-
-                var vActivitiesGrid = EAM.Ajax.request({
-                    url: "GRIDDATA",
-                    params: {
-                    GRID_NAME: "XUACT1",
-                    GRID_TYPE: "LOV",
-                    REQUEST_TYPE: "LOV.HEAD_DATA.STORED",
-                    usagetype: "lov",
-                    LOV_ALIAS_NAME_1: "parameter.PROJET",
-                    LOV_ALIAS_TYPE_1: "number",
-                    LOV_ALIAS_VALUE_1: "10081",
-                    }
-                });
-                var gridData = vActivitiesGrid.responseData.pageData.grid.GRIDRESULT.GRID.DATA;
-                var vActivitiesData = [];
-                if (gridData.length > 0) {
-                var vListofActivities = gridData;
-                for (var i = 0; i < vListofActivities.length; i++) {
-                    vActivitiesData.push({
-                    id: vListofActivities[i].id,
-                    activite: vListofActivities[i].activite,
-                    description: vListofActivities[i].description
-                    });
-                }
-                console.log('vActivitiesData', vActivitiesData);
-                }
-                var activities = Ext.create('Ext.data.Store', {
-                        id: 'activities',
-                        fields: ['id', 'activite', 'description'],
-                        data: vActivitiesData
-                    });
-
-                var vPilotEntitiesGrid = EAM.Ajax.request({
-                    url: "GRIDDATA",
-                    params: {
-                    GRID_NAME: "LVSCHEDGROUP",
-                    GRID_TYPE: "LOV",
-                    REQUEST_TYPE: "LOV.HEAD_DATA.STORED",
-                    usagetype: "lov"
-                    }
-                });
-                gridData = vPilotEntitiesGrid.responseData.pageData.grid.GRIDRESULT.GRID.DATA;
-                var vEntitiesData = [];
-                if (gridData.length > 0) {
-                var vListofEntities = gridData;
-                for (var i = 0; i < vListofEntities.length; i++) {
-                    vEntitiesData.push({
-                    id: vListofEntities[i].id,
-                    schedgroup: vListofEntities[i].schedgroup,
-                    description: vListofEntities[i].schedgroupdesc,
-                    schedgrouporg: vListofEntities[i].schedgrouporg
-                    });
-                }
-                console.log('vEntitiesData', vEntitiesData);
-                }
-                var entities = Ext.create('Ext.data.Store', {
-                        id: 'entities',
-                        fields: ['id', 'schedgroup', 'description', 'schedgrouporg'],
-                        data: vEntitiesData
-                    });
-                
-                    
-                var vPilotGrid = EAM.Ajax.request({
-                    url: "GRIDDATA",
-                    params: {
-                    GRID_NAME: "LVCMOE",
-                    GRID_TYPE: "LOV",
-                    REQUEST_TYPE: "LOV.HEAD_DATA.STORED",
-                    usagetype: "lov"
-                    }
-                });
-                gridData = vPilotGrid.responseData.pageData.grid.GRIDRESULT.GRID.DATA;
-                var vPilotData = [];
-                if (gridData.length > 0) {
-                var vListofPilot = gridData;
-                for (var i = 0; i < vListofPilot.length; i++) {
-                    vPilotData.push({
-                    id: vListofPilot[i].id
-                    });
-                }
-                console.log('vPilotData', vPilotData);
-                }
-                var pilot = Ext.create('Ext.data.Store', {
-                        id: 'pilot',
-                        fields: ['id'],
-                        data: vPilotData
-                    });
-                
-                var formData = {
-                    "CURRENT_TAB_NAME": "HDR",
-                    "GRID_NAME": "DUMMY",
-                    "GRID_TYPE": "LOV",
-                    "LOV_ALIAS_NAME_1": "param.prj_code",
-                    "LOV_ALIAS_TYPE_1": "number",
-                    "LOV_ALIAS_VALUE_1": "10081",
-                    "LOV_TAGNAME": "promptdata1",
-                    "REQUEST_TYPE": "LOVSQL.HEAD_DATA.STORED",
-                    "SOURCEPROMPTSEQUENCE": "1",
-                    "TARGETPROMPTSEQUENCE": "1",
-                    "TRANSACTIONTYPE": "Z002",
-                    "USER_FUNCTION_NAME": "DUPLGD",
-                    "eamid": EAM.SessionStorage.getEamId(),
-                    "popup": "true",
-                    "tenant": EAM.AppData.getTenantId(),
-                    "usagetype": "lov"
-                };
-                var vdata = Ext.Ajax.request ({
-                    async: false,
-                    url: 'LOVPOP',
-                    params: formData,
-                    success: function(response) {
-                        //console.log(response);
-                    }
-                }).responseText;
-
-                var vDataResultJson = Ext.JSON.decode(vdata);
-                gridData = vDataResultJson.pageData.grid.GRIDRESULT.GRID.DATA;
-                var vEOTPdata = [];
-                if (gridData.length > 0) {
-                var vListofEOTP = gridData;
-                    for (var i = 0; i < vListofEOTP.length; i++) {
-                        vEOTPdata.push({
-                            eotp: vListofEOTP[i].col1,
-                            eotpdesc: vListofEOTP[i].col2
-                        });
-                    }
-                    console.log('vEOTPdata', vEOTPdata);
-                }
-                var eotp = Ext.create('Ext.data.Store', {
-                        id: 'eotp',
-                        fields: ['eotp', 'eotpdesc'],
-                        data: vEOTPdata
-                        });
-
-
-                var panel = new Ext.Panel({
-                    title: 'Nouvelle Activité',
-                    frame: true,
-                    width: 650,
-                    id: 'Act_Create_Panel',
-                    height: 750,
-                    modal: true,
-                    closable: true,
-                    centered: true,
-                    floating: true,
-                    layout: 'vbox',
-                    draggable: true,
-                    margins: '5 5 5 5',
-                    layoutConfig: {
-                    animate: true
-                    },
-
-                    items: [{
-                        xtype: 'numberfield',
-                        fieldLabel: 'Activity <span style="color:red"><b>*</b></span>',
-                        id: 'plp_activite_Field',
-                        numberFormat: "24",
-                        readOnly: true,
-                        currentAttribute: PlanningFieldsAttributes.wspf_10_plp_activite,
-                        readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                        requiredCls: Ext.baseCSSPrefix + 'form-required-field',
-                        padding: "5px"
-                    },{
-                        xtype: 'textfield',
-                        fieldLabel: 'Description <span style="color:red"><b>*</b></span>',
-                        id: 'plp_descat_Field',
-                        size: "50",
-                        maxLength: "256",
-                        padding: "5px",
-                        readOnly: PlanningFieldsAttributes.wspf_10_plp_descact=="protected"?true:false,
-                        currentAttribute: PlanningFieldsAttributes.wspf_10_plp_descact,
-                        readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                        requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                    }, {
-                        id: "plp_predecesseur_Field",
-                        name: "plp_predecesseur",
-                        fieldLabel: 'Predecessor',
-                        // labelAlign: 'right',
-                        // fieldAlign: 'left',
-                        padding: "5px",
-                        xtype: 'uxcombobox',
-                        text: 'predecessor',
-                        store: activities,
-                        displayField: 'description',
-                        valueField: 'activite',
-                        listeners: {
-                        change: function (a, b, c) {
-                            //onScaleChange(b);
-                        }
-                        }
-                    },{
-                        id: "plp_parent_Field",
-                        name: "plp_parent",
-                        fieldLabel: 'Parent',
-                        // labelAlign: 'right',
-                        //fieldAlign: left,
-                        padding: "5px",
-                        xtype: 'uxcombobox',
-                        text: 'parent',
-                        store: activities,
-                        displayField: 'description',
-                        valueField: 'activite',
-                        listeners: {
-                        change: function (a, b, c) {
-                            //onScaleChange(b);
-                        }
-                        }
-                    },{
-                        // This is the container for the two fields
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                        items: [{
-                            xtype: 'numberfield',
-                            fieldLabel: 'Advance',
-                            id: 'plp_avancement_Field',
-                            decimalPrecision: 0, 
-                            minValue: 0,
-                            maxValue: 100,
-                            value:'', 
-                            readOnly: PlanningFieldsAttributes.wspf_10_plp_avancement=="protected"?true:false,
-                            currentAttribute: PlanningFieldsAttributes.wspf_10_plp_avancement,
-                            readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                            requiredCls: Ext.baseCSSPrefix + 'form-required-field',
-                            padding: "5px"
-                        },{
-                            xtype: 'numberfield',
-                            fieldLabel: 'Buffer (days)',
-                            id: 'plp_buffer_Field',
-                            value: '', 
-                            readOnly: PlanningFieldsAttributes.wspf_10_plp_buffer=="protected"?true:false,
-                        //   currentAttribute: PlanningFieldsAttributes.activity,
-                            readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                            requiredCls: Ext.baseCSSPrefix + 'form-required-field',
-                            padding: "5px"
-                        }]
-                    },{
-                        xtype: 'checkbox',
-                        fieldLabel: 'Critical path',
-                        inputValue: '1',
-                        id: 'plp_chem_Field',
-                        // labelAlign: 'right',
-                        hidden: false,
-                        checked: false,
-                        padding: "5px",
-                        listeners: {
-                            change : function(){
-                            }
-                        },
-                        readOnly: PlanningFieldsAttributes.wspf_10_plp_chem=="protected"?true:false,
-                        currentAttribute: PlanningFieldsAttributes.wspf_10_plp_chem,
-                            readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                        requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                        
-                    },{
-                        // This is the separate section
-                        xtype: 'fieldset',
-                        title: 'Planification', // The title of the section
-                        collapsible: false,             // Optional: Makes the section collapsible
-                        defaults: {
-                            anchor: '100%',            // Fields take 100% of the width
-                            labelWidth: 100
-                        },
-                        layout: 'anchor',              // Layout for fields inside the section
-                        items: [{
-                            // This is the container for the two fields
-                            xtype: 'fieldcontainer',
-                            layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                            items: [{
-                            xtype: 'uxdate',
-                            anchor: '100%',
-                            id: 'plp_datedeb_Field',
-                            name: 'plp_datedeb',
-                            // labelAlign: 'right',
-                            value: new Date(),
-                            padding: "5px",
-                            fieldLabel: 'Start Date',
-                            margin: '5 0 0 0'
-                            },{
-                            xtype: 'uxdate',
-                            anchor: '100%',
-                            id: 'plp_datefin_Field',
-                            name: 'plp_datefin',
-                            // labelAlign: 'right',
-                            padding: "5px",
-                            fieldLabel: 'End Date',
-                            value: new Date(),
-                            margin: '5 0 0 0'
-                            }]
-                        },{
-                            // This is the container for the two fields
-                            xtype: 'fieldcontainer',
-                            layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                            items: [{
-                            xtype: 'uxdate',
-                            anchor: '100%',
-                            id: 'plp_dateinideb_Field',
-                            name: 'plp_dateinideb',
-                            // labelAlign: 'right',
-                            padding: "5px",
-                            fieldLabel: 'CT – Frozen Start',
-                            value: new Date(),
-                            margin: '5 0 0 0'
-                            },{
-                            xtype: 'uxdate',
-                            anchor: '100%',
-                            id: 'plp_dateinifin_Field',
-                            name: 'plp_dateinifin',
-                            // labelAlign: 'right',
-                            padding: "5px",
-                            fieldLabel: 'CT – Frozen End',
-                            value: new Date(),
-                            margin: '5 0 0 0'
-                            }]
-                        },{
-                            // This is the container for the two fields
-                            xtype: 'fieldcontainer',
-                            layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                            items: [{
-                            xtype: 'uxdate',
-                            anchor: '100%',
-                            id: 'plp_datefigdeb_Field',
-                            name: 'plp_datefigdeb',
-                            // labelAlign: 'right',
-                            padding: "5px",
-                            fieldLabel: 'LT – Frozen Start',
-                            value: new Date(),
-                            margin: '5 0 0 0'
-                            },{
-                            xtype: 'uxdate',
-                            anchor: '100%',
-                            id: 'plp_datefigfin_Field',
-                            name: 'plp_datefigfin',
-                            // labelAlign: 'right',
-                            padding: "5px",
-                            fieldLabel: 'LT – Frozen End',
-                            value: new Date(),
-                            margin: '5 0 0 0'
-                            }]
-                        }]
-                    },{
-                        // This is the separate section
-                        xtype: 'fieldset',
-                        title: 'Autre', // The title of the section
-                        collapsible: false,             // Optional: Makes the section collapsible
-                        defaults: {
-                            anchor: '100%',            // Fields take 100% of the width
-                            labelWidth: 100
-                        },
-                        layout: 'anchor',              // Layout for fields inside the section
-                        items: [{
-                        id: "plp_etpil_Field",
-                        name: "plp_etpil",
-                        fieldLabel: 'Pilot Entity',
-                        // labelAlign: 'right',
-                        //fieldAlign: left,
-                        padding: "5px",
-                        xtype: 'uxcombobox',
-                        text: 'parent',
-                        store: entities,
-                        displayField: 'schedgroup',
-                        valueField: 'schedgroup',
-                        listeners: {
-                            change: function (a, b, c) {
-                            //onScaleChange(b);
-                            }
-                        }
-                        },{
-                        id: "plp_pilote_Field",
-                        name: "plp_pilote",
-                        fieldLabel: 'Pilot',
-                        // labelAlign: 'right',
-                        //fieldAlign: left,
-                        padding: "5px",
-                        xtype: 'uxcombobox',
-                        text: 'parent',
-                        store: pilot,
-                        displayField: 'id',
-                        valueField: 'id',
-                        listeners: {
-                            change: function (a, b, c) {
-                            //onScaleChange(b);
-                            }
-                        }
-                        },{
-                        xtype: 'textfield',
-                        fieldLabel: 'Subdivision',
-                        id: 'plp_lot_Field',
-                        size: "50",
-                        maxLength: "256",
-                        padding: "5px",
-                        readOnly: false,
-                    //   currentAttribute: PlanningFieldsAttributes.udfnote01,
-                        readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                        requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                    },{
-                        // This is the container for the two fields
-                        xtype: 'fieldcontainer',
-                        layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                        items: [{
-                            id: "plp_eotp_Field",
-                            name: "plp_eotp",
-                            fieldLabel: 'EOTP',
-                            // labelAlign: 'right',
-                            //fieldAlign: left,
-                            padding: "5px",
-                            xtype: 'uxcombobox',
-                            text: 'parent',
-                            store: eotp,
-                            displayField: 'eotp',
-                            valueField: 'eotp',
-                            listeners: {
-                                select: function(combo, record) {
-                                    if(record){
-                                        var foundObject = vEOTPdata.find(function(item) {
-                                            return item.eotp === record;
-                                        });
-                                    }
-                                    var descriptionField = combo.up('fieldcontainer').down('#plp_eotpdesc_Field');
-
-                                    descriptionField.setValue(foundObject ? foundObject.eotpdesc : '');
-                                }
-                            }
-                            },{
-                            xtype: 'textfield',
-                            id: 'plp_eotpdesc_Field',
-                            size: "30",
-                            maxLength: "256",
-                            padding: "5px",
-                            readOnly: true,
-                            hideLabel: true,
-                        //   currentAttribute: PlanningFieldsAttributes.udfnote01,
-                            readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                            requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                        }]
-                        },{
-                        // 1. Basic Multi-line Text Field
-                        xtype: 'textareafield',
-                        id:'plp_commentaire_Field',
-                        fieldLabel: 'Commentary',
-                        name: 'commentary',
-                        anchor: '200%', // Makes it span the full width
-                        size: "50",
-                        // 2. Control the height using the 'rows' config
-                        // This suggests a starting height of 4 lines of text.
-                        rows: 4
-                        
-                        // OR, you could set a fixed pixel height:
-                        // height: 100 
-                        
-                    }]
-                    }                                            
-                    ],
-                    buttons: [{
-                        text: 'Fermer',
-                        margin: '0 0 0 5',
-                        handler: function () {
-                        panel.close();
-                        }
-                    }, {
-                        text: 'Sauvegarder',
-                        margin: '0 0 0 5',
-                        handler: function () {
-                        EAM.Utils.mask(Ext.ComponentQuery.query('#custom_global_div')[0]);
-                        setTimeout(
-                            function () {
-
-                            var vRecordProjPlanning = EAM.Ajax.request({
-                            url: "BSUDSC.TAB",
-                            params: {
-                                CURRENT_TAB_NAME: "U1",
-                                SYSTEM_FUNCTION_NAME: "J1PRJ",
-                                USER_FUNCTION_NAME: "J1PRJ"
-                            }
-                            }).responseData.pageData.values;
-                            for (var k in vRecordProjPlanning) {
-                            if (Ext.isObject(vRecordProjPlanning[k])) {
-                                vRecordProjPlanning[k] = vRecordProjPlanning[k].selected
-                            }
-                            }
-                        
-                            if (!Ext.isEmpty(Ext.getCmp('plp_activite_Field').rawValue)) {
-                            vRecordProjPlanning.wspf_10_plp_activite = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_activite_Field").getValue(),"number")) ;
-                            } else if (Ext.isEmpty(Ext.getCmp('plp_activite_Field').rawValue)) {
-                            vRecordProjPlanning.wspf_10_plp_activite = "";
-                            } else {
-                            vRecordProjPlanning.wspf_10_plp_activite = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_activite_Field").getValue(),"number")) ;
-                            }
-                            if (!Ext.isEmpty(Ext.getCmp('plp_descat_Field').rawValue)) {
-                            vRecordProjPlanning.wspf_10_plp_descact = Ext.getCmp('plp_descat_Field').rawValue;
-                            } else if (Ext.isEmpty(Ext.getCmp('plp_descat_Field').rawValue)) {
-                            vRecordProjPlanning.wspf_10_plp_descact = "";
-                            } else {
-                            vRecordProjPlanning.wspf_10_plp_descact = Ext.getCmp('plp_descat_Field').initialValue;
-                            }
-
-                            vRecordProjPlanning.wspf_10_plp_predecesseur = Ext.getCmp('plp_predecesseur_Field').getValue() || "";
-                            vRecordProjPlanning.wspf_10_plp_parent = Ext.getCmp('plp_parent_Field').getValue() || "";
-                            vRecordProjPlanning.wspf_10_plp_avancement = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_avancement_Field").getValue(),"number")) || 0 ;
-                            vRecordProjPlanning.wspf_10_plp_buffer = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_buffer_Field").getValue(),"number")) || 0 ;
-                            // vRecordProjPlanning.wspf_10_plp_chem = Ext.getCmp('plp_chem_Field').getValue() ? '1' : '0';
-                            if(Ext.getCmp("plp_chem_Field").getValue()){
-                                vRecordProjPlanning.wspf_10_plp_chem='-1'
-                            }
-                            else{
-                                vRecordProjPlanning.wspf_10_plp_chem='0'
-                            }
-                            vRecordProjPlanning.wspf_10_plp_datedeb = Ext.getCmp('plp_datedeb_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datedeb_Field').getValue(),'m/d/Y') : "";
-                            vRecordProjPlanning.wspf_10_plp_datefin = Ext.getCmp('plp_datefin_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datefin_Field').getValue(),'m/d/Y') : "";
-                            vRecordProjPlanning.wspf_10_plp_dateinideb = Ext.getCmp('plp_dateinideb_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_dateinideb_Field').getValue(),'m/d/Y') : "";
-                            vRecordProjPlanning.wspf_10_plp_dateinifin = Ext.getCmp('plp_dateinifin_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_dateinifin_Field').getValue(),'m/d/Y') : "";
-                            vRecordProjPlanning.wspf_10_plp_datefigdeb = Ext.getCmp('plp_datefigdeb_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datefigdeb_Field').getValue(),'m/d/Y') : "";
-                            vRecordProjPlanning.wspf_10_plp_datefigfin = Ext.getCmp('plp_datefigfin_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datefigfin_Field').getValue(),'m/d/Y') : "";
-                            vRecordProjPlanning.wspf_10_plp_etpil = Ext.getCmp('plp_etpil_Field').getValue() || "";
-                            vRecordProjPlanning.wspf_10_plp_pilote = Ext.getCmp('plp_pilote_Field').getValue() || "";
-                            vRecordProjPlanning.wspf_10_plp_lot = Ext.getCmp('plp_lot_Field').getValue() || "";
-                            vRecordProjPlanning.wspf_10_plp_eotp = Ext.getCmp('plp_eotp_Field').getValue() || "";
-                            vRecordProjPlanning.wspf_10_plp_eotpdesc = Ext.getCmp('plp_eotpdesc_Field').getValue() || "";
-                            vRecordProjPlanning.wspf_10_plp_commentaire = Ext.getCmp('plp_commentaire_Field').getValue() || "";
-
-
-                            var vStatus = EAM.Ajax.request({
-                            url: "BSUDSC.TAB.insertrecord?pageaction=SAVE",
-                            params: Ext.merge(vRecordProjPlanning, {
-                                CURRENT_TAB_NAME: "U1",
-                                SYSTEM_FUNCTION_NAME: "JSPROJ",
-                                USER_FUNCTION_NAME: "J1PRJ",
-                                CHECK_CF_CHANGEFLAG: "true",
-                                can_update: "true",
-                                wspf_10_plp_projet: 10081,
-                                wspf_10_plp_seq: 12345678
-                            })
-                            });
-                            if (vStatus.success) {
-
-                            // gantt.getTask(vWoNum).actest = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(),"number")) ;
-                            // gantt.getTask(vWoNum).dds_act_est = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(),"number")) ;
-                            // gantt.getTask(vWoNum).dds_act_mrc = Ext.getCmp('act_udfchar01').getValue()==""?gantt.getTask(vWoNum).dds_evt_mrc:Ext.getCmp('act_udfchar01').getValue();
-                            // gantt.getTask(vWoNum).womrc = Ext.getCmp('act_udfchar01').getValue()==""?gantt.getTask(vWoNum).dds_evt_mrc:Ext.getCmp('act_udfchar01').getValue();
-                            // gantt.getTask(vWoNum).dds_act_percomplete =parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Percentcplt_Field").getValue(),"number")) ;
-                            // gantt.refreshTask(vWoNum, true);
-
-                            var vMsg = vBoilerList["woupdate_success_message"];
-                            var find = ':param1';
-                            var re = new RegExp(find, 'g');
-                            vMsg = vMsg.replace(re, "1");
-                            find = ':param2';
-                            re = new RegExp(find, 'g');
-                            // vMsg = vMsg.replace(re, '1 (' + actTask.parent + ')');
-                            //parent.EAM.Messaging.showConfirmation(vCounter + " of " + vTotalCounter + " WorkOrder(s) updated successfully.");
-                            EAM.Messaging.showConfirmation(vMsg);
-                            EAM.Utils.unmask(Ext.ComponentQuery.query('#Act_Insert_Panel')[0].el);
-                            panel.close();
-
-                            //changeFilter()
-                            } else {
-                            EAM.Utils.unmask(Ext.ComponentQuery.query('#Act_Insert_Panel')[0].el);
-                            panel.close();
-                            gantt.refreshTask(vWoNum, true);
-                            //changeFilter()
-                            }
-
-                        }, 200);
-
-                        }
-
-                    }
-                    ]
-                });
-                panel.show();
-            }
-
-            function openNewActivityWindow(){
-                var panel = new Ext.Panel({
-                        title: 'Select Project',
-                        frame: true,
-                        width: 650,
-                        id: 'Select_Project_Panel',
-                        height: 250,
-                        modal: true,
-                        resizable: !0,
-                        closable: true,
-                        centered: true,
-                        floating: true,
-                        layout: 'fit',
-                        margins: '5 5 5 5',
-
-                        items: [{
-                            name: 'prj_code',
-                            id: 'prj_code',
-                            xtype: 'lovfield',
-                            fieldLabel: 'Project Code',
-                            maxLength: 15,
-                            upper: !0,
-                            colspan: 1,
-                            rowspan: 1,
-                            // lookupLOV: {
-                            // lovName: 'XUPROJ',
-                            // returnFields: {
-                            //     'prj_code': 'prj_code'
-                            // }
-                            // },
-                            // validateLOV: {
-                            // lovName: 'XUPROJ',
-                            // returnFields: {
-                            //     'prj_code': 'prj_code'
-                            // }
-                            // },
-                            // size: "30",
-                            padding: "10px",
-                            readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                            requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                        }]
-                    });
-                var vFormPanel = EAM.Utils.getScreen().getCurrentTab().getFormPanel();
-                vFormPanel.getRecord().set("prj_code", "");
-                var vUserFieldMotif = Ext.getCmp("prj_code");
-                vUserFieldMotif.formPanel = vFormPanel;
-                vUserFieldMotif.lookupLOV = {
-                    lovName: 'XUPROJ',
-                    returnFields: {
-                        'prj_code': 'prj_desc'
-                    }
-                };
-
-                vUserFieldMotif.validateLOV = {
-                    lovName: 'XUPROJ',
-                    returnFields: {
-                        'prj_code': 'prj_desc'
-                    }
-                }
-                panel.show();
-            }
-
-            function setCustomDate(){
-                console.log('inSetCustomDate');
-                // Ext.getCmp('viewmode_gantt').setValue('Date Range');
-            }
                 var vToolBar = Ext.create('Ext.toolbar.Toolbar', {
                   id: "gantt_filter",
                   width: '100%',
-                  height: 60,
+                  height: 40,
                   cust_object: 'shutdown_planning',
                   overflowHandler: 'menu',
                   items: [{
@@ -9153,83 +8365,38 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       xtype: 'uxdate',
                       anchor: '100%',
                       size: 15,
-                      fieldLabel: "Période d'affichage",
-                      labelAlign: 'right',
+                      //fieldLabel: 'From',
                       id: 'StartDate',
                       value: new Date(),
                       //format: "d/m/y",
                       margin: '5 0 0 5',
                       listeners: {
-                        change: function (field, newValue, oldValue) {
-                            if(checkDateConsistency(field, Ext.getCmp('EndDate'))) { // Call new check
-                                BeForechangeFilter();
-                                setCustomDate();
-                            }
-                        }
-                      },
-                      cust_object: "shutdown_planning"
-                    }, {
-                        xtype: 'label', // Add a label or text item for the '→' separator
-                        text: '→',
-                        margin: '8 5 0 5', // Adjust margin for alignment
-                        cust_object: "shutdown_planning"
-                    },
-                     {
-                      xtype: 'uxdate',
-                      anchor: '100%',
-                      size: 15,
-                      //fieldLabel: 'From',
-                      id: 'EndDate',
-                      value: Ext.Date.add(new Date(), Ext.Date.YEAR, 1),
-                      //format: "d/m/y",
-                      margin: '5 0 0 5',
-                      listeners: {
-                        change: function (field, newValue, oldValue) {
-                            if(checkDateConsistency(Ext.getCmp('StartDate'), field)) { // Call new check
-                                BeForechangeFilter();
-                                setCustomDate();
-                            }
+                        change: function () {
+                          BeForechangeFilter();
                         }
                       },
                       cust_object: "shutdown_planning"
                     }, {
                       xtype: 'tbspacer',
-                      width: 20,
-                      id: 'tbspacer5',
+                      width: 40,
+                      id: 'tbspacer4',
                       cust_object: "shutdown_planning"
                     }, {
                       xtype: 'button',
-                      //iconCls: 'toolbarReset', 
-                      text : 'Nouvelle Activité',
-                      margin: '5 0 0 5',
-                      id: "newActivityBtn",
-                      uftId: "newActivityBtn",
-                      name :  "newActivityBtn",
-                      handler: function (e) {
-                        openNewActivityWindow();
-                      },
-                      cust_object: "shutdown_planning"
-                    }, {
-                      xtype: 'tbspacer',
-                      width: 20,
-                      id: 'tbspacer5',
-                      cust_object: "shutdown_planning"
-                    },{
-                      xtype: 'button',
-                      //iconCls: 'toolbarReset', 
-                      text : vBoilerList["button_refresh"],
+                      //iconCls: 'toolbarReset',
+                      text: vBoilerList["button_refresh"],
                       margin: '5 0 0 5',
                       id: "refreshGridbtn",
                       uftId: "refreshGridbtn",
-                      name :  "refreshGridbtn",
+                      name: "refreshGridbtn",
                       handler: function (e) {
                         EAM.Utils.mask(Ext.ComponentQuery.query('#custom_global_div')[0]);
                         Ext.getStore('gantt.undo.store').removeAll();
                         Ext.getStore('gantt.redo.store').removeAll();
                         var vSave = document.getElementById("savebtn");
                         vSave.style.background = "";
-                        tGridFilters={};
-                        Link_removedata=[];
+                        tGridFilters = {};
+                        Link_removedata = [];
                         undoStack = [];
                         redoStack = [];
 
@@ -9239,7 +8406,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     }, {
                       xtype: 'tbspacer',
                       width: 40,
-                      id: 'tbspacer6',
+                      id: 'tbspacer5',
                       cust_object: "shutdown_planning"
                     }, {
                       xtype: 'combobox',
@@ -9258,10 +8425,9 @@ Ext.define('EAM.custom.external_DUPLGR', {
                           Ext.getStore('gantt.redo.store').removeAll();
                           undoStack = [];
                           redoStack = [];
-                          Link_removedata=[];
+                          Link_removedata = [];
                           changeFilter();
-                          
-                 
+
                         }
                       },
                       cust_object: "shutdown_planning"
@@ -9274,7 +8440,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       handler: function () {
                         var vParams = {
                           'USER_FUNCTION_NAME': "BSALPG",
-                          'gridname': "BUPLGD"
+                          'gridname': "PUPRTK"
                         };
 
                         Ext.create('EAM.view.common.popups.Grid', {
@@ -9300,7 +8466,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     }, {
                       xtype: 'tbspacer',
                       width: 40,
-                      id: 'tbspacer7',
+                      id: 'tbspacer6',
                       cust_object: "shutdown_planning"
                     }, {
                       xtype: 'button',
@@ -9316,6 +8482,33 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       },
                       cust_object: "shutdown_planning"
                     }, {
+                      xtype: 'tbspacer',
+                      width: 40,
+                      id: 'tbspacer13',
+                      cust_object: "shutdown_planning"
+                    }, {
+                      xtype: 'button',
+                      text: vBoilerList["button_exporttopng"],
+                      margin: '5 0 0 5',
+                      id: "exporttopng",
+                      handler: function () {
+                        exportToPNG();
+                      },
+                    },{
+                      xtype: 'tbspacer',
+                      width: 40,
+                      id: 'tbspacer13',
+                      cust_object: "shutdown_planning"
+                    }, {
+                      xtype: 'button',
+                      text: vBoilerList["button_exporttopdf"],
+                      margin: '5 0 0 5',
+                      id: "exporttopdf",
+                      handler: function () {
+                        exportToPDF();
+                      },
+                    }, 
+					{
                       xtype: 'tbspacer',
                       width: 40,
                       id: 'tbspacer13',
@@ -9383,8 +8576,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
               var vToolBar2 = Ext.create('Ext.toolbar.Toolbar', {
                 id: "gantt_filter_2",
                 width: '100%',
-                
-                height: 60,
+                height: 40,
                 overflowHandler: 'menu',
                 cust_object: 'shutdown_planning',
                 items: [, {
@@ -9405,7 +8597,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   }, {
                     xtype: 'tbspacer',
                     width: 40,
-                    id: 'tbspacer8',
+                    id: 'tbspacer7',
                     cust_object: "shutdown_planning"
                   }, {
                     xtype: 'label',
@@ -9494,7 +8686,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   }, {
                     xtype: 'tbspacer',
                     width: 40,
-                    id: 'tbspacer9',
+                    id: 'tbspacer8',
                     cust_object: "shutdown_planning"
                   }, {
                     xtype: 'checkbox',
@@ -9519,7 +8711,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   }, {
                     xtype: 'tbspacer',
                     width: 40,
-                    id: 'tbspacer10',
+                    id: 'tbspacer9',
                     cust_object: "shutdown_planning"
                   }, {
                     xtype: 'checkbox',
@@ -9551,7 +8743,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   }, {
                     xtype: 'tbspacer',
                     width: 40,
-                    id: 'tbspacer11',
+                    id: 'tbspacer10',
                     cust_object: "shutdown_planning"
                   }, {
                     xtype: 'checkbox',
@@ -9575,7 +8767,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   }, {
                     xtype: 'tbspacer',
                     width: 40,
-                    id: 'tbspacer15',
+                    id: 'tbspacer14',
                     cust_object: "shutdown_planning"
                   }, {
                     xtype: 'checkbox',
@@ -9599,11 +8791,11 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   }, {
                     xtype: 'tbspacer',
                     width: 40,
-                    id: 'tbspacer15_1',
+                    id: 'tbspacer14_1',
                     cust_object: "shutdown_planning"
                   }, {
                     xtype: 'button',
-                    text: INFORGLOBALS.mod=="expand"?vBoilerList["collapse"]:vBoilerList["expand"],
+                    text: INFORGLOBALS.mod == "expand" ? vBoilerList["collapse"] : vBoilerList["expand"],
                     margin: '5 0 0 5',
                     id: "expcollbtn",
                     handler: function () {
@@ -9613,7 +8805,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   }, {
                     xtype: 'tbspacer',
                     width: 40,
-                    id: 'tbspacer12',
+                    id: 'tbspacer11',
                     cust_object: "shutdown_planning"
                   }, {
                     xtype: 'button',
@@ -9627,7 +8819,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   }, {
                     xtype: 'tbspacer',
                     width: 40,
-                    id: 'tbspacer13',
+                    id: 'tbspacer12',
                     cust_object: "shutdown_planning"
                   }, {
                     xtype: 'button',
@@ -9646,19 +8838,17 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
               Ext.getCmp("custom-div").add(vToolBar2)
 
-              
-
               if (vDdsStore.data.length > 0) {
                 getData();
               }
 
               function ExpandcollapseTasks() {
                 gantt.eachTask(function (task) {
-                  if (INFORGLOBALS.mod == "collapse" && task.type == "WO") {
+                  if (INFORGLOBALS.mod == "collapse" && task.type == "Project") {
                     task.$open = true;
-                    
+
                   } else {
-                    if (task.type == "WO") {
+                    if (task.type == "Project") {
                       task.$open = false;
 
                     }
@@ -9703,7 +8893,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     MADDON_FILTER_OPERATOR_1: "=",
                     MADDON_FILTER_JOINER_1: "AND",
                     MADDON_FILTER_SEQNUM_1: "1",
-                    MADDON_FILTER_VALUE_1: 'TEST'
+                    MADDON_FILTER_VALUE_1: vUser
                   }
                 });
 
@@ -9711,10 +8901,10 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   var vLoad = EAM.Ajax.request({
                     url: "BSUDSC",
                     messagingOptions: {
-                            deferConfirm: !0,
-                            deferWarning: !0,
-                            deferError: !0
-                          },
+                      deferConfirm: !0,
+                      deferWarning: !0,
+                      deferError: !0
+                    },
                     params: {
                       SYSTEM_FUNCTION_NAME: "BSUDSC",
                       USER_FUNCTION_NAME: "1UGFSV",
@@ -9724,19 +8914,19 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       MENU_MODULE_KEY: 0
                     }
                   })
-                  var vRecord = EAM.Ajax.request({
-                    url: "BSUDSC.HDR",
-                    params: {
-                      SYSTEM_FUNCTION_NAME: "BSUDSC",
-                      USER_FUNCTION_NAME: "1UGFSV",
-                      CURRENT_TAB_NAME: "HDR",
-                      wspf_10_user_code: 'TEST',
-                      SCROLLROW: "YES",
-                      pagemode: "view"
-                    }
-                  }).responseData.pageData.values;
+                    var vRecord = EAM.Ajax.request({
+                      url: "BSUDSC.HDR",
+                      params: {
+                        SYSTEM_FUNCTION_NAME: "BSUDSC",
+                        USER_FUNCTION_NAME: "1UGFSV",
+                        CURRENT_TAB_NAME: "HDR",
+                        wspf_10_user_code: vUser,
+                        SCROLLROW: "YES",
+                        pagemode: "view"
+                      }
+                    }).responseData.pageData.values;
                   vRecord["processaction"] = "delete";
-                  vRecord["wspf_10_user_code"] = 'TEST';
+                  vRecord["wspf_10_user_code"] = vUser;
 
                   var vStatus = EAM.Ajax.request({
                     url: "BSUDSC.HDR.deleterecord?pageaction=DELETE",
@@ -9759,7 +8949,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
               function saveFilter() {
                 ////console.log("saveFilter");
                 var vScale = "";
-              
+
                 vScale = Ext.getCmp('viewmode_gantt').value;
 
                 try {
@@ -9777,7 +8967,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     MADDON_FILTER_OPERATOR_1: "=",
                     MADDON_FILTER_JOINER_1: "AND",
                     MADDON_FILTER_SEQNUM_1: "1",
-                    MADDON_FILTER_VALUE_1: 'TEST'
+                    MADDON_FILTER_VALUE_1: vUser
                   }
                 });
 
@@ -9785,10 +8975,10 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   var vLoad = EAM.Ajax.request({
                     url: "BSUDSC",
                     messagingOptions: {
-                            deferConfirm: !0,
-                            deferWarning: !0,
-                            deferError: !0
-                          },
+                      deferConfirm: !0,
+                      deferWarning: !0,
+                      deferError: !0
+                    },
                     params: {
                       SYSTEM_FUNCTION_NAME: "BSUDSC",
                       USER_FUNCTION_NAME: "1UGFSV",
@@ -9799,19 +8989,19 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     }
                   })
 
-                  var vRecord = EAM.Ajax.request({
-                    url: "BSUDSC.HDR",
-                    params: {
-                      SYSTEM_FUNCTION_NAME: "BSUDSC",
-                      USER_FUNCTION_NAME: "1UGFSV",
-                      CURRENT_TAB_NAME: "HDR",
-                      wspf_10_user_code: "*",
-                      SCROLLROW: "YES",
-                      pagemode: "view"
-                    }
-                  }).responseData.pageData.values;
+                    var vRecord = EAM.Ajax.request({
+                      url: "BSUDSC.HDR",
+                      params: {
+                        SYSTEM_FUNCTION_NAME: "BSUDSC",
+                        USER_FUNCTION_NAME: "1UGFSV",
+                        CURRENT_TAB_NAME: "HDR",
+                        wspf_10_user_code: "*",
+                        SCROLLROW: "YES",
+                        pagemode: "view"
+                      }
+                    }).responseData.pageData.values;
                   vRecord["processaction"] = "insert";
-                  vRecord["wspf_10_user_code"] = 'TEST';
+                  vRecord["wspf_10_user_code"] = vUser;
                   vRecord["wspf_10_period"] = Ext.getCmp('period').value;
                   vRecord["wspf_10_view_scale"] = vScale;
                   vRecord["wspf_10_dataspy"] = Ext.getCmp('filter').value;
@@ -9824,12 +9014,12 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     vRecord["wspf_10_highlight_collision"] = "-";
                   }
                   vRecord["wspf_10_expand_collapse"] = INFORGLOBALS.mod;
-                 /*wspf_10_expired_dates */
-                 if (Ext.getCmp("ShowExpired").checked) {
-                  vRecord["wspf_10_expired_dates"] = "+";
-                } else {
-                  vRecord["wspf_10_expired_dates"] = "-";
-                }
+                  /*wspf_10_expired_dates */
+                  if (Ext.getCmp("ShowExpired").checked) {
+                    vRecord["wspf_10_expired_dates"] = "+";
+                  } else {
+                    vRecord["wspf_10_expired_dates"] = "-";
+                  }
                   if (Ext.getCmp("ShowHours").checked) {
                     vRecord["wspf_10_show_hours"] = "+";
                   } else {
@@ -9868,13 +9058,13 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       SYSTEM_FUNCTION_NAME: "BSUDSC",
                       USER_FUNCTION_NAME: "1UGFSV",
                       CURRENT_TAB_NAME: "HDR",
-                      wspf_10_user_code: 'TEST',
+                      wspf_10_user_code: vUser,
                       SCROLLROW: "YES",
                       pagemode: "view"
                     }
                   }).responseData.pageData.values;
                   vRecord["processaction"] = "sync";
-                  vRecord["wspf_10_user_code"] = 'TEST';
+                  vRecord["wspf_10_user_code"] = vUser;
                   vRecord["wspf_10_period"] = Ext.getCmp('period').value;
                   vRecord["wspf_10_view_scale"] = vScale;
                   vRecord["wspf_10_dataspy"] = Ext.getCmp('filter').value;
@@ -9939,7 +9129,6 @@ Ext.define('EAM.custom.external_DUPLGR', {
               }
 
               function updateEAM() {
-                ////console.log("updateEAM");
                 var processStatus;
                 if (document.getElementById("savebtn").style.background == "lightgreen") {
                   EAM.Utils.mask(Ext.ComponentQuery.query('#custom_global_div')[0]);
@@ -9949,7 +9138,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     var vTotalCounter = 0;
                     var vStatus = "";
 
-                    for (let i = 0; i < Link_data.length; i++) {
+                    /*for (let i = 0; i < Link_data.length; i++) {
                       const childWO = Link_data[i].target.split('#')[0]
                         const wo_activity = Link_data[i].target.split('#')[1] == undefined ? null : Link_data[i].target.split('#')[1]
                         const parent_wo = Link_data[i].source.split('#')[0]
@@ -9963,10 +9152,10 @@ Ext.define('EAM.custom.external_DUPLGR', {
                             deferError: !0
                           },
                           params: {
-                            SYSTEM_FUNCTION_NAME: "WSJOBS",
-                            USER_FUNCTION_NAME: "WSJOBS",
+                            SYSTEM_FUNCTION_NAME: "J1PRJ",
+                            USER_FUNCTION_NAME: "J1PRJ",
                             CURRENT_TAB_NAME: "U1",
-                            workordernum: childWO,
+                            projectCodenum: childWO,
                             organization: gantt.getTask(childWO).organization,
                             THROW_EXCEPTION: false,
                             REFRESH_GRID: false,
@@ -9993,12 +9182,12 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       var vStatus = EAM.Ajax.request({
                         url: "BSUDSC.TAB.insertrecord?pageaction=SAVE",
                         params: Ext.merge(vRecordLink, {
-                          SYSTEM_FUNCTION_NAME: "WSJOBS",
-                          USER_FUNCTION_NAME: "WSJOBS",
-                          GRID_NAME: "WSJOBS_U1",
+                          SYSTEM_FUNCTION_NAME: "J1PRJ",
+                          USER_FUNCTION_NAME: "J1PRJ",
+                          GRID_NAME: "J1PRJ_U1",
                           CURRENT_TAB_NAME: "U1",
                           CHECK_CF_CHANGEFLAG: true,
-                          workordernum: childWO,
+                          projectCodenum: childWO,
                           organization: gantt.getTask(childWO).organization,
                           can_update: true,
                           pagemode: "view"
@@ -10009,14 +9198,12 @@ Ext.define('EAM.custom.external_DUPLGR', {
                           deferError: !0
                         }
                       });
-                      if(!vStatus.success){
-
-                      }
+                      if (!vStatus.success) {}
                     }
-
+					*/
                     Link_data = [];
 
-                    for (let i = 0; i < Link_removedata.length; i++) {
+                    /*for (let i = 0; i < Link_removedata.length; i++) {
                       const childWO = Link_removedata[i].target.split('#')[0]
                         const wo_activity = Link_removedata[i].target.split('#')[1] == undefined ? null : Link_removedata[i].target.split('#')[1]
                         const parent_wo = Link_removedata[i].source.split('#')[0]
@@ -10030,10 +9217,10 @@ Ext.define('EAM.custom.external_DUPLGR', {
                             deferError: !0
                           },
                           params: {
-                            SYSTEM_FUNCTION_NAME: "WSJOBS",
-                            USER_FUNCTION_NAME: "WSJOBS",
+                            SYSTEM_FUNCTION_NAME: "J1PRJ",
+                            USER_FUNCTION_NAME: "J1PRJ",
                             CURRENT_TAB_NAME: "U1",
-                            workordernum: childWO,
+                            projectCodenum: childWO,
                             organization: gantt.getTask(childWO).organization,
                             webservicepromptcode: "EULWAS",
                             wspf_10_wo_code: childWO,
@@ -10060,12 +9247,12 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       var vStatus = EAM.Ajax.request({
                         url: "BSUDSC.TAB.deleterecord?pageaction=SAVE",
                         params: Ext.merge(vRecordLink, {
-                          SYSTEM_FUNCTION_NAME: "WSJOBS",
-                          USER_FUNCTION_NAME: "WSJOBS",
-                          GRID_NAME: "WSJOBS_U1",
+                          SYSTEM_FUNCTION_NAME: "J1PRJ",
+                          USER_FUNCTION_NAME: "J1PRJ",
+                          GRID_NAME: "J1PRJ_U1",
                           CURRENT_TAB_NAME: "U1",
                           CHECK_CF_CHANGEFLAG: true,
-                          workordernum: childWO,
+                          projectCodenum: childWO,
                           organization: gantt.getTask(childWO).organization,
                           can_update: true,
                           pagemode: "view"
@@ -10077,55 +9264,54 @@ Ext.define('EAM.custom.external_DUPLGR', {
                         }
                       });
                     }
-
+					*/
                     Link_removedata = []
 
                     gantt.eachTask(function (task) {
-                      if (task.updated == 0 && task.id && task.id.indexOf(")") < 0 && task.id.indexOf("#") < 0) {
-                        //Update WO
-                        var vRecordWO = EAM.Ajax.request({
-                          url: "WSJOBS.HDR",
+                      if (task.updated == 0 && task.id && task.type == "Project") {
+                        //Update Project
+                        var vProjectRecord = EAM.Ajax.request({
+                          url: "JSPROJ.HDR",
                           params: {
-                            SYSTEM_FUNCTION_NAME: "WSJOBS",
-                            USER_FUNCTION_NAME: "WSJOBS", // "WSJOBS",
+                            SYSTEM_FUNCTION_NAME: "JSPROJ",
+                            USER_FUNCTION_NAME: "J1PRJ",
                             CURRENT_TAB_NAME: "HDR",
                             CHECK_CF_CHANGEFLAG: true,
-                            workordernum: task.id,
+                            projectcode: task.id,
                             organization: task.organization,
                             pagemode: "view"
                           }
                         }).responseData.pageData.values;
 
-                        for (var k in vRecordWO) {
-                          if (Ext.isObject(vRecordWO[k])) {
-                            vRecordWO[k] = vRecordWO[k].selected
+                        for (var k in vProjectRecord) {
+                          if (Ext.isObject(vProjectRecord[k])) {
+                            vProjectRecord[k] = vProjectRecord[k].selected
                           }
                         }
 
-                        vRecordWO.schedstartdate = formatDate(task.start_date);
+                        //vProjectRecord.schedstartdate = formatDate(task.start_date);
                         task.end_date.setDate(task.end_date.getDate());
-                        vRecordWO.schedenddate = formatDate(task.end_date);
-                        //vRecordWO.recordid = (Math.floor(vRecordWO.recordid)+1).toString();
+                        //vProjectRecord.schedenddate = formatDate(task.end_date);
+                        //vProjectRecord.recordid = (Math.floor(vProjectRecord.recordid)+1).toString();
 
-                        vRecordWO.udfdate07 = Ext.Date.format(task.start_date, 'm/d/Y H:i');
-                        vRecordWO.udfdate09 = Ext.Date.format(task.end_date, 'm/d/Y H:i');
-                         
+                       /* vProjectRecord.udfdate07 = Ext.Date.format(task.start_date, 'm/d/Y H:i');
+                        vProjectRecord.udfdate09 = Ext.Date.format(task.end_date, 'm/d/Y H:i');
 
-                        var dStart = new Date(EAM.utils.Date.parseDate(vRecordWO.actstartdate));
-                        dStart.setDate(dStart.getDate() + EAM.utils.Date.diffDays(EAM.utils.Date.parseDate(vRecordWO.actstartdate), EAM.utils.Date.parseDate(vRecordWO.schedstartdate)));
+                        var dStart = new Date(EAM.utils.Date.parseDate(vProjectRecord.actstartdate));
+                        dStart.setDate(dStart.getDate() + EAM.utils.Date.diffDays(EAM.utils.Date.parseDate(vProjectRecord.actstartdate), EAM.utils.Date.parseDate(vProjectRecord.schedstartdate)));
 
-                        var dEnd = new Date(EAM.utils.Date.parseDate(vRecordWO.actenddate));
-                        dEnd.setDate(dEnd.getDate() + EAM.utils.Date.diffDays(EAM.utils.Date.parseDate(vRecordWO.actenddate), EAM.utils.Date.parseDate(vRecordWO.schedenddate)));
+                        var dEnd = new Date(EAM.utils.Date.parseDate(vProjectRecord.actenddate));
+                        dEnd.setDate(dEnd.getDate() + EAM.utils.Date.diffDays(EAM.utils.Date.parseDate(vProjectRecord.actenddate), EAM.utils.Date.parseDate(vProjectRecord.schedenddate)));
 
-                        vRecordWO.actstartdate = formatDate(new Date(dStart.getFullYear(), dStart.getMonth(), dStart.getDate(), '00', '00'));
-                        vRecordWO.actenddate = formatDate(new Date(dEnd.getFullYear(), dEnd.getMonth(), dEnd.getDate(), '00', '00'));
-                        vRecordWO.udfchkbox04 = -1;
-
+                        vProjectRecord.actstartdate = formatDate(new Date(dStart.getFullYear(), dStart.getMonth(), dStart.getDate(), '00', '00'));
+                        vProjectRecord.actenddate = formatDate(new Date(dEnd.getFullYear(), dEnd.getMonth(), dEnd.getDate(), '00', '00'));
+                        vProjectRecord.udfchkbox04 = -1;
+*/
                         var vStatus = EAM.Ajax.request({
-                          url: "WSJOBS.HDR?pageaction=SAVE",
-                          params: Ext.merge(vRecordWO, {
-                            SYSTEM_FUNCTION_NAME: "WSJOBS",
-                            USER_FUNCTION_NAME: "WSJOBS",
+                          url: "JSPROJ.HDR?pageaction=SAVE",
+                          params: Ext.merge(vProjectRecord, {
+                            SYSTEM_FUNCTION_NAME: "JSPROJ",
+                            USER_FUNCTION_NAME: "J1PRJ",
                             CURRENT_TAB_NAME: "HDR",
                             CHECK_CF_CHANGEFLAG: true,
                             can_update: true,
@@ -10145,33 +9331,32 @@ Ext.define('EAM.custom.external_DUPLGR', {
                         }
 
                       }; // end if WO Update
-                      if (task.updated == 0 && indexCount(task.id, '#') == 2 && !gantt.hasChild(task.id)) {
+                      if (task.updated == 0 && task.type== "Activity") {
                         // SubActivity Update START
 
-                        var actnumber = task.id.split('#')[1]; //task.parentid.substring(indexact+1,task.parentid.length);
-                        var workOrder = task.id.split('#')[0];
-                        var subact = task.id.split('#')[2];
+                        var projActivity = task.id.split('#')[1]; //task.parentid.substring(indexact+1,task.parentid.length);
+                        var projectCode = task.dds_project;
+                        var prjseq = task.sequence;
 
                         try {
 
                           var vRecd = EAM.Ajax.request({
-                            url: "WSJOBS.ACT",
+                            url: "BSUDSC.TAB",
                             messagingOptions: {
                               deferConfirm: !0,
                               deferWarning: !0,
                               deferError: !0
                             },
                             params: {
-                              "CURRENT_TAB_NAME": "ACT",
+                              "CURRENT_TAB_NAME": "U1",
                               "ONLY_DATA_REQUIRED": "true",
                               "REFRESH_GRID": "false",
-                              "SYSTEM_FUNCTION_NAME": "WSJOBS",
+                              "SYSTEM_FUNCTION_NAME": "JSPROJ",
                               "THROW_EXCEPTION": "false",
-                              "USER_FUNCTION_NAME": "WSJOBS",
+                              "USER_FUNCTION_NAME": "J1PRJ",
                               "eamid": EAM.SessionStorage.getEamId(),
-                              "workordernum": workOrder,
+                              "projectcode": projectCode,
                               "organization": task.organization,
-                              "activity": actnumber,
                               "tenant": EAM.AppData.getTenantId()
                             }
                           }).responseData.pageData.values;
@@ -10188,36 +9373,28 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                             vRecd["can_insert"] = "";
                             vRecd["can_delete"] = "";
-                            vRecd["can_update"] = "";
-                            vRecd["udfdate01"] = Ext.Date.format(task.start_date, 'm/d/Y H:i');
-                            vRecd["udfdate02"] = Ext.Date.format(task.end_date, 'm/d/Y H:i');
-
-                            vRecd["actstartdate"] = Ext.Date.format(task.start_date, 'm/d/Y');
-                            vRecd["actenddate"] = Ext.Date.format(task.end_date, 'm/d/Y');
-                            vRecd["udfchar30"] = task.actudfchar30;
-                            vRecd["udfnum01"] = task.actudfnum01;
-                            //vRecd["wspf_10_pwa_duration"]=(task.duration/60)*parseFloat(task.dds_act_persons)
-                            //vRecd["wspf_10_pwa_duration"]=parseFloat(task.dds_act_est)*parseFloat(task.dds_act_persons)
+                            vRecd["can_update"] = "";							
                             var vStatus = EAM.Ajax.request({
-                              url: "WSJOBS.ACT?pageaction=SAVE",
+                              url: "BSUDSC.TAB.updaterecord?pageaction=SAVE",
                               params: Ext.merge(vRecd, {
-                                SYSTEM_FUNCTION_NAME: "WSJOBS",
-                                USER_FUNCTION_NAME: "WSJOBS",
-                                CURRENT_TAB_NAME: "ACT",
+                                SYSTEM_FUNCTION_NAME: "JSPROJ",
+                                USER_FUNCTION_NAME: "J1PRJ",
+                                CURRENT_TAB_NAME: "U1",
+								can_update: true,
                                 ONLY_DATA_REQUIRED: true
                               })
                             });
                           }
-                          /* var vRecordWOActUpd = EAM.Ajax.request({
+                          /* var vProjectRecordActUpd = EAM.Ajax.request({
                           url: "WSJOBS.ACT",
                           params: {
                           SYSTEM_FUNCTION_NAME: "WSJOBS",
                           USER_FUNCTION_NAME: gantt.custom_settings.wo_wsjobs_screen[task.dds_evt_jobtype]||"WSJOBS",
                           CURRENT_TAB_NAME: "ACT",
                           CHECK_CF_CHANGEFLAG: true,
-                          workordernum:workOrder,
+                          projectcode:projectCode,
                           organization: task.organization,
-                          activity: actnumber,
+                          activity: projActivity,
                           pagemode: "view"
                           },
                           messagingOptions: {
@@ -10226,23 +9403,23 @@ Ext.define('EAM.custom.external_DUPLGR', {
                           deferError: !0
                           }
                           }).responseData.pageData.values;
-                          if(vRecordWOActUpd){
-                          for (var k in vRecordWOActUpd) {
-                          if (Ext.isObject(vRecordWOActUpd[k])) {
-                          vRecordWOActUpd[k] = vRecordWOActUpd[k].selected
+                          if(vProjectRecordActUpd){
+                          for (var k in vProjectRecordActUpd) {
+                          if (Ext.isObject(vProjectRecordActUpd[k])) {
+                          vProjectRecordActUpd[k] = vProjectRecordActUpd[k].selected
                           }
                           }
 
 
-                          vRecordWOActUpd.esthrs = task.duration/60;
-                          vRecordWOActUpd.actstartdate = Ext.Date.format(task.start_date,'m/d/Y')
-                          vRecordWOActUpd.actenddate = Ext.Date.format(task.end_date,'m/d/Y')
+                          vProjectRecordActUpd.esthrs = task.duration/60;
+                          vProjectRecordActUpd.actstartdate = Ext.Date.format(task.start_date,'m/d/Y')
+                          vProjectRecordActUpd.actenddate = Ext.Date.format(task.end_date,'m/d/Y')
 
 
 
                           var vStatusWOUpd = EAM.Ajax.request({
                           url: "WSJOBS.ACT?pageaction=SAVE",
-                          params: Ext.merge(vRecordWOActUpd, {
+                          params: Ext.merge(vProjectRecordActUpd, {
                           SYSTEM_FUNCTION_NAME: "WSJOBS",
                           USER_FUNCTION_NAME: gantt.custom_settings.wo_wsjobs_screen[task.dds_evt_jobtype]||"WSJOBS",
                           CURRENT_TAB_NAME: "ACT",
@@ -10263,33 +9440,33 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                            */
 
-                          var vRecordWO = EAM.Ajax.request({
-                            url: "WSJOBS.HDR",
+                          var vProjectRecord = EAM.Ajax.request({
+                            url: "JSPROJ.HDR",
                             params: {
-                              SYSTEM_FUNCTION_NAME: "WSJOBS",
-                              USER_FUNCTION_NAME: "WSJOBS",
+                              SYSTEM_FUNCTION_NAME: "JSPROJ",
+                              USER_FUNCTION_NAME: "J1PRJ",
                               CURRENT_TAB_NAME: "HDR",
                               CHECK_CF_CHANGEFLAG: true,
-                              workordernum: workOrder,
+                              projectcode: projectCode,
                               organization: task.organization,
                               pagemode: "view"
                             }
                           }).responseData.pageData.values;
 
-                          for (var k in vRecordWO) {
-                            if (Ext.isObject(vRecordWO[k])) {
-                              vRecordWO[k] = vRecordWO[k].selected
+                          for (var k in vProjectRecord) {
+                            if (Ext.isObject(vProjectRecord[k])) {
+                              vProjectRecord[k] = vProjectRecord[k].selected
                             }
                           }
 
-                          if (vRecordWO.udfchkbox04 != "-1") {
-                            vRecordWO.udfchkbox04 = -1;
+                         /* if (vProjectRecord.udfchkbox04 != "-1") {
+                            vProjectRecord.udfchkbox04 = -1; */
 
                             var vStatus = EAM.Ajax.request({
-                              url: "WSJOBS.HDR?pageaction=SAVE",
-                              params: Ext.merge(vRecordWO, {
-                                SYSTEM_FUNCTION_NAME: "WSJOBS",
-                                USER_FUNCTION_NAME: "WSJOBS",
+                              url: "JSPROJ.HDR?pageaction=SAVE",
+                              params: Ext.merge(vProjectRecord, {
+                                SYSTEM_FUNCTION_NAME: "JSPROJ",
+                                USER_FUNCTION_NAME: "J1PRJ",
                                 CURRENT_TAB_NAME: "HDR",
                                 CHECK_CF_CHANGEFLAG: true,
                                 can_update: true,
@@ -10302,7 +9479,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                               }
                             });
 
-                          }
+                        //  }
 
                         } catch (e) {
                           //console.log("InsertPartIntoUDS: " + e)
@@ -10326,7 +9503,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     find = ':param2';
                     re = new RegExp(find, 'g');
                     vMsg = vMsg.replace(re, vTotalCounter);
-                    //parent.EAM.Messaging.showConfirmation(vCounter + " of " + vTotalCounter + " WorkOrder(s) updated successfully.");
+                    //parent.EAM.Messaging.showConfirmation(vCounter + " of " + vTotalCounter + " projectCode(s) updated successfully.");
                     EAM.Messaging.showConfirmation(vMsg);
 
                     processStatus = {
@@ -10388,7 +9565,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
               function getTradeSupplierData() {
                 //var ddsid = Ext.getCmp('shiftfilter').value;
 
-
+								return null;
                 if (Ext.getStore("gantt.suppliertrade.store").data.items.length > 0) {
                   var vData = Ext.getStore("gantt.suppliertrade.store").data.items;
 
@@ -10429,27 +9606,13 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 var ddsid = Ext.getCmp('filter').value;
 
                 ddsid = ddsid.replace(" ", "").replace(",", "").replace(".", "").replace(String.fromCharCode(160), ""); // JPG - TODO: to be improved !
-
-                /*var vList = EAM.Ajax.request({
-                  url: "GRIDDATA",
-                  params: {
-                    SYSTEM_FUNCTION_NAME: "BUPLGD",
-                    USER_FUNCTION_NAME: "BUPLGD",
-                    DATASPY_ID: ddsid,
-                    MADDON_FILTER_ALIAS_NAME_1: "evt_code",
-                    MADDON_FILTER_OPERATOR_1: "=",
-                    MADDON_FILTER_JOINER_1: "AND",
-                    MADDON_FILTER_SEQNUM_1: "1",
-                    MADDON_FILTER_VALUE_1: '*'
-                  }
-                }).responseData;*/
                 var vList = EAM.Ajax.request({
                   url: "GRIDDATA",
                   params: {
-                    USER_FUNCTION_NAME: "BUPLGD",
+                    USER_FUNCTION_NAME: "PUPRTK",
                     IGNORE_CUSTOMFIELDS: 'YES',
                     CACHE_REQUEST: false,
-                    GRID_NAME: "BUPLGD", 
+                    GRID_NAME: "PUPRTK",
                     FETCH_LABELS: true,
                     COMPONENT_INFO_TYPE: 'EDIT_INFO',
                     GRID_TYPE: '',
@@ -10462,16 +9625,16 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 var vDataspyInfo = EAM.Ajax.request({
                   url: "GRIDDATA",
                   params: {
-                      USER_FUNCTION_NAME: "BUPLGD",
-                      IGNORE_CUSTOMFIELDS: 'YES',
-                      CACHE_REQUEST: false,
-                      GRID_NAME: "BUPLGD",
-                      DATASPY_ID: ddsid,
-                      FETCH_LABELS: true,
-                      COMPONENT_INFO_TYPE: 'EDIT_INFO',
-                      GRID_TYPE: '',
-                      DATASPY_FILTER: '',
-                      SKIP_DELEGATE: false
+                    USER_FUNCTION_NAME: "PUPRTK",
+                    IGNORE_CUSTOMFIELDS: 'YES',
+                    CACHE_REQUEST: false,
+                    GRID_NAME: "PUPRTK",
+                    DATASPY_ID: ddsid,
+                    FETCH_LABELS: true,
+                    COMPONENT_INFO_TYPE: 'EDIT_INFO',
+                    GRID_TYPE: '',
+                    DATASPY_FILTER: '',
+                    SKIP_DELEGATE: false
                   }
                 }).responseData;
 
@@ -10483,14 +9646,14 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   fields: [],
                   data: []
                 });
-                if(EAM.Utils.propertyExists(vDataspyInfo,'pageData.grid.GRIDRESULT.TOOLBAR.DATASPYDETAIL.SORTABLE')){
-                  if(vDataspyInfo.pageData.grid.GRIDRESULT.TOOLBAR.DATASPYDETAIL.SORTABLE.length>0){
-                      vDataspyInfo.pageData.grid.GRIDRESULT.TOOLBAR.DATASPYDETAIL.SORTABLE.forEach(function(rec){
-                          vDataspySortSettingStore.add({
-                              "id": rec.ALIAS_NAME,
-                              "type":rec.TYPE
-                            })
-                      })                       
+                if (EAM.Utils.propertyExists(vDataspyInfo, 'pageData.grid.GRIDRESULT.TOOLBAR.DATASPYDETAIL.SORTABLE')) {
+                  if (vDataspyInfo.pageData.grid.GRIDRESULT.TOOLBAR.DATASPYDETAIL.SORTABLE.length > 0) {
+                    vDataspyInfo.pageData.grid.GRIDRESULT.TOOLBAR.DATASPYDETAIL.SORTABLE.forEach(function (rec) {
+                      vDataspySortSettingStore.add({
+                        "id": rec.ALIAS_NAME,
+                        "type": rec.TYPE
+                      })
+                    })
                   }
                 }
 
@@ -10512,7 +9675,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       "description": vDataspyInfo.pageData.grid.GRIDRESULT.GRID.FIELDS.FIELD[i].label,
                       "columnorder": vDataspyInfo.pageData.grid.GRIDRESULT.GRID.FIELDS.FIELD[i].order,
                       "columnwidth": vDataspyInfo.pageData.grid.GRIDRESULT.GRID.FIELDS.FIELD[i].width,
-                      "typeColumn" : vDataspyInfo.pageData.grid.GRIDRESULT.GRID.FIELDS.FIELD[i].type
+                      "typeColumn": vDataspyInfo.pageData.grid.GRIDRESULT.GRID.FIELDS.FIELD[i].type
                     })
                   }
 
@@ -10532,7 +9695,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     SYSTEM_FUNCTION_NAME: "BSUDSC",
                     USER_FUNCTION_NAME: "BUDUSR",
                     CURRENT_TAB_NAME: "U1",
-                    wspf_10_user_code: 'TEST', //change here
+                    wspf_10_user_code: vUser,
                     webservicepromptcode: "BUDUS2",
                     wspf_10_line: "1",
                     pagemode: "view",
@@ -10542,35 +9705,55 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   }
                 }).responseData.pageData.values;
 
-                vWOlist = Ext.JSON.decode(vRecord.wspf_10_c_data);
+                vProjectList = Ext.JSON.decode(vRecord.wspf_10_c_data);
                 vEmpSched = Ext.JSON.decode(vRecord.wspf_10_c_data_schedagt);
+								vProjectList.data.forEach(item => {
+									if (item.startdate) {
+										// Convert DD/MM/YYYY → MM/DD/YYYY HH24:MI:SS
+										let [day, month, year] = item.startdate.split('/');
+										item.startdate = `${month}/${day}/${year} 00:00:00`;
+									}
 
+									if (item.enddate) {
+										let [day, month, year] = item.enddate.split('/');
+										item.enddate = `${month}/${day}/${year} 00:00:00`;
+									}
+								});
                 if (Ext.getStore('gantt.taskschedemp.store')) {
                   Ext.getStore('gantt.taskschedemp.store').destroy();
                 }
-                var vTaskEmployeeStore = Ext.create('Ext.data.Store', {
+                /*var vTaskEmployeeStore = Ext.create('Ext.data.Store', {
                   id: 'gantt.taskschedemp.store',
                   fields: [],
                   data: []
                 });
 
-                vEmpSched.data.forEach(function(rec){
+                vEmpSched.data.forEach(function (rec) {
 
                   var key = rec.taskid;
-                  if(vTaskEmployeeStore.getById(key)){
-                    vTaskEmployeeStore.getById(key).data.data.push({"per_code":rec.per_code,"per_desc":rec.per_desc,"sched_hours":rec.sched_hours,"sched_date":new Date(rec.sched_date)})
-                  }
-                  else{
+                  if (vTaskEmployeeStore.getById(key)) {
+                    vTaskEmployeeStore.getById(key).data.data.push({
+                      "per_code": rec.per_code,
+                      "per_desc": rec.per_desc,
+                      "sched_hours": rec.sched_hours,
+                      "sched_date": new Date(rec.sched_date)
+                    })
+                  } else {
                     vTaskEmployeeStore.add({
                       id: key,
-                      data:[{"per_code":rec.per_code,"per_desc":rec.per_desc,"sched_hours":rec.sched_hours,"sched_date":new Date(rec.sched_date)}]
+                      data: [{
+                          "per_code": rec.per_code,
+                          "per_desc": rec.per_desc,
+                          "sched_hours": rec.sched_hours,
+                          "sched_date": new Date(rec.sched_date)
+                        }
+                      ]
                     })
                   }
 
-                })
+                })*/
 
-
-                calGroups = vWOlist.cal_grp;
+                calGroups = vProjectList.cal_grp;
 
                 if (calGroups.length > 0) {
                   for (k = 0; k < calGroups.length; k++) {
@@ -10596,7 +9779,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     }
                   }
                 }
-                DateSpeList = vWOlist.specifique_dates;
+                /* DateSpeList = vProjectList.specifique_dates;
                 if (DateSpeList.length > 0) {
                   for (k = 0; k < DateSpeList.length; k++) {
                     var DateSpe = DateSpeList[k];
@@ -10620,12 +9803,12 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       DateSpeMap.set(DateSpeList[k].id, map);
                     }
                   }
-                }
+                } */
                 vListOfDaysOF = [];
                 vListOfDayTimeOF = [];
                 vListOfDayTimeOffDetail = [];
 
-                vWOlist.days_off.forEach(function (rec) {
+                /* vProjectList.days_off.forEach(function (rec) {
                   vListOfDaysOF.push(rec.date)
                   if (rec.start_time != "0") {
                     var vStartTime = parseInt(rec.start_time / 3600);
@@ -10642,7 +9825,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     vListOfDayTimeOF.push(rec.date);
                   }
                 })
-                vSupplierList = Ext.JSON.decode(vRecord.wspf_10_c_data_supplier);
+                vSupplierList = Ext.JSON.decode(vRecord.wspf_10_c_data_supplier); */
 
                 parseobj();
 
@@ -10652,36 +9835,38 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 _ScaleDateArray1 = [];
                 _ScaleDateArray2 = [];
                 let dPlanningStartDate = new Date(Ext.getCmp("StartDate").rawDate)
-              
-                dMaxDate = new Date();
+
+                  dMaxDate = new Date();
                 var vSorterList = [];
                 var vDataspySortSettingStore = Ext.getStore('gantt.dataspysorting.settings');
                 var vDDsConfigStore = Ext.getStore('gantt.dataspy.settings');
-                if(vDataspySortSettingStore.data.items.length>0){
-                  vDataspySortSettingStore.data.items.forEach(function(rec){
-                      vSorterList.push({property:'dds_'+rec.data.id, direction:rec.data.type})
+                if (vDataspySortSettingStore.data.items.length > 0) {
+                  vDataspySortSettingStore.data.items.forEach(function (rec) {
+                    vSorterList.push({
+                      property: 'dds_' + rec.data.id,
+                      direction: rec.data.type
+                    })
                   })
-                  
+
                 }
 
-              
-                vSorterList.push({property:'dds_act_act', direction:'ASC'})
+                vSorterList.push({
+                  property: 'dds_act_act',
+                  direction: 'ASC'
+                })
 
-                if (Ext.getStore("gantt.workorder.store")) {
-                  Ext.getStore('gantt.workorder.store').destroy();
+                if (Ext.getStore("gantt.projectCode.store")) {
+                  Ext.getStore('gantt.projectCode.store').destroy();
                 }
-              vListFields.push('id', 'text', 'type', 'start_date', 'end_date', 'desc', 'obj_desc', 'parent', 'color', 'colormem', 'open', 'wo', 'wostatus', 'womrc', 'backgroundColor', 'prev_start', 'prev_end', 'render', 'denied',
-                  'tags', 'organization',  'ctrlregind', 'actest', 'readonly', 'start_date_fmt', 'end_date_fmt', 'supervisor', 'act_trade', 'act_desc',
-                   'main_evt_code', 'due_date', 'original_due_date', 'evt_status_desc')
-              var vWOStore = Ext.create('Ext.data.Store', {
-                  id: 'gantt.workorder.store',
+                vListFields.push('id', 'text', 'type', 'start_date', 'end_date', 'desc', 'obj_desc', 'parent', 'color', 'colormem', 'open', 'wo', 'wostatus', 'womrc', 'backgroundColor', 'prev_start', 'prev_end', 'render', 'denied',
+                  'tags', 'organization', 'ctrlregind', 'actest', 'readonly', 'start_date_fmt', 'end_date_fmt', 'supervisor', 'act_trade', 'act_desc',
+                  'project_code', 'due_date', 'original_due_date', 'evt_status_desc')
+                var vPRJStore = Ext.create('Ext.data.Store', {
+                  id: 'gantt.projectCode.store',
                   fields: [],
                   data: [],
                   sorters: vSorterList
-              });
-                
-
-                
+                });
 
                 var vDataRecord = [];
                 if (Ext.getStore('gantt.taskdatesimpact')) {
@@ -10695,509 +9880,640 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                 var lTaskDates = [];
 
-                var vListOfFieldsForModel =[];
-                vListOfFieldsForModel.push({ name: 'id', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'text', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'type', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'start_date', type: 'date' });
-                vListOfFieldsForModel.push({ name: 'act_act', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'end_date', type: 'date' });
-                vListOfFieldsForModel.push({ name: 'equipment', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'assignedto', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'estimatedhrs', type: 'number' });
-                vListOfFieldsForModel.push({ name: 'desc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'obj_desc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'parent', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'color', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'colormem', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'open', type: 'boolean' });
-                vListOfFieldsForModel.push({ name: 'wo', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'wostatus', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'womrc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_evt_mrc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'backgroundColor', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'prev_start', type: 'date' });
-                vListOfFieldsForModel.push({ name: 'prev_end', type: 'date' });
-                vListOfFieldsForModel.push({ name: 'denied', type: 'boolean' });
-                vListOfFieldsForModel.push({ name: 'tags', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'organization', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'actest', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'readonly', type: 'boolean' });
-                vListOfFieldsForModel.push({ name: 'supervisor', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'act_trade', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'act_desc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'main_evt_code', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'due_date', type: 'date' });
-                vListOfFieldsForModel.push({ name: 'dds_isstype', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_evt_rtype', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_eqjwoclasscolor', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_jobtype_desc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_mrc_desc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_status_desc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_class_desc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_person_desc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_evt_object', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_evt_project', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_evt_object_org', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'dds_priority_desc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'original_due_date', type: 'date' });
-                vListOfFieldsForModel.push({ name: 'evt_status_desc', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'recurringwo', type: 'boolean' });
-                vListOfFieldsForModel.push({ name: 'checked', type: 'boolean' });
-                vListOfFieldsForModel.push({ name: 'dds_act_percomplete', type: 'string' });
-                vListOfFieldsForModel.push({ name: 'risk_collision', type: 'boolean' });
-                vListOfFieldsForModel.push({ name: 'original_start_date', type: 'date' });
-                vListOfFieldsForModel.push({ name: 'original_end_date', type: 'date' });
-                vListOfFieldsForModel.push({ name: 'delayed_wo', type: 'boolean' });
+                var vListOfFieldsForModel = [];
+                vListOfFieldsForModel.push({
+                  name: 'id',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'text',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'type',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'start_date',
+                  type: 'date'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'act_act',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'end_date',
+                  type: 'date'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'equipment',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'assignedto',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'estimatedhrs',
+                  type: 'number'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'desc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'obj_desc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'parent',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'color',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'colormem',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'open',
+                  type: 'boolean'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'wo',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'wostatus',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'womrc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_evt_mrc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'backgroundColor',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'prev_start',
+                  type: 'date'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'prev_end',
+                  type: 'date'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'denied',
+                  type: 'boolean'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'tags',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'organization',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'actest',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'readonly',
+                  type: 'boolean'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'supervisor',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'act_trade',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'act_desc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'project_code',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'due_date',
+                  type: 'date'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_isstype',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_evt_rtype',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_eqjwoclasscolor',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_jobtype_desc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_mrc_desc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_status_desc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_class_desc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_person_desc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_evt_object',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_evt_project',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_evt_object_org',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_priority_desc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'original_due_date',
+                  type: 'date'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'evt_status_desc',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'recurringwo',
+                  type: 'boolean'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'checked',
+                  type: 'boolean'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'dds_act_percomplete',
+                  type: 'string'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'risk_collision',
+                  type: 'boolean'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'original_start_date',
+                  type: 'date'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'original_end_date',
+                  type: 'date'
+                });
+                vListOfFieldsForModel.push({
+                  name: 'delayed_wo',
+                  type: 'boolean'
+                });
 
-                Ext.getStore('gantt.dataspy.settings').each(function(rec){
+                Ext.getStore('gantt.dataspy.settings').each(function (rec) {
                   var vType = "string";
-                  if(["VARCHAR","MIXVARCHAR","LONG","CLOB"].indexOf(rec.data.typeColumn)>-1){
-                    vType="string"
+                  if (["VARCHAR", "MIXVARCHAR", "LONG", "CLOB"].indexOf(rec.data.typeColumn) > -1) {
+                    vType = "string"
                   }
-                  if(["CHKBOOLEAN"].indexOf(rec.data.typeColumn)>-1){
-                    vType="boolean"
+                  if (["CHKBOOLEAN"].indexOf(rec.data.typeColumn) > -1) {
+                    vType = "boolean"
                   }
-                  if(["DATE","DATETIME","TSMIDNIGHT"].indexOf(rec.data.typeColumn)>-1){
-                    vType="date"
+                  if (["DATE", "DATETIME", "TSMIDNIGHT"].indexOf(rec.data.typeColumn) > -1) {
+                    vType = "date"
                   }
-                  if(["CURRENCY","NUMBER","DECIMAL","DURATION"].indexOf(rec.data.typeColumn)>-1){
-                    vType="number"                          
+                  if (["CURRENCY", "NUMBER", "DECIMAL", "DURATION"].indexOf(rec.data.typeColumn) > -1) {
+                    vType = "number"
                   }
 
-                  vListOfFieldsForModel.push({ name: rec.data.id, type: vType });
-
+                  vListOfFieldsForModel.push({
+                    name: rec.data.id,
+                    type: vType
+                  });
 
                 })
 
-
-                
-
                 Ext.define('WoStoreModel', {
-                    extend: 'Ext.data.Model',
-                    fields: vListOfFieldsForModel
+                  extend: 'Ext.data.Model',
+                  fields: vListOfFieldsForModel
                 });
-                vWOStore.setModel('WoStoreModel');
+                vPRJStore.setModel('WoStoreModel');
 
+                for (i = 0; i < vProjectList.data.length; i++) {
 
-
-                for (i = 0; i < vWOlist.data.length; i++) {
-                 
-
-                  // TODO : Mieux gérer la convertion de dates selon la config utilisateur (local)
-                  if (vWOlist.data[i].evt_target_form != "") {
+                  // TODO : Mieux gÃ©rer la convertion de dates selon la config utilisateur (local)
+                  if (vProjectList.data[i].startdate != "") {
                     let bDelayedWO = false;
-                    if (!vWOlist.data[i].evt_schedend_form) {
-                      vWOlist.data[i].evt_schedend_form = vWOlist.data[i].evt_target_form
+                    if (!vProjectList.data[i].enddate) {
+                      vProjectList.data[i].enddate = vProjectList.data[i].startdate
                     };
-                  
-                     
+
                     let vDateRetenue = new Date();
 
-                    let dStartDate= new Date(vWOlist.data[i].evt_target_form);
-                    let dEndDate = new Date(vWOlist.data[i].evt_schedend_form);
-                    let dOriginalStartDate= new Date(vWOlist.data[i].evt_target_form);
-                    let dOriginalEndDate = new Date(vWOlist.data[i].evt_schedend_form);
-                    if(parseFloat(Ext.Date.format(dPlanningStartDate,'Ymd')) > parseFloat(Ext.Date.format(dStartDate,'Ymd'))){
+                    let dStartDate = new Date(vProjectList.data[i].startdate);
+                    let dEndDate = new Date(vProjectList.data[i].enddate);
+                    let dOriginalStartDate = new Date(vProjectList.data[i].startdate);
+                    let dOriginalEndDate = new Date(vProjectList.data[i].enddate);
+                    if (parseFloat(Ext.Date.format(dPlanningStartDate, 'Ymd')) > parseFloat(Ext.Date.format(dStartDate, 'Ymd'))) {
                       dStartDate = new Date(dPlanningStartDate);
                       dStartDate.setHours(dOriginalStartDate.getHours());
                       dStartDate.setMinutes(dOriginalStartDate.getMinutes());
-                      let dDiff = Ext.Date.diff(new Date(Ext.Date.format(new Date(dOriginalStartDate),"m/d/Y")),new Date(Ext.Date.format(new Date(dOriginalEndDate),"m/d/Y")),Ext.Date.DAY);
-                      dEndDate = new Date(Ext.Date.format(new Date(dStartDate),'m/d/Y'));
-                      dEndDate.setDate(dEndDate.getDate()+dDiff);
+                      let dDiff = Ext.Date.diff(new Date(Ext.Date.format(new Date(dOriginalStartDate), "m/d/Y")), new Date(Ext.Date.format(new Date(dOriginalEndDate), "m/d/Y")), Ext.Date.DAY);
+                      dEndDate = new Date(Ext.Date.format(new Date(dStartDate), 'm/d/Y'));
+                      dEndDate.setDate(dEndDate.getDate() + dDiff);
                       dEndDate.setHours(dOriginalEndDate.getHours());
                       dEndDate.setMinutes(dOriginalEndDate.getMinutes());
-                      bDelayedWO= true;
+                      bDelayedWO = true;
                     }
 
-                    
                     let vDueDate = new Date(dStartDate)
-                    if(vWOlist.data[i].evt_due!=""&&vWOlist.data[i].evt_due!=undefined){
-                      vDueDate= new Date(vWOlist.data[i].evt_due)
-                    }
-                    if (dEndDate.getHours() == 0) {
+                      if (vProjectList.data[i].evt_due != "" && vProjectList.data[i].evt_due != undefined) {
+                        vDueDate = new Date(vProjectList.data[i].evt_due)
+                      }
+                      if (dEndDate.getHours() == 0) {
                         dEndDate.setHours(23);
                         dEndDate.setMinutes(59);
-                    };
+                      };
                     if (dMaxDate < dEndDate) {
                       dMaxDate = dEndDate;
                     }
-                   
-                    var vActEst = parseFloat(vWOlist.data[i].esthours); 
-                    var vWorkOrderCode = "";
+
+                    var vActEst = parseFloat(vProjectList.data[i].esthours);
+                    var vProjectCode = "";
                     var vActivityCode = "";
                     var vSubActivityCode = "";
 
-                    if (vWOlist.data[i].evt_code.indexOf("#") > -1) {
-                      vWorkOrderCode = vWOlist.data[i].evt_code.split("#")[0]
-                        vActivityCode = vWOlist.data[i].evt_code.split("#")[1]
-                        vSubActivityCode = vWOlist.data[i].evt_code.split("#")[2]
+                    if (vProjectList.data[i].proj_code.indexOf("#") > -1) {
+                      vProjectCode = vProjectList.data[i].proj_code.split("#")[0]
+                        vActivityCode = vProjectList.data[i].proj_code.split("#")[2]
+                        vSubActivityCode = "0";//vProjectList.data[i].proj_code.split("#")[2]""
                     } else {
-                      vWorkOrderCode = vWOlist.data[i].evt_code
+                      vProjectCode = vProjectList.data[i].proj_code
                     }
 
-                    
+                    if (vProjectCode != "") {
 
+                      vActEst = parseFloat(vActEst.toFixed(1));
 
-                    if (vWorkOrderCode != "") {  
-
-                      
-                      
-                      vActEst = parseFloat(vActEst.toFixed(1)); 
-
-                      if (vWOStore.getById(vWorkOrderCode)) {
+                      if (vPRJStore.getById(vProjectCode)) {
                         //not to do because not anymore needed
 
                       } else {
 
-                        
                         // Create WO record
                         var vReadOnly = false;
-                        var vColorClasse = vWOlist.data[i].eqjwoclasscolor;
+                        var vColorClasse = vProjectList.data[i].eqjwoclasscolor;
                         var vUnScheduled = 0;
 
-
-                        if (vWOlist.data[i].evt_code.indexOf("(") > 0) {
+                        if (vProjectList.data[i].proj_code.indexOf("(") > 0) {
                           vReadOnly = true;
                         } else {
-                          if (vWOlist.data[i].evt_rstatus == "C") {
+                          if (vProjectList.data[i].prjstatus == "C") {
                             vReadOnly = true;
-                          } else {
+                          }
+						  if (vProjectList.data[i].prjupdate == "0") {
+                            vReadOnly = true;
+                          }
+						  else {
                             vReadOnly = false;
                           }
                         }
 
-                        if(WOFieldsAttributes.hasOwnProperty("schedstartdate")&&WOFieldsAttributes.hasOwnProperty("udfdate07")){
-                          if(WOFieldsAttributes.schedstartdate=="protected"||WOFieldsAttributes.schedstartdate=="hidden"||WOFieldsAttributes.udfdate07=="protected"||WOFieldsAttributes.udfdate07=="hidden"){
-                            vReadOnly= true;
-                          }
-                        }
-                        var vPerson = vWOlist.data[i].evt_person;
+                        var vPerson = vProjectList.data[i].evt_person;
                         if (!vPerson) {
                           vPerson = ''
                         };
-                        var vActEst = 0 //parseFloat(vWOlist.data[i].esthours);
+                        var vActEst = 0 //parseFloat(vProjectList.data[i].esthours);
                           vActEst = parseFloat(vActEst.toFixed(1));
-                        var MainCodeEVt;
-                        if (vWorkOrderCode.indexOf("(") > 0) {
-                          MainCodeEVt = vWorkOrderCode.substr(0, vWOlist.data[i].evt_code.indexOf("("));
+                        var ProjectCode;
+                        if (vProjectCode.indexOf("(") > 0) {
+                          ProjectCode = vProjectCode.substr(0, vProjectList.data[i].proj_code.indexOf("("));
                         } else {
-                          MainCodeEVt = vWorkOrderCode;
+                          ProjectCode = vProjectCode;
                         }
 
                         var vDesc;
-                        var vNewColor = gantt.custom_settings.wo_type_color[vWOlist.data[i].eqjwoclasscolor];
-                        if(vWOlist.data[i].status_color!=""&&vWOlist.data[i].status_color!=null){
-                              var className = 'inline-icon.inverse.'+vWOlist.data[i].status_color.toLowerCase();
-                              for (let i = 0; i < document.styleSheets.length; i++) {
-                                  const styleSheet = document.styleSheets[i];
-                                  
-                                  try {
-                                      // Vérifier si la feuille de style est accessible
-                                      const rules = styleSheet.cssRules || styleSheet.rules; // Pour Firefox et autres
-                  
-                                      // Parcourir les règles de la feuille de style
-                                      for (let j = 0; j < rules.length; j++) {
-                                          const rule = rules[j];
-                  
-                                          // Vérifier si la règle correspond exactement à la classe souhaitée
-                                          if (rule.selectorText) {
-                                              // On utilise une expression régulière pour correspondre exactement
-                                              const regex = new RegExp(`^\\.${className}\\b`);
-                                          
-                                              if (regex.test(rule.selectorText)) {
-                                                  vNewColor = rule.style.backgroundColor;
-                                                  //console.log(`Règle trouvée pour ${className}: ${rule.cssText}`);
-                                              }//
-                                          }
-                                      }
-                                  } catch (e) {
-                                      console.warn(`La feuille de style ${styleSheet.href} ne peut pas être accédée : ${e}`);
-                                  }
+                        var vNewColor = gantt.custom_settings.wo_type_color[vProjectList.data[i].eqjwoclasscolor];
+                        if (vProjectList.data[i].status_color != "" && vProjectList.data[i].status_color != null) {
+                          var className = 'inline-icon.inverse.' + vProjectList.data[i].status_color.toLowerCase();
+                          for (let i = 0; i < document.styleSheets.length; i++) {
+                            const styleSheet = document.styleSheets[i];
+
+                            try {
+                              // VÃ©rifier si la feuille de style est accessible
+                              const rules = styleSheet.cssRules || styleSheet.rules; // Pour Firefox et autres
+
+                              // Parcourir les rÃ¨gles de la feuille de style
+                              for (let j = 0; j < rules.length; j++) {
+                                const rule = rules[j];
+
+                                // VÃ©rifier si la rÃ¨gle correspond exactement Ã  la classe souhaitÃ©e
+                                if (rule.selectorText) {
+                                  // On utilise une expression rÃ©guliÃ¨re pour correspondre exactement
+                                  const regex = new RegExp(`^\\.${className}\\b`);
+
+                                  if (regex.test(rule.selectorText)) {
+                                    vNewColor = rule.style.backgroundColor;
+                                    //console.log(`RÃ¨gle trouvÃ©e pour ${className}: ${rule.cssText}`);
+                                  } //
+                                }
                               }
+                            } catch (e) {
+                              console.warn(`La feuille de style ${styleSheet.href} ne peut pas Ãªtre accÃ©dÃ©e : ${e}`);
+                            }
+                          }
                         }
 
-                        
-
-
-                        if (vWOlist.data[i].eqjwoclasscolor.indexOf('pm_') >= 0 && vWOlist.data[i].evt_code.indexOf("(") < 0) {
+                        /* if (vProjectList.data[i].eqjwoclasscolor.indexOf('pm_') >= 0 && vProjectList.data[i].proj_code.indexOf("(") < 0) {
                           if (dStartDate > vDueDate) {
                             vNewColor = "#be2c0d";
-                            vDesc = "<table style='width:100%;'><tr><td>" + vWOlist.data[i].evt_desc + "</td></tr><tr><td>" + vWOlist.data[i].obj_desc + "</td></tr><tr></tr></table>";
+                            vDesc = "<table style='width:100%;'><tr><td>" + vProjectList.data[i].prj_desc + "</td></tr><tr><td>" + vProjectList.data[i].obj_desc + "</td></tr><tr></tr></table>";
                           } else {
-                            vDesc = "<table style='width:100%;'><tr><td>" + vWOlist.data[i].evt_desc + "</td></tr><tr><td>" + vWOlist.data[i].obj_desc + "</td></tr><tr></tr></table>";
+                            vDesc = "<table style='width:100%;'><tr><td>" + vProjectList.data[i].prj_desc + "</td></tr><tr><td>" + vProjectList.data[i].obj_desc + "</td></tr><tr></tr></table>";
                           }
                         } else {
-                           vDesc = "<table style='width:100%;'><tr><td>" + vWOlist.data[i].evt_desc + "</td></tr><tr><td>" + vWOlist.data[i].obj_desc + "</td></tr></table>";
-                        }
+                          vDesc = "<table style='width:100%;'><tr><td>" + vProjectList.data[i].prj_desc + "</td></tr><tr><td>" + vProjectList.data[i].obj_desc + "</td></tr></table>";
+                        } */
 
                         //Amazon Scheduling tool code ends here
-
-                        
 
 
                         Ext.getStore('gantt.dataspy.settings').each(function (rec) {
                           var vElement = rec.data.id;
-                          var vValue = vWOlist.data[i][rec.data.orig_name]
-                          if(Ext.ClassManager.get('WoStoreModel').getField(vElement).type=="date"){
-                            if(vValue||""!=""){
-                              vDataRecord[vElement] = EAM.Utils.dateObjectFromString(vValue);
-                            }
-                            else{
+                          var vValue = vProjectList.data[i][rec.data.orig_name]
+                            if (Ext.ClassManager.get('WoStoreModel').getField(vElement).type == "date") {
+                              if (vValue || "" != "") {
+                                vDataRecord[vElement] = EAM.Utils.dateObjectFromString(vValue);
+                              } else {
+                                vDataRecord[vElement] = vValue || "";
+                              }
+                            } else {
                               vDataRecord[vElement] = vValue || "";
                             }
-                          }
-                          else{
-                            vDataRecord[vElement] = vValue || "";
-                          }                          
                         });
-                      
 
-                        
-
-                        
-
-                        vWOStore.add(new Ext.data.Record({
-                            id: vWorkOrderCode,
-                            text: vWOlist.data[i].evt_desc,
-                            type: "WO",
+                        vPRJStore.add(new Ext.data.Record({
+                            id: vProjectCode,
+                            text: vProjectList.data[i].prjdesc,
+                            type: "Project",
                             start_date: dStartDate,
                             act_act: "0000",
                             end_date: dEndDate,
-                            equipment: vWOlist.data[i].evt_object,
+                            //equipment: vProjectList.data[i].evt_object,
                             assignedto: vPerson,
-                            estimatedhrs: 0, //parseFloat(vWOlist.data[i].esthours).toFixed(2),
-                            desc: vWOlist.data[i].evt_desc,
-                            obj_desc: vWOlist.data[i].obj_desc,
+                            estimatedhrs: 0, //parseFloat(vProjectList.data[i].esthours).toFixed(2),
+                            desc: vProjectList.data[i].prj_desc,
+                            //obj_desc: vProjectList.data[i].obj_desc,
                             parent: "",
                             color: vNewColor,
                             colormem: vNewColor,
-                            open: INFORGLOBALS.mod=="expand"?true:false,
-                            wo: vWOlist.data[i].evt_code,
-                            wostatus: vWOlist.data[i].evt_status,
-                            womrc: vWOlist.data[i].evt_mrc,
-                            dds_evt_mrc: vWOlist.data[i].evt_mrc,
+                            open: INFORGLOBALS.mod == "expand" ? true : false,
+                            wo: vProjectList.data[i].proj_code,
+                            wostatus: vProjectList.data[i].prjstatus,
+                            //womrc: vProjectList.data[i].evt_mrc,
+                            //dds_evt_mrc: vProjectList.data[i].evt_mrc,
                             backgroundColor: 'transparent',
-                            prev_start: dStartDate,
-                            prev_end: dEndDate,
+                            //prev_start: dStartDate,
+                            //prev_end: dEndDate,
                             denied: false,
-                            tags: vWOlist.data[i].evt_code + ' ' + vWOlist.data[i].evt_desc + ' ' + vWOlist.data[i].evt_object + ' ' + vPerson + ' ' + vWOlist.data[i].evt_schedend_form + ' ' + vWOlist.data[i].evt_target_form,
-                            organization: vWOlist.data[i].evt_org,
-                            actest: vActEst.toString(),
+                            tags: vProjectList.data[i].proj_code + ' ' + vProjectList.data[i].prj_desc+ ' ' + vProjectList.data[i].enddate + ' ' + vProjectList.data[i].startdate,
+                            organization: vProjectList.data[i].organization,
+                            //actest: vActEst.toString(),
                             readonly: vReadOnly,
-                            supervisor: "",
-                            act_trade: "",
-                            act_desc: "",
-                            main_evt_code: MainCodeEVt,
-                            due_date: "",
+                            //supervisor: "",
+                            //act_trade: "",
+                           // act_desc: "",
+                            project_code: vProjectCode,
+							sequence :vProjectList.data[i].plp_seq,
+                            /*due_date: "",
                             dds_isstype: '',
                             dds_evt_rtype: '',
                             dds_eqjwoclasscolor: '',
-                            dds_jobtype_desc: vWOlist.data[i].jobtype_desc,
-                            dds_mrc_desc: vWOlist.data[i].mrc_desc,
-                            dds_status_desc: vWOlist.data[i].status_desc,
-                            dds_class_desc: vWOlist.data[i].class_desc,
-                            dds_person_desc: vWOlist.data[i].person_desc,
-                            dds_evt_object: vWOlist.data[i].evt_object,
-                            dds_evt_project: vWOlist.data[i].evt_project,
-                            dds_evt_object_org: vWOlist.data[i].evt_object_org,
-                            dds_mrc_desc: vWOlist.data[i].mrc_desc,
-                            dds_priority_desc: vWOlist.data[i].priority_desc,
+                            dds_jobtype_desc: vProjectList.data[i].jobtype_desc,
+                            dds_mrc_desc: vProjectList.data[i].mrc_desc,
+                            dds_status_desc: vProjectList.data[i].status_desc,
+                            dds_class_desc: vProjectList.data[i].class_desc,
+                            dds_person_desc: vProjectList.data[i].person_desc,
+                            dds_evt_object: vProjectList.data[i].evt_object,
+                            dds_evt_project: vProjectList.data[i].evt_project,
+                            dds_evt_object_org: vProjectList.data[i].evt_object_org,
+                            dds_mrc_desc: vProjectList.data[i].mrc_desc,
+                            dds_priority_desc: vProjectList.data[i].priority_desc,
                             original_due_date: '',
                             evt_status_desc: '',
-                            recurringwo: vWOlist.data[i].recurrentwo,
+                            recurringwo: vProjectList.data[i].recurrentwo,
+                            dds_act_percomplete: "",
+                            dds_class_desc: vProjectList.data[i].class_desc,
+                            risk_collision: vProjectList.data[i].evt_udfchkbox04,*/
                             checked: false,
                             act_act: null,
-                            dds_act_percomplete: "",
-                            dds_class_desc: vWOlist.data[i].class_desc,
-                            risk_collision: vWOlist.data[i].evt_udfchkbox04,
-                            original_start_date : dOriginalStartDate,
-                            original_end_date : dOriginalEndDate,
+                            original_start_date: dOriginalStartDate,
+                            original_end_date: dOriginalEndDate,
                             delayed_wo: bDelayedWO
 
                           }));
 
-                        vWOStore.getById(vWorkOrderCode).mergeData(vDataRecord)
+                        vPRJStore.getById(vProjectCode).mergeData(vDataRecord)
                       }
                       if (vActivityCode != "" && vSubActivityCode == "0") {
 
-
-                        
-                        
                         var vReadOnly = false;
-                        var vParent = vWorkOrderCode;
-                        var vColorClasse = vWOlist.data[i].eqjwoclasscolor;
+                        var vParent = vProjectCode;
+                        var vColorClasse = vProjectList.data[i].eqjwoclasscolor;
                         var vUnScheduled = 0;
 
-                        if (vWOlist.data[i].evt_rstatus == "C") {
+                        if (vProjectList.data[i].prjstatus == "C") {
                           vReadOnly = true;
-                        } else {
+                        }
+						if (vProjectList.data[i].actupdate == "0") {
+                            vReadOnly = true;
+                        }
+						if (vProjectList.data[i].advance == "100") {
+							vReadOnly = true;
+						}
+						else {
                           vReadOnly = false;
                         }
-                        if(WOFieldsAttributes.hasOwnProperty("schedstartdate")&&WOFieldsAttributes.hasOwnProperty("udfdate07")){
-                          if(WOFieldsAttributes.schedstartdate=="protected"||WOFieldsAttributes.schedstartdate=="hidden"||WOFieldsAttributes.udfdate07=="protected"||WOFieldsAttributes.udfdate07=="hidden"){
-                            vReadOnly= true;
-                          }
-                        }
-                        var vPerson = vWOlist.data[i].evt_person;
+                        var vPerson = vProjectList.data[i].evt_person;
                         if (!vPerson) {
                           vPerson = ''
                         };
-                        var vActEst = 0 //parseFloat(vWOlist.data[i].esthours);
+                        var vActEst = 0 //parseFloat(vProjectList.data[i].esthours);
                           vActEst = parseFloat(vActEst.toFixed(1));
-                        var MainCodeEVt;
+                        var ProjectCode;
 
-                        MainCodeEVt = vWorkOrderCode;
+                        ProjectCode = vProjectCode;
 
                         var vDesc;
 
-                        vNewColor = "#6D706E";//gantt.custom_settings.wo_type_color[vWOlist.data[i].act_assignmentstatus];
-                        vDesc = vWOlist.data[i].act_note || vWOlist.data[i].evt_desc
-                        Ext.getStore('gantt.dataspy.settings').each(function (rec) {
-                          var vElement = rec.data.id;
-                          var vValue = vWOlist.data[i][rec.data.orig_name]
-                          if(Ext.ClassManager.get('WoStoreModel').getField(vElement).type=="date"){
-                            if(vValue||""!=""){
-                              vDataRecord[vElement] = EAM.Utils.dateObjectFromString(vValue);
-                            }
-                            else{
-                              vDataRecord[vElement] = vValue || "";
-                            }
-                          }
-                          else{
-                            vDataRecord[vElement] = vValue || "";
-                          }                          
-                        });
-                        if (vWOlist.data[i].pwa_start_frm != "") {
-                            vStartdateformat = new Date(vWOlist.data[i].pwa_start_frm);
-                          
-                        } 
+                        vNewColor = "#6D706E"; //gantt.custom_settings.wo_type_color[vProjectList.data[i].act_assignmentstatus];
+                        vDesc = vProjectList.data[i].act_note || vProjectList.data[i].prj_desc
+                          Ext.getStore('gantt.dataspy.settings').each(function (rec) {
+                            var vElement = rec.data.id;
+                            var vValue = vProjectList.data[i][rec.data.orig_name]
+                              if (Ext.ClassManager.get('WoStoreModel').getField(vElement).type == "date") {
+                                if (vValue || "" != "") {
+                                  vDataRecord[vElement] = EAM.Utils.dateObjectFromString(vValue);
+                                } else {
+                                  vDataRecord[vElement] = vValue || "";
+                                }
+                              } else {
+                                vDataRecord[vElement] = vValue || "";
+                              }
+                          });
+                        if (vProjectList.data[i].startdate != "") {
+                          vStartdateformat = new Date(vProjectList.data[i].startdate);
 
-                        if (vWOlist.data[i].pwa_end_frm != "") {
-                            vEnddateformat = new Date(vWOlist.data[i].pwa_end_frm);
-                          
                         }
-                        let dOriginalActStartDate= new Date(vWOlist.data[i].pwa_start_frm);
-                        let dOriginalActEndDate = new Date(vWOlist.data[i].pwa_end_frm);
-                        if(parseFloat(Ext.Date.format(dPlanningStartDate,'Ymd')) > parseFloat(Ext.Date.format(vStartdateformat,'Ymd'))){
-                            let dDiff_Act = Ext.Date.diff(new Date(Ext.Date.format(new Date(dOriginalStartDate),"m/d/Y")),new Date(Ext.Date.format(new Date(vStartdateformat),"m/d/Y")),Ext.Date.DAY);
-                            vStartdateformat = new Date(dPlanningStartDate);
-                            vStartdateformat.setDate(vStartdateformat.getDate()+dDiff_Act);
-                            if(parseFloat(Ext.Date.format(dPlanningStartDate,'Ymd')) > parseFloat(Ext.Date.format(vStartdateformat,'Ymd'))){
-                                vStartdateformat = new Date(dPlanningStartDate);
-                            }
-                            vStartdateformat.setHours(dOriginalActStartDate.getHours());
-                            vStartdateformat.setMinutes(dOriginalActStartDate.getMinutes());
-                            let dDiff_Act2 = Ext.Date.diff(new Date(Ext.Date.format(new Date(dOriginalActStartDate),"m/d/Y")),new Date(Ext.Date.format(new Date(dOriginalActEndDate),"m/d/Y")),Ext.Date.DAY);
-                            vEnddateformat = new Date(Ext.Date.format(new Date(vStartdateformat),'m/d/Y'));
-                            vEnddateformat.setDate(vEnddateformat.getDate()+dDiff_Act2);
-                            vEnddateformat.setHours(dOriginalActEndDate.getHours());
-                            vEnddateformat.setMinutes(dOriginalActEndDate.getMinutes());
-                            bDelayedWO= true;
-                        } 
 
-                        if(vEnddateformat.getHours()==0){
+                        if (vProjectList.data[i].enddate != "") {
+                          vEnddateformat = new Date(vProjectList.data[i].enddate);
+
+                        }
+                        let dOriginalActStartDate = new Date(vProjectList.data[i].startdate);
+                        let dOriginalActEndDate = new Date(vProjectList.data[i].enddate);
+                        if (parseFloat(Ext.Date.format(dPlanningStartDate, 'Ymd')) > parseFloat(Ext.Date.format(vStartdateformat, 'Ymd'))) {
+                          let dDiff_Act = Ext.Date.diff(new Date(Ext.Date.format(new Date(dOriginalStartDate), "m/d/Y")), new Date(Ext.Date.format(new Date(vStartdateformat), "m/d/Y")), Ext.Date.DAY);
+                          vStartdateformat = new Date(dPlanningStartDate);
+                          vStartdateformat.setDate(vStartdateformat.getDate() + dDiff_Act);
+                          if (parseFloat(Ext.Date.format(dPlanningStartDate, 'Ymd')) > parseFloat(Ext.Date.format(vStartdateformat, 'Ymd'))) {
+                            vStartdateformat = new Date(dPlanningStartDate);
+                          }
+                          vStartdateformat.setHours(dOriginalActStartDate.getHours());
+                          vStartdateformat.setMinutes(dOriginalActStartDate.getMinutes());
+                          let dDiff_Act2 = Ext.Date.diff(new Date(Ext.Date.format(new Date(dOriginalActStartDate), "m/d/Y")), new Date(Ext.Date.format(new Date(dOriginalActEndDate), "m/d/Y")), Ext.Date.DAY);
+                          vEnddateformat = new Date(Ext.Date.format(new Date(vStartdateformat), 'm/d/Y'));
+                          vEnddateformat.setDate(vEnddateformat.getDate() + dDiff_Act2);
+                          vEnddateformat.setHours(dOriginalActEndDate.getHours());
+                          vEnddateformat.setMinutes(dOriginalActEndDate.getMinutes());
+                          bDelayedWO = true;
+                        }
+
+                        if (vEnddateformat.getHours() == 0) {
                           vEnddateformat.setHours(23);
                           vEnddateformat.setMinutes(59);
                         }
 
                         /*Initiaite the task impact*/
 
-                        var dDateTemp = new Date(Ext.Date.format(vStartdateformat,'m/d/Y')),
-                        dDateTemp2 = new Date(Ext.Date.format(vEnddateformat,'m/d/Y')),
+                        var dDateTemp = new Date(Ext.Date.format(vStartdateformat, 'm/d/Y')),
+                        dDateTemp2 = new Date(Ext.Date.format(vEnddateformat, 'm/d/Y')),
                         nNbOcurr = 0,
-                        nHrsPerDay = parseFloat(vWOlist.data[i].act_est)
+                        nHrsPerDay = parseFloat(vProjectList.data[i].act_est)
 
-                        lTaskDates=[];
+                          lTaskDates = [];
 
-                        while (dDateTemp<=dDateTemp2){
-                          nNbOcurr++;                           
-                          lTaskDates.push(Ext.Date.format(dDateTemp,'m/d/Y'));
-                          dDateTemp.setDate(dDateTemp.getDate()+1)
+                        while (dDateTemp <= dDateTemp2) {
+                          nNbOcurr++;
+                          lTaskDates.push(Ext.Date.format(dDateTemp, 'm/d/Y'));
+                          dDateTemp.setDate(dDateTemp.getDate() + 1)
                         }
 
-                        var vRelatedResource =""
-                         if (vWOlist.data[i].act_supplier === "") {                           
-                          vRelatedResource= vWOlist.data[i].evt_mrc
-                        } else {
-                          vRelatedResource= vWOlist.data[i].act_supplier
-                        }
-                        nHrsPerDay =parseFloat((nHrsPerDay /(nNbOcurr==0?1:nNbOcurr)).toFixed(1))
-                        vTaskDatesImpact.add({
-                          id: vWorkOrderCode + '#' + vActivityCode + '#0',
-                          dates : lTaskDates,
-                          relatedresource :vRelatedResource,
-                          hours: nHrsPerDay
-                        })
+                        var vRelatedResource = ""
+                          if (vProjectList.data[i].act_supplier === "") {
+                            vRelatedResource = vProjectList.data[i].evt_mrc
+                          } else {
+                            vRelatedResource = vProjectList.data[i].act_supplier
+                          }
+                          nHrsPerDay = parseFloat((nHrsPerDay / (nNbOcurr == 0 ? 1 : nNbOcurr)).toFixed(1))
+                          vTaskDatesImpact.add({
+                            id: vProjectCode + '#' + vActivityCode ,
+                            dates: lTaskDates,
+                            relatedresource: vRelatedResource,
+                            hours: nHrsPerDay
+                          })
 
-                       
-                        vWOStore.add(new Ext.data.Record({
-                            id: vWorkOrderCode + '#' + vActivityCode + '#0',
-                            text: vDesc,
-                            act_act: ("000" + (vActivityCode).toString()).toString().slice(-4) + "-0",
-                            start_date: vStartdateformat,
-                            end_date: vEnddateformat,
-                            equipment: vWOlist.data[i].evt_object,
-                            type: "OP",
-                            desc: vDesc,
-                            obj_desc: vWOlist.data[i].obj_desc,
-                            parent: vParent, //Gestion du regroupement
-                            color: vNewColor,
-                            colormem: vNewColor,
-                            open: true,
-                            //render :"split",
-                            wo: vWOlist.data[i].evt_code,
-                            wostatus: vWOlist.data[i].evt_status,
-                            womrc: vWOlist.data[i].evt_mrc,
-                            dds_evt_mrc: vWOlist.data[i].evt_mrc,
-                            prev_start: vStartdateformat,
-                            prev_end: vEnddateformat,
-                            denied: false,
-                            //Tags = Info bulle liée à la cellule
-                            tags: vWOlist.data[i].evt_object + ' ' + vWOlist.data[i].evt_target + ' ' + vWOlist.data[i].evt_desc + ' (' + vPerson + ') ' + vWOlist.data[i].obj_desc + ' ' + vWOlist.data[i].evt_code,
-                            organization: vWOlist.data[i].evt_org,
-                            actest: vActEst.toString(),
-                            readonly: vReadOnly,
-                            start_date_fmt: "",
-                            end_date_fmt: "",
-                            supervisor: vWOlist.data[i].evt_udfchar10 || "",
-                            act_trade: vWOlist.data[i].act_trade || "",
-                            act_desc: vWOlist.data[i].act_note || "",
-                            operation_impact: vWOlist.data[i].evt_udfchar29 || "",
-                            main_evt_code: MainCodeEVt,
-                            due_date: vDueDate,
-                            original_due_date: vWOlist.data[i].origin_evt_due,
-                            dds_act_statut_desc: vWOlist.data[i].act_statut_desc,
-                            dds_act_supplier: vWOlist.data[i].act_supplier,
-                            dds_act_supplier_desc: vWOlist.data[i].act_supplier_desc,
-                            dds_act_trade: vWOlist.data[i].act_trade,
-                            dds_act_trade_desc: vWOlist.data[i].act_trade_desc,
-                            dds_act_persons: vWOlist.data[i].act_persons,
-                            dds_act_est: vWOlist.data[i].act_est,
-                            dds_act_udfnote01: vWOlist.data[i].act_udfnote01,
-                            dds_act_udfnum01: vWOlist.data[i].act_udfnum01,
-                            dds_act_udfchar20: vWOlist.data[i].act_udfchar20,
-                            dds_priority_desc: vWOlist.data[i].priority_desc,
-                            dds_act_percomplete: vWOlist.data[i].act_percomplete,
-                            dds_class_desc: vWOlist.data[i].class_desc,
-                            risk_collision: vWOlist.data[i].evt_udfchkbox04,
-                            original_start_date : dOriginalActStartDate,
-                            original_end_date : dOriginalActEndDate,
-                            delayed_wo: bDelayedWO
-                          }));
-                        vWOStore.getById(vWorkOrderCode + '#' + vActivityCode + '#0').mergeData(vDataRecord)
-                      }                      
+                          vPRJStore.add(new Ext.data.Record({
+                              id: vProjectCode + '#' + vActivityCode ,
+                              text: vProjectList.data[i].activitydesc,
+                              act_act: ("000" + (vActivityCode).toString()).toString().slice(-4) + "-0",
+                              start_date: vStartdateformat,
+                              end_date: vEnddateformat,
+                              equipment: vProjectList.data[i].evt_object,
+                              type: "Activity",
+                              desc: vDesc,
+                              obj_desc: vProjectList.data[i].obj_desc,
+                              parent: vProjectList.data[i].parent,//vParent, //Gestion du regroupement
+                              color: vNewColor,
+                              colormem: vNewColor,
+                              open: true,
+                              //render :"split",
+                              wo: vProjectList.data[i].proj_code,
+                              wostatus: vProjectList.data[i].prjstatus,
+                              womrc: vProjectList.data[i].evt_mrc,
+                              dds_evt_mrc: vProjectList.data[i].evt_mrc,
+                              prev_start: vStartdateformat,
+                              prev_end: vEnddateformat,
+							  sequence :vProjectList.data[i].plp_seq,
+                              denied: false,
+                              //Tags = Info bulle liÃ©e Ã  la cellule
+                              tags: vProjectList.data[i].evt_object + ' ' + vProjectList.data[i].evt_target + ' ' + vProjectList.data[i].prj_desc + ' (' + vPerson + ') ' + vProjectList.data[i].obj_desc + ' ' + vProjectList.data[i].proj_code,
+                              organization: vProjectList.data[i].organization,
+                              actest: vActEst.toString(),
+                              readonly: vReadOnly,
+                              start_date_fmt: "",
+                              end_date_fmt: "",
+                              supervisor: vProjectList.data[i].evt_udfchar10 || "",
+                              act_trade: vProjectList.data[i].act_trade || "",
+                              act_desc: vProjectList.data[i].act_note || "",
+                              operation_impact: vProjectList.data[i].evt_udfchar29 || "",
+                              project_code: ProjectCode,
+                              due_date: vDueDate,
+                              original_due_date: vProjectList.data[i].origin_evt_due,
+                               dds_act_statut_desc: vProjectList.data[i].act_statut_desc,
+                              dds_act_supplier: vProjectList.data[i].act_supplier,
+                              dds_act_supplier_desc: vProjectList.data[i].act_supplier_desc,
+                              dds_act_trade: vProjectList.data[i].act_trade,
+                              dds_act_trade_desc: vProjectList.data[i].act_trade_desc,
+                              dds_act_persons: vProjectList.data[i].act_persons,
+                              dds_act_est: vProjectList.data[i].act_est,
+                              dds_act_udfnote01: vProjectList.data[i].act_udfnote01,
+                              dds_act_udfnum01: vProjectList.data[i].act_udfnum01,
+                              dds_act_udfchar20: vProjectList.data[i].act_udfchar20,
+                              dds_priority_desc: vProjectList.data[i].priority_desc,
+                              dds_act_percomplete: vProjectList.data[i].advance,
+                              dds_class_desc: vProjectList.data[i].class_desc,
+                              risk_collision: vProjectList.data[i].evt_udfchkbox04, 
+                              original_start_date: dOriginalActStartDate,
+                              original_end_date: dOriginalActEndDate,
+                              delayed_wo: bDelayedWO
+                            }));
+                        vPRJStore.getById(vProjectCode + '#' + vActivityCode ).mergeData(vDataRecord)
+                      }
                     }; // end if
                   }; // end if
                 }; // end loop
-                var vWOStore2 = Ext.getStore("gantt.workorder.store");
-                vWOStore2.data.items.forEach(function (rec) {
+                var vPRJStore2 = Ext.getStore("gantt.projectCode.store");
+                vPRJStore2.data.items.forEach(function (rec) {
                   if (rec.data.id.endsWith("#1")) {
-                    vWOStore2.getById(rec.data.id.split('#')[0] + '#' + rec.data.id.split('#')[1] + '#0').data.start_date = rec.data.start_date
-                      vWOStore2.getById(rec.data.id.split('#')[0] + '#' + rec.data.id.split('#')[1] + '#0').data.end_date = rec.data.end_date
+                    vPRJStore2.getById(rec.data.id.split('#')[0] + '#' + rec.data.id.split('#')[1] + '#0').data.start_date = rec.data.start_date
+                      vPRJStore2.getById(rec.data.id.split('#')[0] + '#' + rec.data.id.split('#')[1] + '#0').data.end_date = rec.data.end_date
                   }
                 });
-                if (Ext.getStore("gantt.suppliertrade.store")) {
+                /* if (Ext.getStore("gantt.suppliertrade.store")) {
                   Ext.getStore("gantt.suppliertrade.store").removeAll();
                   var vSupplierTradeStore = Ext.getStore("gantt.suppliertrade.store");
                 } else {
@@ -11244,7 +10560,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                         type: vSupplierList.data[i].type
                       }))
                   }
-                }
+                } */
 
                 displayGantt();
                 displayResourceGantt();
@@ -11281,7 +10597,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       var emphrs = vCurrentData[0].sum_act;
                       var hours = vCurrentData[0].avail_qty;
                       var vId = vCurrentData[0].supplier_code + "_" + vCurrentData[0].trade + "_" + Ext.Date.format(start_date, 'Ymd');
-                      var html = "<div id ='" + vId + "' class='resource_avl_day' type='"+vCurrentData[0].type+"'  supplier='" + vCurrentData[0].supplier_code + "' supplierorg='" + vCurrentData[0].supplier_org + "' supplierdesc='" + vCurrentData[0].supplier_desc + "' trade='" + vCurrentData[0].trade + "' tradedesc='" + vCurrentData[0].trade_desc + "' date='" + Ext.Date.format(start_date, 'm/d/Y') + "' availhrs='" + parseFloat(new Number(hours + '').toFixed(parseInt(12))) + "' acthrs='" + parseFloat(new Number(emphrs + '').toFixed(parseInt(12))) + "'>";
+                      var html = "<div id ='" + vId + "' class='resource_avl_day' type='" + vCurrentData[0].type + "'  supplier='" + vCurrentData[0].supplier_code + "' supplierorg='" + vCurrentData[0].supplier_org + "' supplierdesc='" + vCurrentData[0].supplier_desc + "' trade='" + vCurrentData[0].trade + "' tradedesc='" + vCurrentData[0].trade_desc + "' date='" + Ext.Date.format(start_date, 'm/d/Y') + "' availhrs='" + parseFloat(new Number(hours + '').toFixed(parseInt(12))) + "' acthrs='" + parseFloat(new Number(emphrs + '').toFixed(parseInt(12))) + "'>";
                       //html += parseFloat(new Number(hours+'').toFixed(parseInt(12))) + ' | ' + parseFloat(new Number(emphrs+'').toFixed(parseInt(12)));
                       html += parseFloat(new Number(emphrs + '').toFixed(parseInt(12))) + ' | ' + parseFloat(new Number(hours + '').toFixed(parseInt(12)))
                       html += "</div>";
@@ -11420,88 +10736,84 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   gantt.config.layout = {
                     css: "gantt_container",
                     rows: [{
-                            gravity: 2,
+                        gravity: 2,
 
-                            cols: [{
-                                    width: _width,
-                                    rows: [{
+                        cols: [{
+                            width: _width,
+                            rows: [{
 
-                                            view: "grid",
-                                            scrollX: "gridScroll",
-                                            scrollable: true,
-                                            scrollY: "scrollVer",
-                                        },
-                                        {
-                                            view: "scrollbar",
-                                            id: "gridScroll",
-                                            group: "horizontal"
-                                        }
-                                    ]
-                                },
-                                {
-                                    resizer: true,
-                                    width: 1,
-                                    group: "vertical"
-                                },
-                                {
-                                    rows: [{
-                                            view: "timeline",
-                                            scrollX: "scrollHor",
-                                            scrollY: "scrollVer",
-                                            collapsible: true
-                                        },
-                                        {
-                                            view: "scrollbar",
-                                            id: "scrollHor",
-                                            group: "horizontal"
-                                        }
-                                    ]
-                                }, {
-                                    view: "scrollbar",
-                                    id: "scrollVer",
-                                    group: "vertical"
-                                }
-
+                                view: "grid",
+                                scrollX: "gridScroll",
+                                scrollable: true,
+                                scrollY: "scrollVer",
+                              }, {
+                                view: "scrollbar",
+                                id: "gridScroll",
+                                group: "horizontal"
+                              }
                             ]
-
-                        },
-                        {
+                          }, {
                             resizer: true,
-                            width: 1
-                        },
-                        {
-                            gravity: 1,
-                            cols: [{
-                                    width: _width,
-                                    rows: [{
-                                        config: resourceConfig,
-                                        templates: resourceTemplates,
-                                        rows: [{
-                                            view: "resourceGrid",
-                                            scrollY: "resourceVScroll"
-                                        }]
-                                    }]
-                                },
-                                //{resizer:true,width:1, group: "vertical"},
-                                {
-                                    rows: [{
-                                        view: "resourceTimeline",
-                                        scrollX: "scrollHor",
-                                        scrollY: "resourceVScroll",
-                                        collapsible: true
-                                    }]
-                                },
-                                {
-                                    view: "scrollbar",
-                                    id: "resourceVScroll",
-                                    group: "vertical"
-                                }
-
+                            width: 1,
+                            group: "vertical"
+                          }, {
+                            rows: [{
+                                view: "timeline",
+                                scrollX: "scrollHor",
+                                scrollY: "scrollVer",
+                                collapsible: true
+                              }, {
+                                view: "scrollbar",
+                                id: "scrollHor",
+                                group: "horizontal"
+                              }
                             ]
+                          }, {
+                            view: "scrollbar",
+                            id: "scrollVer",
+                            group: "vertical"
+                          }
 
-                        }
+                        ]
+
+                      }, {
+                        resizer: true,
+                        width: 1
+                      }/*, {
+                        gravity: 1,
+                        cols: [{
+                            width: _width,
+                            rows: [{
+                                config: resourceConfig,
+                                templates: resourceTemplates,
+                                rows: [{
+                                    view: "resourceGrid",
+                                    scrollY: "resourceVScroll"
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          //{resizer:true,width:1, group: "vertical"},
+                          {
+                            rows: [{
+                                view: "resourceTimeline",
+                                scrollX: "scrollHor",
+                                scrollY: "resourceVScroll",
+                                collapsible: true
+                              }
+                            ]
+                          }, {
+                            view: "scrollbar",
+                            id: "resourceVScroll",
+                            group: "vertical"
+                          }
+
+                        ]
+
+                      }*/
                     ]
-                };
+                  };
                   /*  gantt.config.layout = {
                   css: "gantt_container",
                   rows: [{
@@ -11581,22 +10893,22 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   };*/
                 }
 
-                gantt.attachEvent("onGanttRender", function() {
+                gantt.attachEvent("onGanttRender", function () {
                   refreshColumnfilter();
                   // Votre logique ici
-               
-              });
+
+                });
 
                 gantt.attachEvent("onBeforeGanttReady", function () {
                   setConfigLayout(vGridSize);
                 });
-                gantt.attachEvent("onGridRender", function() {
+                gantt.attachEvent("onGridRender", function () {
                   var rows = document.querySelectorAll(".gantt_row");
-                  rows.forEach(function(row) {
-                      row.style.height = "auto";
+                  rows.forEach(function (row) {
+                    row.style.height = "auto";
                   });
                   gantt.render();
-              });
+                });
 
                 gantt.attachEvent("onGridResizeEnd", function (old_width, new_width) {
                   //console.log(new_width);
@@ -11632,31 +10944,28 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   }
                 });
 
-                gantt.attachEvent("onAfterSort", function() {
-                  // Récupérer l'input et réattacher l'événement
-                  setTimeout(function(){
-                      document.querySelectorAll('input[data-column]').forEach(function(input) {
-                        
-                        input.addEventListener("input", function() {
-                            
-                            var column = this.getAttribute('data-column');
-                            if(this.value==null||this.value===""){
-                              delete tGridFilters[column]
-                            }
-                            else{
-                              tGridFilters[column] = this.value
-                            }
-                            ;  // Met à jour la variable de filtres dynamiques
-                            gantt.refreshData();  // Met à jour l'affichage des tâches
-                        });
+                gantt.attachEvent("onAfterSort", function () {
+                  // RÃ©cupÃ©rer l'input et rÃ©attacher l'Ã©vÃ©nement
+                  setTimeout(function () {
+                    document.querySelectorAll('input[data-column]').forEach(function (input) {
+
+                      input.addEventListener("input", function () {
+
+                        var column = this.getAttribute('data-column');
+                        if (this.value == null || this.value === "") {
+                          delete tGridFilters[column]
+                        } else {
+                          tGridFilters[column] = this.value
+                        }; // Met Ã  jour la variable de filtres dynamiques
+                        gantt.refreshData(); // Met Ã  jour l'affichage des tÃ¢ches
+                      });
                     });
 
-                  },3000)
-              });
-
+                  }, 3000)
+                });
 
                 gantt.attachEvent("onGanttReady", function () {
-          
+
                   document.querySelector(".gantt_task_scale").addEventListener('click', function (e) {
                     e.preventDefault();
                     var currentScale = gantt.config.cust_scale;
@@ -11711,7 +11020,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       var taskDate = node.getAttribute("date-baseline");
                       var taskText = node.getAttribute("text-baseline");
                       var taskType = node.getAttribute("type-baseline");
-                      return "<b>Type:</b> " + taskType + "</br><b>Date:</b> " + taskDate+ "</br>"+ taskText;
+                      return "<b>Type:</b> " + taskType + "</br><b>Date:</b> " + taskDate + "</br>" + taskText;
                     }
                   });
                   tooltips.tooltipFor({
@@ -11741,25 +11050,22 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       return "<b>Type:</b> " + taskType + "</br><b>Desc.:</b> " + taskText + "</br><b>Date:</b> " + taskDate;
                     }
                   });
-                  setTimeout(function(){
-                      document.querySelectorAll('input[data-column]').forEach(function(input) {
-                        
-                        input.addEventListener("input", function() {
-                            
-                            var column = this.getAttribute('data-column');
-                            if(this.value==null||this.value===""){
-                              delete tGridFilters[column]
-                            }
-                            else{
-                              tGridFilters[column] = this.value
-                            }
-                            ;  // Met à jour la variable de filtres dynamiques
-                            gantt.refreshData();  // Met à jour l'affichage des tâches
-                        });
+                  setTimeout(function () {
+                    document.querySelectorAll('input[data-column]').forEach(function (input) {
+
+                      input.addEventListener("input", function () {
+
+                        var column = this.getAttribute('data-column');
+                        if (this.value == null || this.value === "") {
+                          delete tGridFilters[column]
+                        } else {
+                          tGridFilters[column] = this.value
+                        }; // Met Ã  jour la variable de filtres dynamiques
+                        gantt.refreshData(); // Met Ã  jour l'affichage des tÃ¢ches
+                      });
                     });
 
-                  },3000)
-                  
+                  }, 3000)
 
                 });
                 gantt.$resourcesStore = gantt.createDatastore({
@@ -11777,13 +11083,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 });
                 //gantt.init("gantt_area_div");
 
-                gantt.attachEvent("onParse", function() {
-     
-                    
-                 
-              });
-              
-              
+                gantt.attachEvent("onParse", function () {});
 
                 gantt.$resourcesStore.attachEvent("onParse", function () {
                   var people = [];
@@ -11807,23 +11107,17 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                 gantt.init("gantt_area_div");
                 ////console.log("beforParse");
-                
 
-
-                
-
-                
 
                 var _Wo_data = [];
-                Ext.getStore("gantt.workorder.store").each(function (rec) {
+                Ext.getStore("gantt.projectCode.store").each(function (rec) {
                   _Wo_data.push(rec.data);
                 });
                 var vArr = [];
-            
 
                 var tasks = {
                   data: _Wo_data,
-                  links: vWOlist.links // Pas utilisé (lien entre taches du Gantt)
+                  links: vProjectList.links // Pas utilisÃ© (lien entre taches du Gantt)
                 };
 
                 function renderElement(row, start, end, type, tasktext, key, adj) {
@@ -11876,16 +11170,16 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   renderer: {
                     render: function draw_planned(task) {
                       var result = null;
-                      if (task.type=="WO"&&task.dds_evt_due) {
-                        if(Ext.isDate(task.dds_evt_due)){
+                      if (task.type == "Project" && task.dds_evt_due) {
+                        if (Ext.isDate(task.dds_evt_due)) {
                           var sizes = gantt.getTaskPosition(task, new Date(task.dds_evt_due), new Date(task.dds_evt_due));
                           result = document.createElement("div");
                           result.setAttribute("cust_object", "shutdown_planning");
-                          result.id = task.id + '_div1';                         
+                          result.id = task.id + '_div1';
                           var el = document.createElement('div');
                           el.id = task.id + '#B1';
                           el.className = 'baseline_jalon';
-                          el.setAttribute("cust_object","shutdown_planning");
+                          el.setAttribute("cust_object", "shutdown_planning");
                           el.setAttribute("date-baseline", Ext.Date.format(new Date(task.dds_evt_due), 'd/m/Y H:i'));
                           el.setAttribute("type-baseline", "Due date");
                           el.style.left = sizes.left + ((1) * 15) + 'px';
@@ -11895,46 +11189,53 @@ Ext.define('EAM.custom.external_DUPLGR', {
                           result.appendChild(el)
                         }
                       }
-                      if(task.type=="OP"){
+                      if (task.type == "Activity") {
                         //afficher ici les planifs par date et par tache
-                          var vListToCreated=[];
+                        var vListToCreated = [];
 
-                          if(Ext.getStore('gantt.taskschedemp.store').getById(task.id)){
-                            var vListOfSchedules= Ext.getStore('gantt.taskschedemp.store').getById(task.id).data.data
-                            vListOfSchedules.forEach(function(rec){
-                                const targetId = Ext.Date.format(new Date(rec.sched_date),'m/d/Y')
-                                const newData = { date: new Date(rec.sched_date), per_desc: rec.per_desc, per_code : rec.per_code, sched_hours : rec.sched_hours };
-                                let targetItem = vListToCreated.find(item => item.id === targetId);
-                                if (targetItem) {
-                                    targetItem.data.push(newData);
-                                } else {
-                                  vListToCreated.push({ id: targetId, data: [newData] });
-                                }
-                                
-                            }
-                          )
-                          }
-                        var nCount=0;
-                        if(vListToCreated.length>0){
+                        if ( !Ext.isEmpty(Ext.getStore('gantt.taskschedemp.store')) && Ext.getStore('gantt.taskschedemp.store').getById(task.id)) {
+                          var vListOfSchedules = Ext.getStore('gantt.taskschedemp.store').getById(task.id).data.data
+                            vListOfSchedules.forEach(function (rec) {
+                              const targetId = Ext.Date.format(new Date(rec.sched_date), 'm/d/Y')
+                                const newData = {
+                                date: new Date(rec.sched_date),
+                                per_desc: rec.per_desc,
+                                per_code: rec.per_code,
+                                sched_hours: rec.sched_hours
+                              };
+                              let targetItem = vListToCreated.find(item => item.id === targetId);
+                              if (targetItem) {
+                                targetItem.data.push(newData);
+                              } else {
+                                vListToCreated.push({
+                                  id: targetId,
+                                  data: [newData]
+                                });
+                              }
+
+                            })
+                        }
+                        var nCount = 0;
+                        if (vListToCreated.length > 0) {
                           result = document.createElement("div");
                           result.setAttribute("cust_object", "shutdown_planning");
                           result.id = task.id + '_div1';
-                          vListToCreated.forEach(function(rec1){
+                          vListToCreated.forEach(function (rec1) {
                             var vText;
                             nCount++;
-  
-                            vText= '<table border="1" cellspacing="0" cellpadding="8" width="100%">';
-                            rec1.data.forEach(function(rec2){
-                                  vText= vText+'<tr><td>'+ rec2.per_desc +'</td><td> '+ rec2.sched_hours+ ' hrs</td></tr>'                             
-                               
+
+                            vText = '<table border="1" cellspacing="0" cellpadding="8" width="100%">';
+                            rec1.data.forEach(function (rec2) {
+                              vText = vText + '<tr><td>' + rec2.per_desc + '</td><td> ' + rec2.sched_hours + ' hrs</td></tr>'
+
                             })
-                            vText= vText+'</table>';
+                            vText = vText + '</table>';
                             var sizes = gantt.getTaskPosition(task, new Date(rec1.id), new Date(rec1.id));
-                                              
+
                             var el = document.createElement('div');
-                            el.id = task.id + '#B'+nCount;
+                            el.id = task.id + '#B' + nCount;
                             el.className = 'baseline_date_debut';
-                            el.setAttribute("cust_object","shutdown_planning");
+                            el.setAttribute("cust_object", "shutdown_planning");
                             el.setAttribute("date-baseline", Ext.Date.format(new Date(rec1.id), EAM.AppData._appconfig.map.dateformat));
                             el.setAttribute("type-baseline", "Schedule");
                             el.style.left = sizes.left + ((2) * 15) + 'px';
@@ -11942,13 +11243,12 @@ Ext.define('EAM.custom.external_DUPLGR', {
                             el.setAttribute("text-baseline", vText);
                             el.style.top = sizes.top + gantt.config.task_height + 9 + 'px';
                             result.appendChild(el)
-                          })       
+                          })
                         }
-                        
-                        
+
                       }
 
-                       return result;
+                      return result;
                     },
                     // define getRectangle in order to hook layer with the smart rendering
                     getRectangle: function (task, view) {
@@ -11961,13 +11261,8 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 gantt.$resourcesStore.parse(empData);
                 var v = gantt.parse(tasks);
 
-              
                 //Look for the dataspy sort options //
-                
 
-
-
-                
 
                 // Event listeners to capture changes
                 gantt.attachEvent("onAfterTaskAdd", function (id, item) {
@@ -11998,26 +11293,26 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   redoStack = []; // Clear redo stack on new action
                 });
 
-                gantt.templates.grid_file= function (t) {
-                    if(t.type=="WO"){
-                         return "<div class='gantt_tree_icon gantt_work_order'></div>"
-                    }
-                    return  "<div class='gantt_tree_icon gantt_activity'></div>"						
-                   
-                }, 
+                gantt.templates.grid_file = function (t) {
+                  if (t.type == "Project") {
+                    return "<div class='gantt_tree_icon gantt_work_order'></div>"
+                  }
+                  return "<div class='gantt_tree_icon gantt_activity'></div>"
 
-                gantt.templates.grid_folder= function (t) {
-                    if(t.type=="WO"){
-                        return "<div class='gantt_tree_icon gantt_work_order'></div>"
-                    }
-                    return  "<div class='gantt_tree_icon gantt_activity'></div>"			
+                },
+
+                gantt.templates.grid_folder = function (t) {
+                  if (t.type == "Project") {
+                    return "<div class='gantt_tree_icon gantt_work_order'></div>"
+                  }
+                  return "<div class='gantt_tree_icon gantt_activity'></div>"
                 }
 
                 // Undo function
 
-                // Attacher un événement pour la suppression de lien
+                // Attacher un Ã©vÃ©nement pour la suppression de lien
                 gantt.attachEvent("onLinkDblClick", function (id, link) {
-                  // Ouvrir une boîte de dialogue personnalisée pour confirmer la suppression ou modifier le lien
+                  // Ouvrir une boÃ®te de dialogue personnalisÃ©e pour confirmer la suppression ou modifier le lien
 
 
                   EAM.Messaging.showQuestion({
@@ -12030,7 +11325,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     }
                   });
 
-                  // Retourner false pour empêcher les actions par défaut lors du double-clic
+                  // Retourner false pour empÃªcher les actions par dÃ©faut lors du double-clic
                   return false;
                 });
 
@@ -12053,10 +11348,9 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     gantt.getTask(link.target).actudfchar30 = link.source.split('#')[0];
                     gantt.getTask(link.target).actudfnum01 = link.source.split('#')[1];
                     gantt.getTask(link.target).updated = 0;
-                    
-                    if(sessionStorage.getItem("undoactionupdateLink")=="OK"){
-                    }
-                    else{
+
+                    if (sessionStorage.getItem("undoactionupdateLink") == "OK") {}
+                    else {
                       Ext.getStore('gantt.undo.store').add({
                         type: "addLink",
                         task: link
@@ -12085,10 +11379,8 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     gantt.getTask(link.target).actudfchar30 = link.source.split('#')[0];
                     gantt.getTask(link.target).actudfnum01 = link.source.split('#')[1];
                     gantt.getTask(link.target).updated = 0;
-                    if(sessionStorage.getItem("undoactionupdateLink")=="OK"){
-
-                    }
-                    else{
+                    if (sessionStorage.getItem("undoactionupdateLink") == "OK") {}
+                    else {
                       Ext.getStore('gantt.undo.store').add({
                         type: "deleteLink",
                         task: link
@@ -12098,7 +11390,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                         task: link
                       });
                     }
-                    
+
                   }
 
                   //redoStack = []; // Clear redo stack on new action
@@ -12212,7 +11504,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                 });
 
-                // Ajout de l'écouteur d'événement de défilement sur l'élément Gantt
+                // Ajout de l'Ã©couteur d'Ã©vÃ©nement de dÃ©filement sur l'Ã©lÃ©ment Gantt
                 //document.getElementById('gantt_area_div').addEventListener('wheel', zoomTimeline);
 
 
@@ -12242,39 +11534,39 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 //gantt.destructor();
 
 
-                scale_cell_array = []; // TODO: A supprimer peut-être
+                scale_cell_array = []; // TODO: A supprimer peut-Ãªtre
                 //////console.log("displayGantaffDateMax");
-                
+
                 dMaxDate = new Date(dMaxDate.setMonth(dMaxDate.getMonth() + 1));
                 //////console.log(dMaxDate);
                 var dStartDate = new Date();
                 dStartDate = new Date(Ext.getCmp('StartDate').rawDate);
                 var dTestEndDate = new Date(dStartDate);
-                dTestEndDate.setDate(dTestEndDate.getDate()+900);
-                if(dMaxDate>dTestEndDate){
+                dTestEndDate.setDate(dTestEndDate.getDate() + 900);
+                if (dMaxDate > dTestEndDate) {
                   dMaxDate = new Date(dTestEndDate);
                 }
                 gantt.config.start_date = dStartDate.getFullYear() + '-' + ("0" + (dStartDate.getMonth() + 1)).toString().slice(-2) + '-' + ("0" + dStartDate.getDate()).toString().slice(-2);
                 gantt.config.end_date = dMaxDate.getFullYear() + '-' + ("0" + (dMaxDate.getMonth() + 1)).toString().slice(-2) + '-' + ("0" + dMaxDate.getDate()).toString().slice(-2);
                 gantt.config.show_progress = false;
-                gantt.config.drag_resize = true; // Permet d'augmenter la durée
+                gantt.config.drag_resize = true; // Permet d'augmenter la durÃ©e
                 gantt.config.show_links = true;
                 gantt.config.drag_links = true;
-                gantt.config.smart_rendering = true; // TODO: A étudier
+                gantt.config.smart_rendering = true; // TODO: A Ã©tudier
                 gantt.config.static_background = true;
-                gantt.config.show_task_cells = true; // TODO: A étudier
+                gantt.config.show_task_cells = true; // TODO: A Ã©tudier
                 gantt.config.bar_height = 18;
                 gantt.config.row_height = 30;
                 gantt.config.scale_height = "100";
                 gantt.config.show_loading = true;
-                gantt.config.time_step = Ext.getCmp("disp_minute").getValue();//15;
+                gantt.config.time_step = Ext.getCmp("disp_minute").getValue(); //15;
                 gantt.config.round_dnd_dates = false;
                 gantt.config.branch_loading = false;
                 gantt.config.smart_scales = true;
                 gantt.config.work_time = false;
                 gantt.config.duration_unit = "minute";
                 gantt.config.duration_step = 1;
-                // Définitions des colonnes à afficher récupérées de la var ArrEvents
+                // DÃ©finitions des colonnes Ã  afficher rÃ©cupÃ©rÃ©es de la var ArrEvents
                 //var menu = new dhtmlXMenuObject();
                 gantt.config.undo = true;
                 gantt.config.redo = true;
@@ -12297,32 +11589,31 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 gantt.attachEvent("onBeforeTaskDisplay", function (id, task) {
 
                   var selection = Ext.getCmp('searchgantt')
-                  let bCheck = false;
+                    let bCheck = false;
 
-                    /*if(!task.$open && !Ext.isEmpty(selection.value)){
-                    task.$open = true;
-                    }*/
-                    /*else{
-                    task.$open = false;
-                    }*/
-                    if(!selection.value){
-                        bCheck=true;
+                  /*if(!task.$open && !Ext.isEmpty(selection.value)){
+                  task.$open = true;
+                  }*/
+                  /*else{
+                  task.$open = false;
+                  }*/
+                  if (!selection.value) {
+                    bCheck = true;
+                  }
+                  if (task.tags.toUpperCase().indexOf(selection.value.toUpperCase()) > -1) {
+                    bCheck = true;
+                  } // end if
+                  if (Object.keys(tGridFilters).length > 0) {
+                    for (var key in tGridFilters) {
+                      if (tGridFilters[key]) {
+                        if (task[key].toString().toLowerCase().indexOf(tGridFilters[key].toLowerCase()) === -1 && tGridFilters[key] != "") {
+                          bCheck = false; // Masquer la tÃ¢che si elle ne correspond pas au filtre
+                        }
+                      }
                     }
-                    if (task.tags.toUpperCase().indexOf(selection.value.toUpperCase()) > -1) {
-                        bCheck = true;
-                    } // end if
-                    if(Object.keys(tGridFilters).length>0){
-                        for (var key in tGridFilters) {
-                            if (tGridFilters[key]) {
-                              if (task[key].toString().toLowerCase().indexOf(tGridFilters[key].toLowerCase()) === -1&&tGridFilters[key]!="") {
-                                bCheck=false; // Masquer la tâche si elle ne correspond pas au filtre
-                              }
-                            }
-                         }
-                    }
-                                      
-                    
-                    return bCheck;
+                  }
+
+                  return bCheck;
                 }); // end attachEvent
                 /*
                 gantt.addCalendar({
@@ -12343,7 +11634,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   console.log(state)
                 });
 
-                vListColumns.push({
+                /* vListColumns.push({
                   name: "icon1",
                   id: "icon1",
                   label: "", //vBoilerList["column_wodescription"],
@@ -12351,15 +11642,15 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   width: "30",
                   typeColumn: "icon",
                   template: function (task) {
-                    if (task.type === "WO" && !task.$open) {
-                      for (i = 0; i < vWOlist.conflict_parts.length; i++) {
-                        if (gantt.getChildren(task.id).indexOf(vWOlist.conflict_parts[i].woact) >= 0) {
+                    if (task.type === "Project" && !task.$open) {
+                      for (i = 0; i < vProjectList.conflict_parts.length; i++) {
+                        if (gantt.getChildren(task.id).indexOf(vProjectList.conflict_parts[i].woact) >= 0) {
                           return "<div class='conflict_part'></div>"
                         }
                       }
                     } else {
-                      for (i = 0; i < vWOlist.conflict_parts.length; i++) {
-                        if (vWOlist.conflict_parts[i].woact == task.id) {
+                      for (i = 0; i < vProjectList.conflict_parts.length; i++) {
+                        if (vProjectList.conflict_parts[i].woact == task.id) {
                           return "<div class='conflict_part'></div>"
                         }
                       }
@@ -12376,18 +11667,18 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   id: "icon2",
                   label: "", //vBoilerList["column_wodescription"],
                   header: "", //vBoilerList["column_wodescription"],
-                  width: "30",                  
+                  width: "30",
                   typeColumn: "icon",
                   template: function (task) {
-                    if (task.type === "WO") {
-                      for (i = 0; i < vWOlist.conflict_tools.length; i++) {
-                        if (gantt.getChildren(task.id).indexOf(vWOlist.conflict_tools[i].woact) >= 0) {
+                    if (task.type === "Project") {
+                      for (i = 0; i < vProjectList.conflict_tools.length; i++) {
+                        if (gantt.getChildren(task.id).indexOf(vProjectList.conflict_tools[i].woact) >= 0) {
                           return "<div class='conflict_tool'></div>"
                         }
                       }
                     } else {
-                      for (i = 0; i < vWOlist.conflict_tools.length; i++) {
-                        if (vWOlist.conflict_tools[i].woact == task.id) {
+                      for (i = 0; i < vProjectList.conflict_tools.length; i++) {
+                        if (vProjectList.conflict_tools[i].woact == task.id) {
                           return "<div class='conflict_tool'></div>"
                         }
                       }
@@ -12397,28 +11688,28 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   },
                   resize: true
 
-                });
+                }); */
 
                 vListColumns.push({
                   name: "id",
-                  label :  "<input type='text' id='id_text' data-column='id' placeholder='Id'  style='width:100%;'/>",  
+                  label: "<input type='text' id='id_text' data-column='id' placeholder='Id'  style='width:100%;'/>",
                   width: "150",
                   tree: true,
                   resize: true,
                   typeColumn: "varchar"
                 });
 
-                vListColumns.push({
+               /* vListColumns.push({
                   name: "desc",
                   id: "evt_desc",
-                  label :  "<input type='text' id='desc_text' data-column='desc' placeholder='"+vBoilerList["column_wodescription"]+"'  style='width:100%;'/>",   
+                  label: "<input type='text' id='desc_text' data-column='desc' placeholder='" + vBoilerList["column_wodescription"] + "'  style='width:100%;'/>",
                   header: vBoilerList["column_wodescription"],
                   width: "300",
                   resize: true,
                   typeColumn: "varchar"
 
                 });
-                /*vListColumns.push({
+                vListColumns.push({
                 name: "act_act",
                 id: "act_act",
                 label: vBoilerList["column_opdescription"],//gantt.locale.labels.column_wodescription,
@@ -12438,7 +11729,6 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   typeColumn: "date",
                   template: function (obj) {
 
-                    
                     return Ext.Date.format(new Date(obj.start_date), EAM.AppData._appconfig.map.dateformat + ' H:i')
 
                   }
@@ -12456,7 +11746,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   typeColumn: "date",
                   template: function (obj) {
                     var dDate = new Date(obj.end_date);
-                    
+
                     return Ext.Date.format(new Date(obj.end_date), EAM.AppData._appconfig.map.dateformat + ' H:i')
                   }
                 });
@@ -12479,7 +11769,6 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   vFieldId = rec.data.id;
                   VFieldName = rec.data.id;
 
-                  
                   if (rec.data.id == "dds_evt_target") {
                     vFieldId = "evt_target";
                     VFieldName = "start_date";
@@ -12488,63 +11777,58 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     vFieldId = "evt_schedend";
                     VFieldName = "end_date";
                   }
-                  if(rec.data.typeColumn=="DATETIME"){
+                  if (rec.data.typeColumn == "DATETIME") {
                     vListColumns.push({
                       name: VFieldName,
                       id: vFieldId,
-                      label :  "<input type='text' id='"+VFieldName+"_text' data-column='"+VFieldName+"' placeholder='"+rec.data.description+"'  style='width:100%;'/>",  
+                      label: "<input type='text' id='" + VFieldName + "_text' data-column='" + VFieldName + "' placeholder='" + rec.data.description + "'  style='width:100%;'/>",
                       header: rec.data.description,
                       width: rec.data.columnwidth,
                       resize: true,
                       typeColumn: rec.data.typeColumn,
                       template: function (obj) {
-                        if(obj[VFieldName]!=""&&Ext.isDate(obj[VFieldName])){
-                          var dDate = new Date(obj[VFieldName]);                         
-                          if(dDate.getHours()=="23"&&dDate.getMinutes()=="59"){
+                        if (obj[VFieldName] != "" && Ext.isDate(obj[VFieldName])) {
+                          var dDate = new Date(obj[VFieldName]);
+                          if (dDate.getHours() == "23" && dDate.getMinutes() == "59") {
                             dDate.setHours(0);
                             dDate.setMinutes(0);
                           }
                           return Ext.Date.format(new Date(dDate), EAM.AppData._appconfig.map.dateformat + ' H:i')
-                        }
-                        else{
+                        } else {
                           return obj[VFieldName]
                         }
-                        
-    
+
                       }
                     });
-                  }
-                  else{
-                    if(rec.data.typeColumn=="DATE"){
+                  } else {
+                    if (rec.data.typeColumn == "DATE") {
                       vListColumns.push({
                         name: VFieldName,
                         id: vFieldId,
-                        label :  "<input type='text' id='"+VFieldName+"_text' data-column='"+VFieldName+"' placeholder='"+rec.data.description+"'  style='width:100%;'/>",  
+                        label: "<input type='text' id='" + VFieldName + "_text' data-column='" + VFieldName + "' placeholder='" + rec.data.description + "'  style='width:100%;'/>",
                         header: rec.data.description,
                         width: rec.data.columnwidth,
                         resize: true,
                         typeColumn: rec.data.typeColumn,
                         template: function (obj) {
-                          if(obj[VFieldName]!=""&&Ext.isDate(obj[VFieldName])){
-                            var dDate = new Date(obj[VFieldName]);                         
-                            if(dDate.getHours()=="23"&&dDate.getMinutes()=="59"){
+                          if (obj[VFieldName] != "" && Ext.isDate(obj[VFieldName])) {
+                            var dDate = new Date(obj[VFieldName]);
+                            if (dDate.getHours() == "23" && dDate.getMinutes() == "59") {
                               dDate.setHours(0);
                               dDate.setMinutes(0);
                             }
                             return Ext.Date.format(new Date(obj[dDate]), EAM.AppData._appconfig.map.dateformat)
-                          }
-                          else{
+                          } else {
                             return obj[VFieldName]
                           }
                         }
                       });
 
-                    }
-                    else{
+                    } else {
                       vListColumns.push({
                         name: VFieldName,
                         id: vFieldId,
-                        label :  "<input type='text' id='"+VFieldName+"_text' data-column='"+VFieldName+"' placeholder='"+rec.data.description+"'  style='width:100%;'/>",  
+                        label: "<input type='text' id='" + VFieldName + "_text' data-column='" + VFieldName + "' placeholder='" + rec.data.description + "'  style='width:100%;'/>",
                         header: rec.data.description,
                         width: rec.data.columnwidth,
                         resize: true,
@@ -12554,9 +11838,6 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     }
                   }
 
-                    
-
-                  
                 });
                 gantt.config.columns = vListColumns;
                 gantt.config.date_grid = '%' + EAM.AppData._appconfig.map.dateformat.replaceAll(EAM.AppData._appconfig.map.dateseparator, EAM.AppData._appconfig.map.dateseparator + "%");
@@ -12564,7 +11845,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   return true
                 });
 
-                // TODO: vérifier confusion des date_to_str (var/function....)
+                // TODO: vÃ©rifier confusion des date_to_str (var/function....)
                 var date_to_str = gantt.date.date_to_str(gantt.config.task_date);
                 var today = new Date();
                 gantt.addMarker({
@@ -12574,7 +11855,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   title: "Date: " + date_to_str(today)
                 });
                 // Gestion des events sur le Gantt
-                gantt.attachEvent("onBeforeDragStart", function (vWoNum, e) {
+                gantt.attachEvent("onBeforeDragStart", function (vTaskId, e) {
                   //////console.log("onBeforeDragStart");
                 });
                 function deselect(e) {
@@ -12583,16 +11864,16 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   });
                 }
                 gantt.attachEvent("onBeforeLinkAdd", function (id, link) {
-                  // Exemple de règles pour empêcher certains types de liens
-                  // Vérifie que la source et la cible ne sont pas égales (aucun lien vers soi-même)
-                  if(WOFieldsAttributes.hasOwnProperty("schedstartdate")){
-                    if(WOFieldsAttributes.schedstartdate=="protected"||WOFieldsAttributes.schedstartdate=="hidden"){
+                  // Exemple de rÃ¨gles pour empÃªcher certains types de liens
+                  // VÃ©rifie que la source et la cible ne sont pas Ã©gales (aucun lien vers soi-mÃªme)
+                  if (WOFieldsAttributes.hasOwnProperty("schedstartdate")) {
+                    if (WOFieldsAttributes.schedstartdate == "protected" || WOFieldsAttributes.schedstartdate == "hidden") {
                       return false;
                     }
                   }
 
-                  if(WOFieldsAttributes.hasOwnProperty("schedstartdate")&&WOFieldsAttributes.hasOwnProperty("udfdate07")){
-                    if(WOFieldsAttributes.schedstartdate=="protected"||WOFieldsAttributes.schedstartdate=="hidden"||WOFieldsAttributes.udfdate07=="protected"||WOFieldsAttributes.udfdate07=="hidden"){
+                  if (WOFieldsAttributes.hasOwnProperty("schedstartdate") && WOFieldsAttributes.hasOwnProperty("udfdate07")) {
+                    if (WOFieldsAttributes.schedstartdate == "protected" || WOFieldsAttributes.schedstartdate == "hidden" || WOFieldsAttributes.udfdate07 == "protected" || WOFieldsAttributes.udfdate07 == "hidden") {
                       return false;
                     }
                   }
@@ -12605,44 +11886,44 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   let vContinue = true;
 
                   /*Case 1 : WO --> OP of same WO*/
-                  if (vTaskParent.type === "WO" && vTaskChild.type === "OP" && vTaskChild.$rendered_parent === vTaskParent.id) {
+                  if (vTaskParent.type === "Project" && vTaskChild.type === "Activity" && vTaskChild.$rendered_parent === vTaskParent.id) {
                     vContinue = false
                   }
                   /*Case 2 : OP --> Parent WO*/
-                  if (vTaskParent.type === "OP" && vTaskChild.type === "WO") {
+                  if (vTaskParent.type === "Activity" && vTaskChild.type === "Project") {
                     vContinue = false
                   }
                   /*case 3 : WO --> WO */
-                  if (vTaskParent.type === "WO" && vTaskChild.type === "WO") {
+                  if (vTaskParent.type === "Project" && vTaskChild.type === "Project") {
                     let vTaskChildChildren = gantt.getChildren(vTaskChild.id);
                     vTaskChildChildren.forEach(function (_childid) {
-                      if(gantt.isTaskExists(_childid)){
+                      if (gantt.isTaskExists(_childid)) {
                         let _vTaskChild = gantt.getTask(_childid);
                         _vTaskChild.$target.forEach(function (_link) {
                           vContinue = false;
                         })
                       }
-                     
+
                     })
                     vTaskChild.$target.forEach(function (_link) {
-                      
+
                       let vLink = gantt.getLink(_link);
-                      if(gantt.isTaskExists(vLink.source)){
+                      if (gantt.isTaskExists(vLink.source)) {
                         let vSource = gantt.getTask(vLink.source);
                         if (vSource.$rendered_parent === vTaskParent.id) {
                           vContinue = false;
                         }
                       }
-                      
+
                     })
                   }
                   /*Case 4 : WO --> OP of another WO*/
-                  if (vTaskParent.type === "WO" && vTaskChild.type === "OP") {
-                      vContinue = false;
+                  if (vTaskParent.type === "Project" && vTaskChild.type === "Activity") {
+                    vContinue = false;
                   }
                   /*Case 5 : OP --> OP of another WO*/
-                  if (vTaskParent.type === "OP" && vTaskChild.type === "OP" && vTaskChild.$rendered_parent != vTaskParent.$rendered_parent) {
-                    if(gantt.isTaskExists(vTaskChild.$rendered_parent)&&gantt.isTaskExists(vTaskParent.$rendered_parent)){
+                  if (vTaskParent.type === "Activity" && vTaskChild.type === "Activity" && vTaskChild.$rendered_parent != vTaskParent.$rendered_parent) {
+                    if (gantt.isTaskExists(vTaskChild.$rendered_parent) && gantt.isTaskExists(vTaskParent.$rendered_parent)) {
                       let vChildParent = gantt.getTask(vTaskChild.$rendered_parent);
                       let vParentParent = gantt.getTask(vTaskParent.$rendered_parent);
                       if (vChildParent.$target.length > 0) {
@@ -12650,24 +11931,23 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       } else {
                         let vTaskChildChildren = gantt.getChildren(vTaskChild.$rendered_parent);
                         vTaskChildChildren.forEach(function (_childid) {
-                          if(gantt.isTaskExists(_childid)){
+                          if (gantt.isTaskExists(_childid)) {
                             let _vTaskChild = gantt.getTask(_childid);
-                          
-                          _vTaskChild.$target.forEach(function (_link) {                          
-                            let vLink = gantt.getLink(_link);
-                            if(gantt.isTaskExists(vLink.source)){
-                              let vSource = gantt.getTask(vLink.source);
-                              if (vSource === vParentParent.id) {
-                                vContinue = false;
+
+                            _vTaskChild.$target.forEach(function (_link) {
+                              let vLink = gantt.getLink(_link);
+                              if (gantt.isTaskExists(vLink.source)) {
+                                let vSource = gantt.getTask(vLink.source);
+                                if (vSource === vParentParent.id) {
+                                  vContinue = false;
+                                }
                               }
-                            }                          
-                          })                          
-                          }                          
+                            })
+                          }
                         })
                       }
-                    }                    
+                    }
                   }
-                 
 
                   return vContinue;
 
@@ -12675,47 +11955,46 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 gantt.attachEvent("onAfterTaskUpdate", function (id, task, is_new) {
                   console.log("onAfterTaskUpdate");
                   let actionUpdate = false;
-            
-                  var vUpdateID = task.id+'_'+Date.now();
-                  
-                  
+
+                  var vUpdateID = task.id + '_' + Date.now();
+
                   let treeStack = [];
                   if (sessionStorage.getItem("undoactionupdate") == "OK") {
-                      actionUpdate=true;
+                    actionUpdate = true;
                   } else {
-                    addUndo('update', id, task, task.id,vUpdateID);
+                    addUndo('update', id, task, task.id, vUpdateID);
                   }
                   if (sessionStorage.getItem("redoactionupdate") == "OK") {
-                    actionUpdate=true;
+                    actionUpdate = true;
                   }
-            
+
                   if (task.wo != undefined) {
                     if (task.wo.indexOf("(") < 0) {
                       var vSave = document.getElementById("savebtn");
                       vSave.style.background = "lightgreen";
-            
+
                     }
                   }
-            
+
                   function getChildren(taskId, data) {
                     const children = [];
-            
-                    // Chercher tous les enfants directs de la tâche donnée
+
+                    // Chercher tous les enfants directs de la tÃ¢che donnÃ©e
                     const directChildren = data.filter(item => item.task === taskId);
-            
+
                     // Parcourir chaque enfant direct
                     directChildren.forEach(child => {
                       children.push({
                         "child": child.child,
                         "type": child.type
-                      }); // Ajouter l'enfant à la liste des résultats
-                      // Rechercher récursivement les enfants de cet enfant
+                      }); // Ajouter l'enfant Ã  la liste des rÃ©sultats
+                      // Rechercher rÃ©cursivement les enfants de cet enfant
                       children.push(...getChildren(child.child, data));
                     });
-            
+
                     return children;
                   }
-            
+
                   gantt.getTaskByTime().forEach(function (_task) {
                     if (_task.$source.length > 0) {
                       _task.$source.forEach(function (_link) {
@@ -12735,34 +12014,32 @@ Ext.define('EAM.custom.external_DUPLGR', {
                         });
                       })
                     }
-            
+
                   })
                   let ListOfChildrenDone = [];
                   //we are updating the work order level
-                  if (task.type === "WO" || task.type === "OP") {
+                  if (task.type === "Project" || task.type === "Activity") {
                     var vTruncPrevStart = new Date(task.prev_start);
                     var vTruncNewStart = new Date(task.start_date);
                     var vTruncPrevEnd = new Date(task.prev_end);
                     var vTruncNewEnd = new Date(task.end_date);
                     var vDiff = vTruncNewStart.getTime() - vTruncPrevStart.getTime();
                     var vDiff2 = vTruncNewEnd.getTime() - vTruncPrevEnd.getTime();
-                    if (vDiff != 0||vDiff2!=0) {
-                     
+                    if (vDiff != 0 || vDiff2 != 0) {
+
                       //Management of the activities of the WO
                       var vListOfChildren = getChildren(task.id, treeStack);
                       var vCheckupated = 0;
-            
+
                       for (c = 0; c < vListOfChildren.length; c++) {
-            
-                        
-                        
-                        if(gantt.isTaskExists(vListOfChildren[c].child)&&ListOfChildrenDone.indexOf(vListOfChildren[c].child)<0&&!actionUpdate){
-                          
+
+                        if (gantt.isTaskExists(vListOfChildren[c].child) && ListOfChildrenDone.indexOf(vListOfChildren[c].child) < 0 && !actionUpdate) {
+
                           var vChildTask = gantt.getTask(vListOfChildren[c].child);
                           ListOfChildrenDone.push(vChildTask.id)
                           let vChildType = vListOfChildren[c].type;
                           let isChildOfLinkedParent = false;
-                          if (vChildType == "child" && vChildTask.type == "OP") {
+                          if (vChildType == "child" && vChildTask.type == "Activity") {
                             let _ParentOfChild = gantt.getParent(vChildTask.id);
                             let _result = vListOfChildren.find(item => item.child === _ParentOfChild);
                             if (_result) {
@@ -12771,125 +12048,111 @@ Ext.define('EAM.custom.external_DUPLGR', {
                               }
                             }
                           }
-                          if((vChildTask.type==="OP"&&isChildOfLinkedParent&&Ext.getCmp("PostPoneOp").checked)||((vChildType==="child"&&vChildTask.$rendered_parent===task.id)||(vChildType==="link"&&vChildTask.$rendered_parent!=task.id&&Ext.getCmp("PostPoneOp").checked)||(vChildType==="link"&&Ext.getCmp("PostPoneOp").checked))){ 
+                          if ((vChildTask.type === "Activity" && isChildOfLinkedParent && Ext.getCmp("PostPoneOp").checked) || ((vChildType === "child" && vChildTask.$rendered_parent === task.id) || (vChildType === "link" && vChildTask.$rendered_parent != task.id && Ext.getCmp("PostPoneOp").checked) || (vChildType === "link" && Ext.getCmp("PostPoneOp").checked))) {
                             var vChildStarDate = new Date(vChildTask.start_date);
                             var vChildNewStartDate = new Date(vChildTask.start_date);
                             vChildNewStartDate.setTime(vChildNewStartDate.getTime() + vDiff2);
                             var vChildNewEndDate = new Date(vChildTask.end_date);
                             vChildNewEndDate.setTime(vChildNewEndDate.getTime() + vDiff2);
                             var vDuration = vChildTask.dds_act_est
-                              var vData = vSupplierList.data;
+                             // var vData = vSupplierList.data;
                             var dInitDate = Ext.Date.format(vChildStarDate, 'm/d/Y');
                             var dNewDate = Ext.Date.format(vChildNewStartDate, 'm/d/Y');
                             var vOldIndex = null;
                             var vNewIndex = null;
                             if (vChildTask.dds_act_supplier === "") {
-                              try{
+                              try {
                                 var vSplitHours = Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("hours")
-                              
-                                Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function(_Date){
-                                  dInitDate = Ext.Date.format(new Date(_Date),'m/d/Y');
-                                   vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date ===dInitDate  && item.trade == '*');
-                                   var vNewValue = 0
-                                   if (vData[vOldIndex]) {
-                                      vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
-                                      vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(1)))
-                                  }
-                                });
-                              }                 
-                              catch(err){}
-                              
-                              var dDateTemp=new Date(Ext.Date.format(vChildNewStartDate,'m/d/Y')),
-                              dDateTemp2=new Date(Ext.Date.format(vChildNewEndDate,'m/d/Y')),
-                              dListofDates=[],
-                              nOccurr=Ext.Date.diffDays(dDateTemp,dDateTemp2)+1;
+
+                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function (_Date) {
+                                    dInitDate = Ext.Date.format(new Date(_Date), 'm/d/Y');
+                                    //vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date === dInitDate && item.trade == '*');
+                                    var vNewValue = 0
+                                   /*    if (vData[vOldIndex]) {
+                                        vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
+                                          vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(1)))
+                                      } */
+                                  });
+                              } catch (err) {}
+
+                              var dDateTemp = new Date(Ext.Date.format(vChildNewStartDate, 'm/d/Y')),
+                              dDateTemp2 = new Date(Ext.Date.format(vChildNewEndDate, 'm/d/Y')),
+                              dListofDates = [],
+                              nOccurr = Ext.Date.diffDays(dDateTemp, dDateTemp2) + 1;
                               var dTemp = new Date();
-                              vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est)/nOccurr).toFixed(1));
-            
-                              
-                              while(dDateTemp<=dDateTemp2){
-                                dInitDate = Ext.Date.format(dDateTemp,'m/d/Y');
-                                vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date ===dInitDate  && item.trade == '*');
+                              vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est) / nOccurr).toFixed(1));
+
+                              while (dDateTemp <= dDateTemp2) {
+                                dInitDate = Ext.Date.format(dDateTemp, 'm/d/Y');
+                                //vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date === dInitDate && item.trade == '*');
                                 var vNewValue = 0
-                                if (vData[vNewIndex]) {
+                                /*   if (vData[vNewIndex]) {
                                     vNewValue = parseFloat(vData[vNewIndex].sum_act || 0) + (parseFloat(vSplitHours))
-                                    vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                                } 
-                                dTemp = new Date(dDateTemp);
+                                      vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                  } */
+                                  dTemp = new Date(dDateTemp);
                                 dListofDates.push(dTemp);
-                                dDateTemp.setDate(dDateTemp.getDate()+1);
-                              } 
-                              try{
-                                Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates",dListofDates);
-                                Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours",vSplitHours);
-            
+                                dDateTemp.setDate(dDateTemp.getDate() + 1);
                               }
-                              catch(err){
-            
-                              }
-                             
-            
+                              try {
+                                Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates", dListofDates);
+                                Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours", vSplitHours);
+
+                              } catch (err) {}
+
                             } else {
-                              try{
+                              try {
                                 var vSplitHours = Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("hours")
-                              
-                                Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function(_Date){
-                                  dInitDate = Ext.Date.format(new Date(_Date),'m/d/Y');
-                                   vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date ===dInitDate  && item.trade == '*');
-                                   var vNewValue = 0
-                                   if (vData[vOldIndex]) {
-                                      vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
-                                      vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                                  }
-                                });
-            
-                              }
-                             
-                              catch(err){
-            
-                              }
-                              var dDateTemp=new Date(Ext.Date.format(vChildNewStartDate,'m/d/Y')),
-                              dDateTemp2=new Date(Ext.Date.format(vChildNewEndDate,'m/d/Y')),
-                              dListofDates=[],
-                              nOccurr=Ext.Date.diffDays(dDateTemp,dDateTemp2)+1;
+
+                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function (_Date) {
+                                    dInitDate = Ext.Date.format(new Date(_Date), 'm/d/Y');
+                                    //vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date === dInitDate && item.trade == '*');
+                                    var vNewValue = 0
+                                    /*   if (vData[vOldIndex]) {
+                                        vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
+                                          vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                      } */
+                                  });
+
+                              } catch (err) {}
+                              var dDateTemp = new Date(Ext.Date.format(vChildNewStartDate, 'm/d/Y')),
+                              dDateTemp2 = new Date(Ext.Date.format(vChildNewEndDate, 'm/d/Y')),
+                              dListofDates = [],
+                              nOccurr = Ext.Date.diffDays(dDateTemp, dDateTemp2) + 1;
                               var dTemp = new Date();
-            
-                              vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est)/nOccurr).toFixed(1));
-            
-                              
-                              while(dDateTemp<=dDateTemp2){
-                                dInitDate = Ext.Date.format(dDateTemp,'m/d/Y');
-                                vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date ===dInitDate  && item.trade == '*');
+
+                              vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est) / nOccurr).toFixed(1));
+
+                              while (dDateTemp <= dDateTemp2) {
+                                dInitDate = Ext.Date.format(dDateTemp, 'm/d/Y');
+                                //vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date === dInitDate && item.trade == '*');
                                 var vNewValue = 0
-                                if (vData[vNewIndex]) {
+                                /*   if (vData[vNewIndex]) {
                                     vNewValue = parseFloat(vData[vNewIndex].sum_act || 0) + (parseFloat(vSplitHours))
-                                    vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                                }
-                                dTemp = new Date(dDateTemp);
+                                      vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                  } */
+                                  dTemp = new Date(dDateTemp);
                                 dListofDates.push(dTemp);
-                                dDateTemp.setDate(dDateTemp.getDate()+1);
+                                dDateTemp.setDate(dDateTemp.getDate() + 1);
                               }
-                              try{
-                                Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates",dListofDates);
-                              Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours",vSplitHours);
-                              }
-                              catch(err){}
-                              
-            
+                              try {
+                                Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates", dListofDates);
+                                Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours", vSplitHours);
+                              } catch (err) {}
+
                             }
                             vChildTask.start_date = new Date(vChildTask.start_date.getTime() + vDiff2);
-            
+
                             vChildTask.end_date = new Date(vChildTask.end_date.getTime() + vDiff2);
                             vChildTask.duration = gantt.calculateDuration(vChildTask.start_date, vChildTask.end_date);
-            
-                            
-                            addUndo('update', vChildTask.id, vChildTask, task.id,vUpdateID);
+
+                            addUndo('update', vChildTask.id, vChildTask, task.id, vUpdateID);
                             vChildTask.prev_start = vChildTask.start_date
                               vChildTask.prev_end = vChildTask.end_date
                               vCheckupated = 1;
                             vChildTask.updated = 0;
-                            
-                            if (vChildTask.type == "OP" && vChildTask.$rendered_parent != task.id) {
+
+                            if (vChildTask.type == "Activity" && vChildTask.$rendered_parent != task.id) {
                               let vParentTask = gantt.getTask(vChildTask.$rendered_parent);
                               let vThisListOfChildren = gantt.getChildren(vChildTask.$rendered_parent);
                               let dNewStartDate = new Date(vChildTask.start_date);
@@ -12898,286 +12161,271 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                 let _childTask = gantt.getTask(_child)
                                   if (new Date(_childTask.start_date) < dNewStartDate) {
                                     dNewStartDate = new Date(_childTask.start_date);
-            
+
                                   }
                                   if (new Date(_childTask.end_date) > dNewEndDate) {
                                     dNewEndDate = new Date(_childTask.end_date);
-            
+
                                   }
-            
+
                               });
-            
+
                               vParentTask.start_date = dNewStartDate;
-                             
+
                               vParentTask.end_date = dNewEndDate;
-                             
+
                               vParentTask.duration = gantt.calculateDuration(vParentTask.start_date, vParentTask.end_date);
-                              vParentTask.updated = 0;                                
-                              addUndo('update', vParentTask.id, vParentTask, task.id,vUpdateID);
+                              vParentTask.updated = 0;
+                              addUndo('update', vParentTask.id, vParentTask, task.id, vUpdateID);
                               vParentTask.prev_start = dNewStartDate;
                               vParentTask.prev_end = dNewEndDate;
-                              
-            
+
                             }
                           }
-            
+
                         }
-                        
-            
+
                       }
                       //Management of the linked work orders or activities
                       if (vCheckupated == 1) {
                         gantt.refreshData();
                       }
-                      if (task.type === "OP") {
+                      if (task.type === "Activity") {
                         var vChildTask = task;
                         var vChildStarDate = new Date(vChildTask.prev_start);
                         var vChildNewStartDate = new Date(vChildTask.prev_start);
                         vChildNewStartDate.setTime(vChildNewStartDate.getTime() + vDiff2);
                         var vDuration = vChildTask.dds_act_est
-                          var vData = vSupplierList.data;
+                          //var vData = vSupplierList.data;
                         var dInitDate = Ext.Date.format(vChildStarDate, 'm/d/Y');
                         var dNewDate = Ext.Date.format(vChildNewStartDate, 'm/d/Y');
                         var vOldIndex = null;
                         var vNewIndex = null;
                         var dTemp = new Date();
-                        
+
                         if (vChildTask.dds_act_supplier === "") {
-                            var vSplitHours = Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("hours")
-                                  
-                            Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function(_Date){
-                              dInitDate = Ext.Date.format(new Date(_Date),'m/d/Y');
-                              vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date ===dInitDate  && item.trade == '*');
+                          var vSplitHours = Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("hours")
+
+                            Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function (_Date) {
+                              dInitDate = Ext.Date.format(new Date(_Date), 'm/d/Y');
+                             // vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date === dInitDate && item.trade == '*');
                               var vNewValue = 0
-                              if (vData[vOldIndex]) {
+                              /*   if (vData[vOldIndex]) {
                                   vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
-                                  vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                              }
+                                    vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                } */
                             });
-                            
-                            var dDateTemp=new Date(Ext.Date.format(vChildTask.start_date,'m/d/Y')),
-                            dDateTemp2=new Date(Ext.Date.format(vChildTask.end_date,'m/d/Y')),
-                            dListofDates=[],
-                            nOccurr=Ext.Date.diffDays(dDateTemp,dDateTemp2)+1;
-                            vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est)/nOccurr).toFixed(1));
-            
-                            
-                            while(dDateTemp<=dDateTemp2){
-                              dInitDate = Ext.Date.format(dDateTemp,'m/d/Y');
-                              vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date ===dInitDate  && item.trade == '*');
-                              var vNewValue = 0
-                              if (vData[vNewIndex]) {
-                                  vNewValue = parseFloat(vData[vNewIndex].sum_act || 0) + (parseFloat(vSplitHours))
+
+                          var dDateTemp = new Date(Ext.Date.format(vChildTask.start_date, 'm/d/Y')),
+                          dDateTemp2 = new Date(Ext.Date.format(vChildTask.end_date, 'm/d/Y')),
+                          dListofDates = [],
+                          nOccurr = Ext.Date.diffDays(dDateTemp, dDateTemp2) + 1;
+                          vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est) / nOccurr).toFixed(1));
+
+                          while (dDateTemp <= dDateTemp2) {
+                            dInitDate = Ext.Date.format(dDateTemp, 'm/d/Y');
+                            //vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date === dInitDate && item.trade == '*');
+                            var vNewValue = 0
+                             /*  if (vData[vNewIndex]) {
+                                vNewValue = parseFloat(vData[vNewIndex].sum_act || 0) + (parseFloat(vSplitHours))
                                   vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                              }
+                              } */
                               dTemp = new Date(dDateTemp);
-                              dListofDates.push(dTemp);
-                              dDateTemp.setDate(dDateTemp.getDate()+1);
-                            }
-                            Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates",dListofDates);
-                            Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours",vSplitHours);
-            
+                            dListofDates.push(dTemp);
+                            dDateTemp.setDate(dDateTemp.getDate() + 1);
+                          }
+                          Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates", dListofDates);
+                          Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours", vSplitHours);
+
                         } else {
                           var vSplitHours = Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("hours")
-                                  
-                            Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function(_Date){
-                              dInitDate = Ext.Date.format(new Date(_Date),'m/d/Y');
-                              vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date ===dInitDate  && item.trade == '*');
+
+                            Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function (_Date) {
+                              dInitDate = Ext.Date.format(new Date(_Date), 'm/d/Y');
+                              //vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date === dInitDate && item.trade == '*');
                               var vNewValue = 0
-                              if (vData[vOldIndex]) {
+                               /*  if (vData[vOldIndex]) {
                                   vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
-                                  vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                              }
+                                    vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                } */
                             });
-                            
-                            var dDateTemp=new Date(Ext.Date.format(vChildTask.start_date,'m/d/Y')),
-                            dDateTemp2=new Date(Ext.Date.format(vChildTask.end_date,'m/d/Y')),
-                            dListofDates=[],
-                            nOccurr=Ext.Date.diffDays(dDateTemp,dDateTemp2)+1;
-                            vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est)/nOccurr).toFixed(1));
-            
-                            
-                            while(dDateTemp<=dDateTemp2){
-                              dInitDate = Ext.Date.format(dDateTemp,'m/d/Y');
-                              vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date ===dInitDate  && item.trade == '*');
-                              var vNewValue = 0
-                              if (vData[vNewIndex]) {
-                                  vNewValue = parseFloat(vData[vNewIndex].sum_act || 0) + (parseFloat(vSplitHours))
+
+                          var dDateTemp = new Date(Ext.Date.format(vChildTask.start_date, 'm/d/Y')),
+                          dDateTemp2 = new Date(Ext.Date.format(vChildTask.end_date, 'm/d/Y')),
+                          dListofDates = [],
+                          nOccurr = Ext.Date.diffDays(dDateTemp, dDateTemp2) + 1;
+                          vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est) / nOccurr).toFixed(1));
+
+                          while (dDateTemp <= dDateTemp2) {
+                            dInitDate = Ext.Date.format(dDateTemp, 'm/d/Y');
+                           // vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date === dInitDate && item.trade == '*');
+                            var vNewValue = 0
+                             /*  if (vData[vNewIndex]) {
+                                vNewValue = parseFloat(vData[vNewIndex].sum_act || 0) + (parseFloat(vSplitHours))
                                   vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                              }
+                              } */
                               dTemp = new Date(dDateTemp);
-                              dListofDates.push(dTemp);
-                              dDateTemp.setDate(dDateTemp.getDate()+1);
-                            }
-                            Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates",dListofDates);
-                            Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours",vSplitHours);
-            
+                            dListofDates.push(dTemp);
+                            dDateTemp.setDate(dDateTemp.getDate() + 1);
+                          }
+                          Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates", dListofDates);
+                          Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours", vSplitHours);
+
                         }
-            
-                                          
-            
-                        if(!actionUpdate){                         
-                       
-                            let vParentTask = gantt.getTask(vChildTask.$rendered_parent);
-                            let vThisListOfChildren = gantt.getChildren(vChildTask.$rendered_parent);
-                            let dNewStartDate = new Date(vChildTask.start_date);
-                            let dNewEndDate = new Date(vChildTask.end_date);
-            
-                            vThisListOfChildren.forEach(function (_child) {
-                              let _childTask = gantt.getTask(_child)
-                                if (_childTask.start_date < dNewStartDate) {
-                                  dNewStartDate = new Date(_childTask.start_date);
-            
-                                }
-                                if (_childTask.end_date > dNewEndDate) {
-                                  dNewEndDate = new Date(_childTask.end_date);
-            
-                                }
-            
-                            });
-                            
-                          
-                            vParentTask.start_date = dNewStartDate;                          
-                            vParentTask.end_date = dNewEndDate;                          
-                            vParentTask.duration = gantt.calculateDuration(vParentTask.start_date, vParentTask.end_date);
-                            vParentTask.updated = 0;
-                            addUndo('update', vParentTask.id, vParentTask,task.id,vUpdateID);
-                            vParentTask.prev_start = dNewStartDate;
-                            vParentTask.prev_end = dNewEndDate;
+
+                        if (!actionUpdate) {
+
+                          let vParentTask = gantt.getTask(vChildTask.$rendered_parent);
+                          let vThisListOfChildren = gantt.getChildren(vChildTask.$rendered_parent);
+                          let dNewStartDate = new Date(vChildTask.start_date);
+                          let dNewEndDate = new Date(vChildTask.end_date);
+
+                          vThisListOfChildren.forEach(function (_child) {
+                            let _childTask = gantt.getTask(_child)
+                              if (_childTask.start_date < dNewStartDate) {
+                                dNewStartDate = new Date(_childTask.start_date);
+
+                              }
+                              if (_childTask.end_date > dNewEndDate) {
+                                dNewEndDate = new Date(_childTask.end_date);
+
+                              }
+
+                          });
+
+                          vParentTask.start_date = dNewStartDate;
+                          vParentTask.end_date = dNewEndDate;
+                          vParentTask.duration = gantt.calculateDuration(vParentTask.start_date, vParentTask.end_date);
+                          vParentTask.updated = 0;
+                          addUndo('update', vParentTask.id, vParentTask, task.id, vUpdateID);
+                          vParentTask.prev_start = dNewStartDate;
+                          vParentTask.prev_end = dNewEndDate;
                         }
-                         
-            
+
                       }
                       gantt.getTask(task.id).updated = 0;
                       gantt.getTask(task.id).prev_start = task.start_date;
                       gantt.getTask(task.id).prev_end = task.end_date;
                       gantt.refreshData();
-                    } 
-                    else {
-                      if (1==2) {
-            
-                        if (task.type == "OP") {
+                    } else {
+                      if (1 == 2) {
+
+                        if (task.type == "Activity") {
                           let vParentTask = gantt.getTask(task.$rendered_parent);
                           let vThisListOfChildren = gantt.getChildren(task.$rendered_parent);
                           let dNewStartDate = new Date(task.start_date);
                           let dNewEndDate = new Date(task.end_date);
                           let dTemp = new Date();
-                          
+
                           var vData = vSupplierList.data;
                           vThisListOfChildren.forEach(function (_child) {
                             let _childTask = gantt.getTask(_child)
                               if (new Date(_childTask.start_date) < dNewStartDate) {
                                 dNewStartDate = new Date(_childTask.start_date);
-            
+
                               }
                               if (new Date(_childTask.end_date) > dNewEndDate) {
                                 dNewEndDate = new Date(_childTask.end_date);
-            
+
                               }
-            
+
                           });
-            
+
                           if (task.dds_act_supplier === "") {
                             var vSplitHours = Ext.getStore('gantt.taskdatesimpact').getById(task.id).get("hours")
-                                  
-                            Ext.getStore('gantt.taskdatesimpact').getById(task.id).get("dates").forEach(function(_Date){
-                              dInitDate = Ext.Date.format(new Date(_Date),'m/d/Y');
-                              vOldIndex = vData.findIndex(item => item.supplier_code === task.dds_act_mrc && item.date ===dInitDate  && item.trade == '*');
+
+                              Ext.getStore('gantt.taskdatesimpact').getById(task.id).get("dates").forEach(function (_Date) {
+                                dInitDate = Ext.Date.format(new Date(_Date), 'm/d/Y');
+                                vOldIndex = vData.findIndex(item => item.supplier_code === task.dds_act_mrc && item.date === dInitDate && item.trade == '*');
+                                var vNewValue = 0
+                                  if (vData[vOldIndex]) {
+                                    vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
+                                      vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                  }
+                              });
+
+                            var dDateTemp = new Date(Ext.Date.format(task.start_date, 'm/d/Y')),
+                            dDateTemp2 = new Date(Ext.Date.format(task.end_date, 'm/d/Y')),
+                            dListofDates = [],
+                            nOccurr = Ext.Date.diffDays(dDateTemp, dDateTemp2) + 1;
+                            vSplitHours = parseFloat((parseFloat(task.dds_act_est) / nOccurr).toFixed(1));
+
+                            while (dDateTemp <= dDateTemp2) {
+                              dInitDate = Ext.Date.format(dDateTemp, 'm/d/Y');
+                              vNewIndex = vData.findIndex(item => item.supplier_code === task.dds_act_mrc && item.date === dInitDate && item.trade == '*');
                               var vNewValue = 0
-                              if (vData[vOldIndex]) {
-                                  vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
-                                  vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                              }
-                            });
-                            
-                            var dDateTemp=new Date(Ext.Date.format(task.start_date,'m/d/Y')),
-                            dDateTemp2=new Date(Ext.Date.format(task.end_date,'m/d/Y')),
-                            dListofDates=[],
-                            nOccurr=Ext.Date.diffDays(dDateTemp,dDateTemp2)+1;
-                            vSplitHours = parseFloat((parseFloat(task.dds_act_est)/nOccurr).toFixed(1));
-            
-                            
-                            while(dDateTemp<=dDateTemp2){
-                              dInitDate = Ext.Date.format(dDateTemp,'m/d/Y');
-                              vNewIndex = vData.findIndex(item => item.supplier_code === task.dds_act_mrc && item.date ===dInitDate  && item.trade == '*');
-                              var vNewValue = 0
-                              if (vData[vNewIndex]) {
+                                if (vData[vNewIndex]) {
                                   vNewValue = parseFloat(vData[vNewIndex].sum_act || 0) + (parseFloat(vSplitHours))
-                                  vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                              }
-                              dTemp = new Date(dDateTemp);
+                                    vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                }
+                                dTemp = new Date(dDateTemp);
                               dListofDates.push(dTemp);
-                              dDateTemp.setDate(dDateTemp.getDate()+1);
+                              dDateTemp.setDate(dDateTemp.getDate() + 1);
                             }
-                            Ext.getStore('gantt.taskdatesimpact').getById(task.id).set("dates",dListofDates);
-                            Ext.getStore('gantt.taskdatesimpact').getById(task.id).set("hours",vSplitHours);
-            
-                        } else {
-                          var vSplitHours = Ext.getStore('gantt.taskdatesimpact').getById(task.id).get("hours")
-                                  
-                            Ext.getStore('gantt.taskdatesimpact').getById(task.id).get("dates").forEach(function(_Date){
-                              dInitDate = Ext.Date.format(new Date(_Date),'m/d/Y');
-                              vOldIndex = vData.findIndex(item => item.supplier_code === task.dds_act_supplier && item.date ===dInitDate  && item.trade == '*');
+                            Ext.getStore('gantt.taskdatesimpact').getById(task.id).set("dates", dListofDates);
+                            Ext.getStore('gantt.taskdatesimpact').getById(task.id).set("hours", vSplitHours);
+
+                          } else {
+                            var vSplitHours = Ext.getStore('gantt.taskdatesimpact').getById(task.id).get("hours")
+
+                              Ext.getStore('gantt.taskdatesimpact').getById(task.id).get("dates").forEach(function (_Date) {
+                                dInitDate = Ext.Date.format(new Date(_Date), 'm/d/Y');
+                                vOldIndex = vData.findIndex(item => item.supplier_code === task.dds_act_supplier && item.date === dInitDate && item.trade == '*');
+                                var vNewValue = 0
+                                  if (vData[vOldIndex]) {
+                                    vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
+                                      vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                  }
+                              });
+
+                            var dDateTemp = new Date(Ext.Date.format(task.start_date, 'm/d/Y')),
+                            dDateTemp2 = new Date(Ext.Date.format(task.end_date, 'm/d/Y')),
+                            dListofDates = [],
+                            nOccurr = Ext.Date.diffDays(dDateTemp, dDateTemp2) + 1;
+                            vSplitHours = parseFloat((parseFloat(task.dds_act_est) / nOccurr).toFixed(1));
+
+                            while (dDateTemp <= dDateTemp2) {
+                              dInitDate = Ext.Date.format(dDateTemp, 'm/d/Y');
+                              vNewIndex = vData.findIndex(item => item.supplier_code === task.dds_act_supplier && item.date === dInitDate && item.trade == '*');
                               var vNewValue = 0
-                              if (vData[vOldIndex]) {
-                                  vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
-                                  vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                              }
-                            });
-                            
-                            var dDateTemp=new Date(Ext.Date.format(task.start_date,'m/d/Y')),
-                            dDateTemp2=new Date(Ext.Date.format(task.end_date,'m/d/Y')),
-                            dListofDates=[],
-                            nOccurr=Ext.Date.diffDays(dDateTemp,dDateTemp2)+1;
-                            vSplitHours = parseFloat((parseFloat(task.dds_act_est)/nOccurr).toFixed(1));
-            
-                            
-                            while(dDateTemp<=dDateTemp2){
-                              dInitDate = Ext.Date.format(dDateTemp,'m/d/Y');
-                              vNewIndex = vData.findIndex(item => item.supplier_code === task.dds_act_supplier && item.date ===dInitDate  && item.trade == '*');
-                              var vNewValue = 0
-                              if (vData[vNewIndex]) {
+                                if (vData[vNewIndex]) {
                                   vNewValue = parseFloat(vData[vNewIndex].sum_act || 0) + (parseFloat(vSplitHours))
-                                  vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                              }
-                              dTemp = new Date(dDateTemp);
+                                    vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                }
+                                dTemp = new Date(dDateTemp);
                               dListofDates.push(dTemp);
-                              dDateTemp.setDate(dDateTemp.getDate()+1);
+                              dDateTemp.setDate(dDateTemp.getDate() + 1);
                             }
-                            Ext.getStore('gantt.taskdatesimpact').getById(task.id).set("dates",dListofDates);
-                            Ext.getStore('gantt.taskdatesimpact').getById(task.id).set("hours",vSplitHours);
-            
-                        }
-                          if(!actionUpdate){
+                            Ext.getStore('gantt.taskdatesimpact').getById(task.id).set("dates", dListofDates);
+                            Ext.getStore('gantt.taskdatesimpact').getById(task.id).set("hours", vSplitHours);
+
+                          }
+                          if (!actionUpdate) {
                             vParentTask.start_date = dNewStartDate;
                             vParentTask.end_date = dNewEndDate;
                             vParentTask.duration = gantt.calculateDuration(vParentTask.start_date, vParentTask.end_date);
-                            addUndo('update', vParentTask.id, vParentTask, task.id,vUpdateID);
+                            addUndo('update', vParentTask.id, vParentTask, task.id, vUpdateID);
                             vParentTask.updated = 0;
                             vParentTask.prev_start = vParentTask.start_date
-                            vParentTask.prev_end = vParentTask.end_date;
+                              vParentTask.prev_end = vParentTask.end_date;
                           }
-                          
-                          
-            
-            
+
                         }
                         gantt.getTask(task.id).updated = 0;
                         gantt.getTask(task.id).prev_start = task.start_date;
                         gantt.getTask(task.id).prev_end = task.end_date;
                         gantt.refreshData();
-            
-                      }  
+
+                      }
                     }
-                    }
-                   
-            
+                  }
+
                 });
 
-                gantt.attachEvent("onTaskDblClick", function (vWoNum, e) {
+                gantt.attachEvent("onTaskDblClick", function (vTaskId, e) {
                   ////console.log("dblclick")
-                  /*var task = gantt.getTask(vWoNum);
-                  if ((!task["render"] || task["render"] == "") && task.type == "WO") {
+                  /*var task = gantt.getTask(vTaskId);
+                  if ((!task["render"] || task["render"] == "") && task.type == "Project") {
                   task.render = "split";
                   } else {
                   task.render = "";
@@ -13206,7 +12454,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   var vHours = "";
 
                 });
-                gantt.attachEvent("onContextMenu", function (vWoNum, e, el, d, f, g) {
+                gantt.attachEvent("onContextMenu", function (vTaskId, e, el, d, f, g) {
 
                   function getElementPosition(elem) {
                     var rect = elem.getBoundingClientRect();
@@ -13295,17 +12543,17 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     menuContext.showAt(x, y);
                   } else {
                     var vItems = []
-                    if (vWoNum) {
+                    if (vTaskId) {
                       //var target = e.target || e.srcElement;
-                      if (vWoNum.indexOf("(") > 10000) {
+                      if (vTaskId.indexOf("(") > 10000) {
                         return false;
                       } else {
                         var panel;
 
-                        if (Ext.isEmpty(vWoNum)) {
+                        if (Ext.isEmpty(vTaskId)) {
                           return false;
                         }
-                      //  dDateToSched = new Date(gantt.getTask(vWoNum).start_date)
+                        //  dDateToSched = new Date(gantt.getTask(vTaskId).start_date)
 
                         if (Ext.getCmp('menuContext_Gantt')) {
                           ////console.log('menuContext_Gantt');
@@ -13329,35 +12577,34 @@ Ext.define('EAM.custom.external_DUPLGR', {
                         }).responseData;
                         let _showUpdWo = false;
                         if (EAM.Utils.propertyExists(vList, 'pageData.grid.GRIDRESULT.GRID.DATA')) {
-                            if(vList.pageData.grid.GRIDRESULT.GRID.DATA.length>0){
-                              if(vList.pageData.grid.GRIDRESULT.GRID.DATA[0].ins_desc=="ON"){
-                                _showUpdWo=true;
-                              }
+                          if (vList.pageData.grid.GRIDRESULT.GRID.DATA.length > 0) {
+                            if (vList.pageData.grid.GRIDRESULT.GRID.DATA[0].ins_desc == "ON") {
+                              _showUpdWo = true;
                             }
+                          }
                         }
 
                         //Siva added  funtionality to split
-                        if (gantt.getTask(vWoNum).type == "WO") {
-                          if(_showUpdWo){
+                        if (gantt.getTask(vTaskId).type == "Project") {
+                          if (_showUpdWo) {
                             vItems = [{
-                                id: "View WorkOrder Details",
+                                id: "View projectCode Details",
                                 text: vBoilerList["menu_go_to_wo"]//'Split'
                               }, {
-                                id: "Update WorkOrder",
+                                id: "Update projectCode",
                                 text: vBoilerList["menu_update_wo"]//'Split'
                               }
-                            ]                            
-                          }
-                          else{
+                            ]
+                          } else {
                             vItems = [{
-                                id: "View WorkOrder Details",
+                                id: "View projectCode Details",
                                 text: vBoilerList["menu_go_to_wo"]//'Split'
                               }
                             ]
-                          }                         
+                          }
                         }
-                       
-                        if (gantt.getTask(vWoNum).type == "OP" && (gantt.getTask(vWoNum)["render"] != "split" || !gantt.getTask(vWoNum)["render"]) && (vWoNum.indexOf('#') > 0) && (gantt.getChildren(vWoNum).length == 0 || gantt.getChildren(vWoNum).length <= 0) && vWoNum.endsWith("#0")) {
+						var vReadOnly = false;
+                        if (gantt.getTask(vTaskId).type == "Activity" && (gantt.getTask(vTaskId)["render"] != "split" || !gantt.getTask(vTaskId)["render"]) && (vTaskId.indexOf('#') > 0) && (gantt.getChildren(vTaskId).length == 0 || gantt.getChildren(vTaskId).length <= 0)) {
                           vItems = [
                             /*{
                             id: "Split Activity",
@@ -13366,29 +12613,21 @@ Ext.define('EAM.custom.external_DUPLGR', {
                             {
                               id: "UpdateActivity_item",
                               text: vBoilerList["menu_updateactivity"]//'Update Activity'
-                            },{
+                            }, {
                               id: "view_partavailability",
                               text: vBoilerList["menu_view_partavailability"]
                             }, {
                               id: "view_toolconflicts",
                               text: vBoilerList["menu_view_toolconflicts"]
-                            }
-                           , {
-                            id: "Schedule_activity",
-                            text: 'Add schedule' //vBoilerList["menu_view_toolconflicts"]
-                            },{
-                              id: "Update-DeleteActivity_item",
-                              text: 'Update/Delete Activity' //'Update/Delete Activity'
-                            },
-                            {
-                              id: "CreateActivity_item",
-                              text: 'Create Activity' //'Create Activity'
+                            }, {
+                              id: "Schedule_activity",
+                              text: 'Add schedule' //vBoilerList["menu_view_toolconflicts"]
                             }
 
                           ];
                           var vSplitItem = false;
                         }
-                        if (gantt.getTask(vWoNum).type == "OP" && (gantt.getTask(vWoNum)["render"] == "split") && (vWoNum.indexOf('#') > 0) && (gantt.getChildren(vWoNum).length > 0) && vWoNum.endsWith("#0")) {
+                        if (gantt.getTask(vTaskId).type == "Activity" && (gantt.getTask(vTaskId)["render"] == "split") && (vTaskId.indexOf('#') > 0) && (gantt.getChildren(vTaskId).length > 0)) {
                           vItems = [
                             /*{
                             id: "Unsplit Activity",
@@ -13406,20 +12645,13 @@ Ext.define('EAM.custom.external_DUPLGR', {
                             }, {
                               id: "view_toolconflicts",
                               text: vBoilerList["menu_view_toolconflicts"]
-                            }
-                            , {
-                            id: "Schedule_activity",
-                            text: 'Add schedule' //vBoilerList["menu_view_toolconflicts"]
-                            },{
-                              id: "Update-DeleteActivity_item",
-                              text: 'Update/Delete Activity' //'Update/Delete Activity'
-                            },
-                            {
-                              id: "CreateActivity_item",
-                              text: 'Create Activity' //'Create Activity'
+                            }, {
+                              id: "Schedule_activity",
+                              text: 'Add schedule' //vBoilerList["menu_view_toolconflicts"]
                             }
                           ];
                           var vSplitItem = true;
+						  
                         }
                         if (vItems.length > 0) {
                           var menuContext = new Ext.menu.Menu({
@@ -13430,31 +12662,31 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                 // handle click
                                 //  //console.log('click');
                                 if (b.id == "Schedule_activity") {
-                                  var vWo = vWoNum.split('#')[0],
-                                  vAct = vWoNum.split('#')[1];
-                                  schedule_employee(vWo, vAct, dDateToSched, gantt.getTask(vWoNum).organization);
+                                  var vWo = vTaskId.split('#')[0],
+                                  vAct = vTaskId.split('#')[1];
+                                  schedule_employee(vWo, vAct, dDateToSched, gantt.getTask(vTaskId).organization);
                                 }
-                                if (b.id == "Update WorkOrder") {
-                                  var dblClickedObject = gantt.getTask(vWoNum);
+                                if (b.id == "Update projectCode") {
+                                  var dblClickedObject = gantt.getTask(vTaskId);
 
-                                 /* if (Ext.isEmpty(dblClickedObject.wostatus))
-                                    return true;*/
+                                  /* if (Ext.isEmpty(dblClickedObject.wostatus))
+                                  return true;*/
 
-                                  var vRecordWO = EAM.Ajax.request({
+                                  var vProjectRecord = EAM.Ajax.request({
                                     url: "WSJOBS.HDR",
                                     params: {
                                       SYSTEM_FUNCTION_NAME: "WSJOBS",
                                       USER_FUNCTION_NAME: "WSJOBS",
                                       CURRENT_TAB_NAME: "HDR",
                                       CHECK_CF_CHANGEFLAG: true,
-                                      workordernum: dblClickedObject.main_evt_code,
+                                      projectcode: dblClickedObject.proj_code,
                                       organization: dblClickedObject.organization,
                                       pagemode: "view"
                                     }
                                   }).responseData.pageData.values;
 
                                   var comboStoreStatuses = Ext.create('Ext.data.Store', {
-                                    data: vRecordWO["workorderstatus"].option,
+                                    data: vProjectRecord["projectCodestatus"].option,
                                     id: 'WOStatuses'
                                   });
 
@@ -13505,10 +12737,6 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                                   }
 
-                                  
-
-
-
                                   if (panel == null) {
                                     panel = new Ext.Panel({
                                       title: vBoilerList["woupdatetitle"] + " " + dblClickedObject.id,
@@ -13534,11 +12762,11 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           queryMode: 'local',
                                           displayField: 'display',
                                           valueField: 'value',
-                                          value: vRecordWO["workorderstatus"].selected,
+                                          value: vProjectRecord["projectCodestatus"].selected,
                                           id: "wostatus_upd",
                                           padding: "10px",
-                                          readOnly: WOFieldsAttributes.workorderstatus=="protected"?true:false,
-                                          currentAttribute: WOFieldsAttributes.workorderstatus,
+                                          readOnly: WOFieldsAttributes.projectCodestatus == "protected" ? true : false,
+                                          currentAttribute: WOFieldsAttributes.projectCodestatus,
                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
                                           requiredCls: Ext.baseCSSPrefix + 'form-required-field'
                                         }, {
@@ -13547,12 +12775,12 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           fieldLabel: vBoilerList["woupdate_start_date"],
                                           //fieldLabel: 'From',
                                           id: 'StartDate_upd',
-                                          value: new Date(vRecordWO.schedstartdate),
+                                          value: new Date(vProjectRecord.schedstartdate),
                                           //format: "d/m/y",
                                           padding: "10px",
-                                          readOnly: WOFieldsAttributes.schedstartdate=="protected"?true:false,
+                                          readOnly: WOFieldsAttributes.schedstartdate == "protected" ? true : false,
                                           currentAttribute: WOFieldsAttributes.schedstartdate,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
+                                          readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
                                           requiredCls: Ext.baseCSSPrefix + 'form-required-field'
                                         }, {
                                           xtype: 'uxdate',
@@ -13560,12 +12788,12 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           fieldLabel: vBoilerList["woupdate_end_date"],
                                           //fieldLabel: 'From',
                                           id: 'EndDate_upd',
-                                          value: new Date(vRecordWO.schedenddate),
+                                          value: new Date(vProjectRecord.schedenddate),
                                           //format: "d/m/y",
                                           padding: "10px",
-                                          readOnly: WOFieldsAttributes.schedenddate=="protected"?true:false,
+                                          readOnly: WOFieldsAttributes.schedenddate == "protected" ? true : false,
                                           currentAttribute: WOFieldsAttributes.schedenddate,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
+                                          readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
                                           requiredCls: Ext.baseCSSPrefix + 'form-required-field'
                                         }, {
                                           xtype: 'uxdate',
@@ -13575,9 +12803,9 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           id: 'CompletedDate_upd',
                                           //format: "d/m/y",
                                           padding: "10px",
-                                          readOnly: WOFieldsAttributes.datecompleted=="protected"?true:false,
+                                          readOnly: WOFieldsAttributes.datecompleted == "protected" ? true : false,
                                           currentAttribute: WOFieldsAttributes.datecompleted,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
+                                          readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
                                           requiredCls: Ext.baseCSSPrefix + 'form-required-field'
                                         }, {
                                           name: 'woupd_assignto',
@@ -13587,12 +12815,12 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           rowspan: 1,
                                           fieldLabel: vBoilerList["woupdate_assign_to"],
                                           maxLength: 15,
-                                          value: vRecordWO.assignedto,
+                                          value: vProjectRecord.projmanager,
                                           upper: !0,
                                           padding: "10px",
-                                          readOnly: WOFieldsAttributes.assignedto=="protected"?true:false,
-                                          currentAttribute: WOFieldsAttributes.assignedto,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
+                                          readOnly: WOFieldsAttributes.projmanager == "protected" ? true : false,
+                                          currentAttribute: WOFieldsAttributes.projmanager,
+                                          readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
                                           requiredCls: Ext.baseCSSPrefix + 'form-required-field'
                                         }
                                       ],
@@ -13607,21 +12835,21 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           margin: '0 0 0 5',
                                           handler: function () {
 
-                                            var vRecordWOUpd = EAM.Ajax.request({
+                                            var vProjectRecordUpd = EAM.Ajax.request({
                                               url: "WSJOBS.HDR",
                                               params: {
                                                 SYSTEM_FUNCTION_NAME: "WSJOBS",
                                                 USER_FUNCTION_NAME: "WSJOBS",
                                                 CURRENT_TAB_NAME: "HDR",
                                                 CHECK_CF_CHANGEFLAG: true,
-                                                workordernum: dblClickedObject.main_evt_code,
+                                                projectcode: dblClickedObject.proj_code,
                                                 organization: dblClickedObject.organization,
                                                 pagemode: "view"
                                               }
                                             }).responseData.pageData.values;
-                                            for (var k in vRecordWOUpd) {
-                                              if (Ext.isObject(vRecordWOUpd[k])) {
-                                                vRecordWOUpd[k] = vRecordWOUpd[k].selected
+                                            for (var k in vProjectRecordUpd) {
+                                              if (Ext.isObject(vProjectRecordUpd[k])) {
+                                                vProjectRecordUpd[k] = vProjectRecordUpd[k].selected
                                               }
                                             }
                                             var dD = new Date(Ext.getCmp('StartDate_upd').rawDate);
@@ -13631,36 +12859,36 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                             gantt.getTask(dblClickedObject.id).end_date = new Date(dF.getFullYear(), dF.getMonth(), dF.getDate(), '23', '59', '00');
 
                                             if (!Ext.isEmpty(Ext.getCmp('StartDate_upd').value)) {
-                                              vRecordWOUpd.schedstartdate = formatDate(Ext.getCmp('StartDate_upd').rawDate);
+                                              vProjectRecordUpd.schedstartdate = formatDate(Ext.getCmp('StartDate_upd').rawDate);
                                             } else {
-                                              vRecordWOUpd.schedstartdate = "";
+                                              vProjectRecordUpd.schedstartdate = "";
                                             }
                                             if (!Ext.isEmpty(Ext.getCmp('EndDate_upd').value)) {
-                                              vRecordWOUpd.schedenddate = formatDate(Ext.getCmp('EndDate_upd').rawDate);
+                                              vProjectRecordUpd.schedenddate = formatDate(Ext.getCmp('EndDate_upd').rawDate);
                                             } else {
-                                              vRecordWOUpd.schedenddate = "";
+                                              vProjectRecordUpd.schedenddate = "";
                                             }
                                             if (!Ext.isEmpty(Ext.getCmp('CompletedDate_upd').value)) {
-                                              vRecordWOUpd.datecompleted = formatDate(Ext.getCmp('CompletedDate_upd').rawDate);
+                                              vProjectRecordUpd.datecompleted = formatDate(Ext.getCmp('CompletedDate_upd').rawDate);
                                             } else {
-                                              vRecordWOUpd.datecompleted = "";
+                                              vProjectRecordUpd.datecompleted = "";
                                             }
 
-                                            vRecordWOUpd.workorderstatus = Ext.getCmp('wostatus_upd').value;
+                                            vProjectRecordUpd.projectCodestatus = Ext.getCmp('wostatus_upd').value;
 
-                                            var dStart = new Date(EAM.utils.Date.parseDate(vRecordWOUpd.actstartdate));
-                                            dStart.setDate(dStart.getDate() + EAM.utils.Date.diffDays(EAM.utils.Date.parseDate(vRecordWOUpd.actstartdate), EAM.utils.Date.parseDate(vRecordWOUpd.schedstartdate)));
+                                            var dStart = new Date(EAM.utils.Date.parseDate(vProjectRecordUpd.actstartdate));
+                                            dStart.setDate(dStart.getDate() + EAM.utils.Date.diffDays(EAM.utils.Date.parseDate(vProjectRecordUpd.actstartdate), EAM.utils.Date.parseDate(vProjectRecordUpd.schedstartdate)));
 
-                                            var dEnd = new Date(EAM.utils.Date.parseDate(vRecordWOUpd.actenddate));
-                                            dEnd.setDate(dEnd.getDate() + EAM.utils.Date.diffDays(EAM.utils.Date.parseDate(vRecordWOUpd.actenddate), EAM.utils.Date.parseDate(vRecordWOUpd.schedenddate)));
+                                            var dEnd = new Date(EAM.utils.Date.parseDate(vProjectRecordUpd.actenddate));
+                                            dEnd.setDate(dEnd.getDate() + EAM.utils.Date.diffDays(EAM.utils.Date.parseDate(vProjectRecordUpd.actenddate), EAM.utils.Date.parseDate(vProjectRecordUpd.schedenddate)));
 
-                                            vRecordWOUpd.actstartdate = formatDate(new Date(dStart.getFullYear(), dStart.getMonth(), dStart.getDate(), '00', '00'));
-                                            vRecordWOUpd.actenddate = formatDate(new Date(dEnd.getFullYear(), dEnd.getMonth(), dEnd.getDate(), '00', '00'));
-                                            vRecordWOUpd.assignedto = Ext.getCmp('woupd_assignto').value;
+                                            vProjectRecordUpd.actstartdate = formatDate(new Date(dStart.getFullYear(), dStart.getMonth(), dStart.getDate(), '00', '00'));
+                                            vProjectRecordUpd.actenddate = formatDate(new Date(dEnd.getFullYear(), dEnd.getMonth(), dEnd.getDate(), '00', '00'));
+                                            vProjectRecordUpd.projmanager = Ext.getCmp('woupd_assignto').value;
 
                                             var vStatusWOUpd = EAM.Ajax.request({
                                               url: "WSJOBS.HDR?pageaction=SAVE",
-                                              params: Ext.merge(vRecordWOUpd, {
+                                              params: Ext.merge(vProjectRecordUpd, {
                                                 SYSTEM_FUNCTION_NAME: "WSJOBS",
                                                 USER_FUNCTION_NAME: "WSJOBS",
                                                 CURRENT_TAB_NAME: "HDR",
@@ -13677,7 +12905,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                               find = ':param2';
                                               re = new RegExp(find, 'g');
                                               vMsg = vMsg.replace(re, '1 (' + dblClickedObject.wo + ')');
-                                              //parent.EAM.Messaging.showConfirmation(vCounter + " of " + vTotalCounter + " WorkOrder(s) updated successfully.");
+                                              //parent.EAM.Messaging.showConfirmation(vCounter + " of " + vTotalCounter + " projectCode(s) updated successfully.");
 
                                               EAM.Messaging.showConfirmation(vMsg);
 
@@ -13748,24 +12976,24 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                     panel.show();
                                   }
                                 }
-                                if (b.id == "View WorkOrder Details") {
+                                if (b.id == "View projectCode Details") {
                                   EAM.ContextManager.getEAM("parent").Usage.start("screen_hyperlink");
-                                  var WO = gantt.getTask(vWoNum)
-                                    var vWODDsJobType = 2005//gantt.custom_settings.wo_wsjobs_ddspyid[WO.dds_evt_jobtype]
+                                  var WO = gantt.getTask(vTaskId)
+                                    var vWODDsJobType = 2005 //gantt.custom_settings.wo_wsjobs_ddspyid[WO.dds_evt_jobtype]
                                     var vWOScreenJobType = gantt.custom_settings.wo_wsjobs_screen_hpl[WO.dds_evt_jobtype] || "WSJOBS"
-                                    a = ["hyperlink", 1, "Q:WEBL", "COMPONENT_INFO_TYPE=HEAD_DATA&DATASPY_ID="+vWODDsJobType+"&MADDON_FILTER_ALIAS_NAME_1=workordernum&MADDON_FILTER_OPERATOR_1=" + encodeURIComponent("=") + "&MADDON_FILTER_JOINER_1=AND&MADDON_FILTER_SEQNUM_1=1&MADDON_FILTER_VALUE_1=" + encodeURIComponent(gantt.getTask(vWoNum).main_evt_code) + "&ADDONS_REQUIRED=true&", "workordernum"];
-                                    var b = EAM.Utils.createModal({
+                                    a = ["hyperlink", 1, "Q:WEBL", "COMPONENT_INFO_TYPE=HEAD_DATA&DATASPY_ID=" + vWODDsJobType + "&MADDON_FILTER_ALIAS_NAME_1=projectcode&MADDON_FILTER_OPERATOR_1=" + encodeURIComponent("=") + "&MADDON_FILTER_JOINER_1=AND&MADDON_FILTER_SEQNUM_1=1&MADDON_FILTER_VALUE_1=" + encodeURIComponent(gantt.getTask(vTaskId).proj_code) + "&ADDONS_REQUIRED=true&", "projectcode"];
+                                  var b = EAM.Utils.createModal({
                                     header: false,
                                     cust_object: 'shutdown_planning',
                                     parentContext: window
                                   });
                                   b.show();
                                   b.update("loadmain?initpath=WSJOBS&SYSTEM_FUNCTION_NAME=WSJOBS&USER_FUNCTION_NAME=WSJOBS&MENU_MODULE_KEY=-1&fromlogin=yes&popup=TRUE&skipfirstfunccheck=true&CURRENT_TAB_NAME=LST&hyperlinksource=F&uitheme=ux3", a)
-                                  
+
                                 }
 
                                 if (b.id == "view_toolconflicts") {
-                                  var WO = gantt.getTask(vWoNum);
+                                  var WO = gantt.getTask(vTaskId);
                                   var vParams = {
                                     'USER_FUNCTION_NAME': "BSALPG",
                                     'gridname': "XUDSTO",
@@ -13797,11 +13025,11 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                 }
 
                                 if (b.id == "view_partavailability") {
-                                  var WO = gantt.getTask(vWoNum);
+                                  var WO = gantt.getTask(vTaskId);
                                   var d = {
                                     'organization': WO.dds_evt_org,
                                     'activity': WO.id.split('#')[1],
-                                    'workordernum': WO.id.split('#')[0],
+                                    'projectcode': WO.id.split('#')[0],
                                     'department': WO.dds_evt_mrc,
                                     'filterfields': "activity",
                                     'filteroperator': "=",
@@ -13824,10 +13052,10 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                   }).show()
                                 }
                                 if (b.id == "Add_specific_date") {
-                                  var dblClickedObject = gantt.getTask(vWoNum);
+                                  var dblClickedObject = gantt.getTask(vTaskId);
                                   var sDateSpeStore = Ext.getStore('gantt.datespetype.store')
 
-                                    var actTask = gantt.getTask(vWoNum);
+                                    var actTask = gantt.getTask(vTaskId);
 
                                   if (Ext.getCmp('datespe_type')) {
                                     ////console.log('destroy_CompletedDate_upd');
@@ -13839,7 +13067,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                                   if (panel == null) {
                                     panel = new Ext.Panel({
-                                      title: "Ajoute date spécifique", //vBoilerList["activityupdatetitle"] + " " + actTask.parent,
+                                      title: "Ajoute date spÃ©cifique", //vBoilerList["activityupdatetitle"] + " " + actTask.parent,
                                       frame: true,
                                       width: 490,
                                       id: 'DateSpeAddPanel',
@@ -13888,7 +13116,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           fieldLabel: vBoilerList["datespe_date_lb"],
                                           //fieldLabel: 'From',
                                           id: 'datespe_date',
-                                          value: new Date(gantt.getTask(vWoNum).start_date),
+                                          value: new Date(gantt.getTask(vTaskId).start_date),
                                           //format: "d/m/y",																		,
                                           allowBlank: false,
                                           currentAttribute: "required",
@@ -13928,14 +13156,14 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                                   MADDON_FILTER_OPERATOR_1: "=",
                                                   MADDON_FILTER_JOINER_1: "AND",
                                                   MADDON_FILTER_SEQNUM_1: "1",
-                                                  MADDON_FILTER_VALUE_1: vWoNum.split('#')[0],
+                                                  MADDON_FILTER_VALUE_1: vTaskId.split('#')[0],
                                                   MADDON_LPAREN_1: false,
                                                   MADDON_RPAREN_1: false,
                                                   MADDON_FILTER_ALIAS_NAME_2: "wspf_10_wo_act",
                                                   MADDON_FILTER_OPERATOR_2: "=",
                                                   MADDON_FILTER_JOINER_2: "AND",
                                                   MADDON_FILTER_SEQNUM_2: "2",
-                                                  MADDON_FILTER_VALUE_2: vWoNum.split('#')[1],
+                                                  MADDON_FILTER_VALUE_2: vTaskId.split('#')[1],
                                                   MADDON_LPAREN_2: false,
                                                   MADDON_RPAREN_2: false,
                                                   USER_FUNCTION_NAME: "XUDASP",
@@ -14000,8 +13228,8 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                                 vNewRecord["wspf_10_date_desc"] = Ext.getCmp('datespe_desc').value
                                                 vNewRecord["wspf_10_date_line"] = Ext.Date.format(dNewDate, 'm/d/Y H:i')
                                                 vNewRecord["wspf_10_type_date"] = Ext.getCmp('datespe_type').value
-                                                vNewRecord["wspf_10_wo"] = vWoNum.split('#')[0]
-                                                vNewRecord["wspf_10_wo_act"] = vWoNum.split('#')[1]
+                                                vNewRecord["wspf_10_wo"] = vTaskId.split('#')[0]
+                                                vNewRecord["wspf_10_wo_act"] = vTaskId.split('#')[1]
                                                 vNewRecord["wspf_10_line"] = vNewLigne
 
                                                 var vStatus = EAM.Ajax.request({
@@ -14016,7 +13244,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                                   })
                                                 });
                                               if (vStatus.success) {
-                                                var vId = vWoNum.split('#')[0] + '#' + vWoNum.split('#')[1] + '#0'
+                                                var vId = vTaskId.split('#')[0] + '#' + vTaskId.split('#')[1] + '#0'
                                                   if (DateSpeMap.has(vId)) {
                                                     var map = DateSpeMap.get(vId);
                                                     var mapdetails = {
@@ -14048,15 +13276,15 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                     });
                                     panel.show();
                                   }
-                                  //gantt.refreshTask(vWoNum, true);
+                                  //gantt.refreshTask(vTaskId, true);
                                 }
                                 if (b.id == "UpdateActivity_item") {
-                                  var dblClickedObject = gantt.getTask(vWoNum);
+                                  var dblClickedObject = gantt.getTask(vTaskId);
 
-                                  var actTask = gantt.getTask(vWoNum);
+                                  var actTask = gantt.getTask(vTaskId);
                                   var vact = actTask.act_act;
                                   var indexact = actTask.id.indexOf('#');
-                                  var actnumber = actTask.id.split("#")[1]; //actTask.id.substring(indexact+1,actTask.length);
+                                  var projActivity = actTask.id.split("#")[1]; //actTask.id.substring(indexact+1,actTask.length);
                                   var vClassActHrs = (vSplitItem) ? "form-text-readonly" : "";
 
                                   var vRecordActivity = EAM.Ajax.request({
@@ -14066,9 +13294,9 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                       USER_FUNCTION_NAME: /* gantt.custom_settings.wo_wsjobs_screen[actTask.dds_evt_jobtype]||*/ "WSJOBS",
                                       CURRENT_TAB_NAME: "ACT",
                                       CHECK_CF_CHANGEFLAG: true,
-                                      workordernum: actTask.id.split('#')[0],
+                                      projectcode: actTask.id.split('#')[0],
                                       organization: actTask.organization,
-                                      activity: actnumber,
+                                      activity: projActivity,
                                       pagemode: "view"
                                     }
                                   }).responseData.pageData.values;
@@ -14111,43 +13339,41 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                                   }
 
-                                  var vRecordWOActUpd = EAM.Ajax.request({
+                                  var vProjectRecordActUpd = EAM.Ajax.request({
                                     url: "WSJOBS.ACT",
                                     params: {
                                       SYSTEM_FUNCTION_NAME: "WSJOBS",
                                       USER_FUNCTION_NAME: /* gantt.custom_settings.wo_wsjobs_screen[actTask.dds_evt_jobtype]||*/ "WSJOBS",
                                       CURRENT_TAB_NAME: "ACT",
                                       CHECK_CF_CHANGEFLAG: true,
-                                      workordernum: actTask.parent,
+                                      projectcode: actTask.parent,
                                       organization: actTask.organization,
-                                      activity: actnumber,
+                                      activity: projActivity,
                                       pagemode: "view"
                                     }
                                   });
                                   var ActFieldsAttributes = {};
-            
-                                  if(vRecordWOActUpd.success){
-                                    if(EAM.Utils.propertyExists(vRecordWOActUpd,'responseData.pageData.attributes')){
-                                      for (var key in vRecordWOActUpd.responseData.pageData.attributes){
-                    
-                                        ActFieldsAttributes[key]= vRecordWOActUpd.responseData.pageData.attributes[key]
-                    
+
+                                  if (vProjectRecordActUpd.success) {
+                                    if (EAM.Utils.propertyExists(vProjectRecordActUpd, 'responseData.pageData.attributes')) {
+                                      for (var key in vProjectRecordActUpd.responseData.pageData.attributes) {
+
+                                        ActFieldsAttributes[key] = vProjectRecordActUpd.responseData.pageData.attributes[key]
+
                                       }
                                     }
-                    
+
                                   }
-                    
-            
-            
+
                                   var bActCompleted = false;
-            
-                                  if(vRecordActivity.completed=="-1"){
-                                    bActCompleted=true;
+
+                                  if (vRecordActivity.completed == "-1") {
+                                    bActCompleted = true;
                                   }
-            
+
                                   if (panel == null) {
                                     panel = new Ext.Panel({
-                                      title: vBoilerList["activityupdatetitle"] + " " + actTask.parent + "#" + actnumber,
+                                      title: vBoilerList["activityupdatetitle"] + " " + actTask.parent + "#" + projActivity,
                                       frame: true,
                                       width: 490,
                                       id: 'ActUpdatePanel1',
@@ -14162,7 +13388,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                       layoutConfig: {
                                         animate: true
                                       },
-            
+
                                       items: [{
                                           xtype: 'uxnumber',
                                           //queryMode: 'local',
@@ -14172,10 +13398,10 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           id: 'Act_Est_Hours_Field',
                                           vtype: "currency",
                                           numberFormat: "24,6",
-                                          value:EAM.utils.Format.number.toClientFormat(vRecordActivity.esthrs,'number'), 
-                                          readOnly: ActFieldsAttributes.esthrs=="protected"?true:false,
+                                          value: EAM.utils.Format.number.toClientFormat(vRecordActivity.esthrs, 'number'),
+                                          readOnly: ActFieldsAttributes.esthrs == "protected" ? true : false,
                                           currentAttribute: ActFieldsAttributes.esthrs,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
+                                          readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
                                           requiredCls: Ext.baseCSSPrefix + 'form-required-field',
                                           padding: "10px"
                                         }, {
@@ -14189,9 +13415,9 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           numberFormat: "8,0",
                                           value: parseFloat(vRecordActivity.personsreq),
                                           padding: "10px",
-                                          readOnly: ActFieldsAttributes.personsreq=="protected"?true:false,
+                                          readOnly: ActFieldsAttributes.personsreq == "protected" ? true : false,
                                           currentAttribute: ActFieldsAttributes.personsreq,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
+                                          readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
                                           requiredCls: Ext.baseCSSPrefix + 'form-required-field'
                                         }, {
                                           name: 'act_udfchar01',
@@ -14222,9 +13448,9 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           value: vRecordActivity.udfchar01,
                                           maxLength: "30",
                                           padding: "10px",
-                                          readOnly: ActFieldsAttributes.udfchar01=="protected"?true:false,
+                                          readOnly: ActFieldsAttributes.udfchar01 == "protected" ? true : false,
                                           currentAttribute: ActFieldsAttributes.udfchar01,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
+                                          readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
                                           requiredCls: Ext.baseCSSPrefix + 'form-required-field'
                                         }, {
                                           xtype: 'textfield',
@@ -14237,9 +13463,9 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           size: "50",
                                           maxLength: "256",
                                           padding: "10px",
-                                          readOnly: ActFieldsAttributes.udfnote01=="protected"?true:false,
+                                          readOnly: ActFieldsAttributes.udfnote01 == "protected" ? true : false,
                                           currentAttribute: ActFieldsAttributes.udfnote01,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
+                                          readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
                                           requiredCls: Ext.baseCSSPrefix + 'form-required-field'
                                         }, {
                                           xtype: 'uxnumber',
@@ -14249,38 +13475,37 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                           maskRe: "/[0-9]/",
                                           enforceMaxLength: true,
                                           maxLength: 3,
-                                          maxValue : 100,
+                                          maxValue: 100,
                                           numberFormat: "8,0",
-                                          value: EAM.utils.Format.number.toClientFormat(vRecordActivity.percentcomplete,'number'),  
+                                          value: EAM.utils.Format.number.toClientFormat(vRecordActivity.percentcomplete, 'number'),
                                           padding: "10px",
-                                          readOnly: ActFieldsAttributes.percentcomplete=="protected"?true:false,
+                                          readOnly: ActFieldsAttributes.percentcomplete == "protected" ? true : false,
                                           currentAttribute: ActFieldsAttributes.percentcomplete,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
+                                          readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
                                           requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                                        },
-                                            {xtype: 'checkbox',
-                                            fieldLabel: vBoilerList["woactcomplete"],
-                                            inputValue: '1',
-                                            id: 'Act_Complete_Field',
-                                            labelAlign: 'right',
-                                            hidden: false,
-                                            checked: bActCompleted,
-                                            padding: "10px",
-                                            listeners: {
-                                                change : function(){
-                                                    if(Ext.getCmp("Act_Complete_Field").getValue()){
-                                                        Ext.getCmp("Act_Percentcplt_Field").setValue("100");
-                                                    }
-                                                    else{
-                                                        Ext.getCmp("Act_Percentcplt_Field").setValue(null);
-                                                    }
-                                                }
-                                            },
-                                            readOnly: ActFieldsAttributes.completed=="protected"?true:false,
-                                            currentAttribute: ActFieldsAttributes.completed,
-                                             readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                            requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                                            
+                                        }, {
+                                          xtype: 'checkbox',
+                                          fieldLabel: vBoilerList["woactcomplete"],
+                                          inputValue: '1',
+                                          id: 'Act_Complete_Field',
+                                          labelAlign: 'right',
+                                          hidden: false,
+                                          checked: bActCompleted,
+                                          padding: "10px",
+                                          listeners: {
+                                            change: function () {
+                                              if (Ext.getCmp("Act_Complete_Field").getValue()) {
+                                                Ext.getCmp("Act_Percentcplt_Field").setValue("100");
+                                              } else {
+                                                Ext.getCmp("Act_Percentcplt_Field").setValue(null);
+                                              }
+                                            }
+                                          },
+                                          readOnly: ActFieldsAttributes.completed == "protected" ? true : false,
+                                          currentAttribute: ActFieldsAttributes.completed,
+                                          readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
+                                          requiredCls: Ext.baseCSSPrefix + 'form-required-field'
+
                                         }
                                       ],
                                       buttons: [{
@@ -14297,67 +13522,66 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                             setTimeout(
                                               function () {
 
-                                              var vRecordWOActUpd = EAM.Ajax.request({
+                                              var vProjectRecordActUpd = EAM.Ajax.request({
                                                 url: "WSJOBS.ACT",
                                                 params: {
                                                   SYSTEM_FUNCTION_NAME: "WSJOBS",
                                                   USER_FUNCTION_NAME: /* gantt.custom_settings.wo_wsjobs_screen[actTask.dds_evt_jobtype]||*/ "WSJOBS",
                                                   CURRENT_TAB_NAME: "ACT",
                                                   CHECK_CF_CHANGEFLAG: true,
-                                                  workordernum: actTask.parent,
+                                                  projectcode: actTask.parent,
                                                   organization: actTask.organization,
-                                                  activity: actnumber,
+                                                  activity: projActivity,
                                                   pagemode: "view"
                                                 }
                                               }).responseData.pageData.values;
-                                              for (var k in vRecordWOActUpd) {
-                                                if (Ext.isObject(vRecordWOActUpd[k])) {
-                                                  vRecordWOActUpd[k] = vRecordWOActUpd[k].selected
+                                              for (var k in vProjectRecordActUpd) {
+                                                if (Ext.isObject(vProjectRecordActUpd[k])) {
+                                                  vProjectRecordActUpd[k] = vProjectRecordActUpd[k].selected
                                                 }
                                               }
 
                                               if (!Ext.isEmpty(Ext.getCmp('Act_Est_Hours_Field').rawValue)) {
-                                                vRecordWOActUpd.esthrs = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(),"number")) ;
+                                                vProjectRecordActUpd.esthrs = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(), "number"));
                                               } else if (Ext.isEmpty(Ext.getCmp('Act_Est_Hours_Field').rawValue)) {
-                                                vRecordWOActUpd.esthrs = "";
+                                                vProjectRecordActUpd.esthrs = "";
                                               } else {
-                                                vRecordWOActUpd.esthrs = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(),"number")) ;
+                                                vProjectRecordActUpd.esthrs = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(), "number"));
                                               }
                                               if (!Ext.isEmpty(Ext.getCmp('Act_Note_Field').rawValue)) {
-                                                vRecordWOActUpd.udfnote01 = Ext.getCmp('Act_Note_Field').rawValue;
+                                                vProjectRecordActUpd.udfnote01 = Ext.getCmp('Act_Note_Field').rawValue;
                                               } else if (Ext.isEmpty(Ext.getCmp('Act_Note_Field').rawValue)) {
-                                                vRecordWOActUpd.udfnote01 = "";
+                                                vProjectRecordActUpd.udfnote01 = "";
                                               } else {
-                                                vRecordWOActUpd.udfnote01 = Ext.getCmp('Act_Note_Field').initialValue;
+                                                vProjectRecordActUpd.udfnote01 = Ext.getCmp('Act_Note_Field').initialValue;
                                               }
                                               if (!Ext.isEmpty(Ext.getCmp('Act_NumberOfEmp_Field').rawValue)) {
-                                                vRecordWOActUpd.personsreq = parseFloat(Ext.getCmp('Act_NumberOfEmp_Field').rawValue);
+                                                vProjectRecordActUpd.personsreq = parseFloat(Ext.getCmp('Act_NumberOfEmp_Field').rawValue);
                                               } else if (Ext.isEmpty(Ext.getCmp('Act_NumberOfEmp_Field').rawValue)) {
-                                                vRecordWOActUpd.personsreq = "";
+                                                vProjectRecordActUpd.personsreq = "";
                                               } else {
-                                                vRecordWOActUpd.personsreq = parseFloat(Ext.getCmp('Act_NumberOfEmp_Field').initialValue);
+                                                vProjectRecordActUpd.personsreq = parseFloat(Ext.getCmp('Act_NumberOfEmp_Field').initialValue);
                                               }
 
                                               if (!Ext.isEmpty(Ext.getCmp('Act_Percentcplt_Field').rawValue)) {
-                                                vRecordWOActUpd.percentcomplete = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Percentcplt_Field").getValue(),"number")) ;
+                                                vProjectRecordActUpd.percentcomplete = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Percentcplt_Field").getValue(), "number"));
                                               } else if (Ext.isEmpty(Ext.getCmp('Act_Percentcplt_Field').rawValue)) {
-                                                vRecordWOActUpd.percentcomplete = "";
+                                                vProjectRecordActUpd.percentcomplete = "";
                                               } else {
-                                                vRecordWOActUpd.percentcomplete =  parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Percentcplt_Field").getValue(),"number"));
+                                                vProjectRecordActUpd.percentcomplete = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Percentcplt_Field").getValue(), "number"));
                                               }
 
-                                              vRecordWOActUpd.udfchar01 = Ext.getCmp('act_udfchar01').getValue();
-                                           
-                                              if(Ext.getCmp("Act_Complete_Field").getValue()){
-                                                vRecordWOActUpd.completed='-1'
-                                              }
-                                              else{
-                                                 vRecordWOActUpd.completed='0'
+                                              vProjectRecordActUpd.udfchar01 = Ext.getCmp('act_udfchar01').getValue();
+
+                                              if (Ext.getCmp("Act_Complete_Field").getValue()) {
+                                                vProjectRecordActUpd.completed = '-1'
+                                              } else {
+                                                vProjectRecordActUpd.completed = '0'
                                               }
 
                                               var vStatusWOUpd = EAM.Ajax.request({
                                                 url: "WSJOBS.ACT?pageaction=SAVE",
-                                                params: Ext.merge(vRecordWOActUpd, {
+                                                params: Ext.merge(vProjectRecordActUpd, {
                                                   SYSTEM_FUNCTION_NAME: "WSJOBS",
                                                   USER_FUNCTION_NAME: /*gantt.custom_settings.wo_wsjobs_screen[actTask.dds_evt_jobtype]||*/ "WSJOBS",
                                                   CURRENT_TAB_NAME: "ACT",
@@ -14368,14 +13592,14 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                               });
                                               if (vStatusWOUpd.success) {
 
-                                                gantt.getTask(vWoNum).actest = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(),"number")) ;
-                                                gantt.getTask(vWoNum).dds_act_est = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(),"number")) ;
-                                                gantt.getTask(vWoNum).dds_act_mrc = Ext.getCmp('act_udfchar01').getValue()==""?gantt.getTask(vWoNum).dds_evt_mrc:Ext.getCmp('act_udfchar01').getValue();
-                                                gantt.getTask(vWoNum).womrc = Ext.getCmp('act_udfchar01').getValue()==""?gantt.getTask(vWoNum).dds_evt_mrc:Ext.getCmp('act_udfchar01').getValue();
-                                                gantt.getTask(vWoNum).dds_act_percomplete =parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Percentcplt_Field").getValue(),"number")) ;
-                                                gantt.refreshTask(vWoNum, true);
+                                                gantt.getTask(vTaskId).actest = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(), "number"));
+                                                gantt.getTask(vTaskId).dds_act_est = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(), "number"));
+                                                gantt.getTask(vTaskId).dds_act_mrc = Ext.getCmp('act_udfchar01').getValue() == "" ? gantt.getTask(vTaskId).dds_evt_mrc : Ext.getCmp('act_udfchar01').getValue();
+                                                gantt.getTask(vTaskId).womrc = Ext.getCmp('act_udfchar01').getValue() == "" ? gantt.getTask(vTaskId).dds_evt_mrc : Ext.getCmp('act_udfchar01').getValue();
+                                                gantt.getTask(vTaskId).dds_act_percomplete = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Percentcplt_Field").getValue(), "number"));
+                                                gantt.refreshTask(vTaskId, true);
                                                 var vData = vSupplierList.data;
-                                                var vChildTask= gantt.getTask(vWoNum);
+                                                var vChildTask = gantt.getTask(vTaskId);
 
                                                 var vMsg = vBoilerList["woupdate_success_message"];
                                                 var find = ':param1';
@@ -14384,81 +13608,78 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                                 find = ':param2';
                                                 re = new RegExp(find, 'g');
                                                 vMsg = vMsg.replace(re, '1 (' + actTask.parent + ')');
-                                                //parent.EAM.Messaging.showConfirmation(vCounter + " of " + vTotalCounter + " WorkOrder(s) updated successfully.");
+                                                //parent.EAM.Messaging.showConfirmation(vCounter + " of " + vTotalCounter + " projectCode(s) updated successfully.");
                                                 EAM.Messaging.showConfirmation(vMsg);
                                                 if (vChildTask.dds_act_supplier === "") {
                                                   var vSplitHours = Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("hours")
-                                                  
-                                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function(_Date){
-                                                    dInitDate = Ext.Date.format(new Date(_Date),'m/d/Y');
-                                                     vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date ===dInitDate  && item.trade == '*');
-                                                     var vNewValue = 0
-                                                     if (vData[vOldIndex]) {
-                                                        vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
-                                                        vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                                                    }
-                                                  });
-                                                  
-                                                  var dDateTemp=new Date(Ext.Date.format(vChildTask.start_date,'m/d/Y')),
-                                                  dDateTemp2=new Date(Ext.Date.format(vChildTask.end_date,'m/d/Y')),
-                                                  dListofDates=[],
-                                                  nOccurr=Ext.Date.diffDays(dDateTemp,dDateTemp2)+1;
-                                                  vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est)/nOccurr).toFixed(2));
-                  
-                                                  
-                                                  while(dDateTemp<=dDateTemp2){
-                                                    dInitDate = Ext.Date.format(dDateTemp,'m/d/Y');
-                                                    vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date ===dInitDate  && item.trade == '*');
+
+                                                    Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function (_Date) {
+                                                      dInitDate = Ext.Date.format(new Date(_Date), 'm/d/Y');
+                                                      vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date === dInitDate && item.trade == '*');
+                                                      var vNewValue = 0
+                                                        if (vData[vOldIndex]) {
+                                                          vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
+                                                            vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                                        }
+                                                    });
+
+                                                  var dDateTemp = new Date(Ext.Date.format(vChildTask.start_date, 'm/d/Y')),
+                                                  dDateTemp2 = new Date(Ext.Date.format(vChildTask.end_date, 'm/d/Y')),
+                                                  dListofDates = [],
+                                                  nOccurr = Ext.Date.diffDays(dDateTemp, dDateTemp2) + 1;
+                                                  vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est) / nOccurr).toFixed(2));
+
+                                                  while (dDateTemp <= dDateTemp2) {
+                                                    dInitDate = Ext.Date.format(dDateTemp, 'm/d/Y');
+                                                    vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_mrc && item.date === dInitDate && item.trade == '*');
                                                     var vNewValue = 0
-                                                    if (vData[vNewIndex]) {
+                                                      if (vData[vNewIndex]) {
                                                         vNewValue = parseFloat(vData[vNewIndex].sum_act || 0) + (parseFloat(vSplitHours))
-                                                        vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                                                    }
-                                                    var dTemp = new Date(dDateTemp);
+                                                          vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                                      }
+                                                      var dTemp = new Date(dDateTemp);
                                                     dListofDates.push(dTemp);
-                                                    dDateTemp.setDate(dDateTemp.getDate()+1);
+                                                    dDateTemp.setDate(dDateTemp.getDate() + 1);
                                                   }
-                                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates",dListofDates);
-                                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours",vSplitHours);
+                                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates", dListofDates);
+                                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours", vSplitHours);
                                                 } else {
                                                   var vSplitHours = Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("hours")
-                                                  
-                                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function(_Date){
-                                                    dInitDate = Ext.Date.format(new Date(_Date),'m/d/Y');
-                                                     vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date ===dInitDate  && item.trade == '*');
-                                                     var vNewValue = 0
-                                                     if (vData[vOldIndex]) {
-                                                        vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
-                                                        vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                                                    }
-                                                  });
-                                                  
-                                                  var dDateTemp=new Date(Ext.Date.format(vChildTask.start_date,'m/d/Y')),
-                                                  dDateTemp2=new Date(Ext.Date.format(vChildTask.end_date,'m/d/Y')),
-                                                  dListofDates=[],
-                                                  nOccurr=Ext.Date.diffDays(dDateTemp,dDateTemp2)+1;
+
+                                                    Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).get("dates").forEach(function (_Date) {
+                                                      dInitDate = Ext.Date.format(new Date(_Date), 'm/d/Y');
+                                                      vOldIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date === dInitDate && item.trade == '*');
+                                                      var vNewValue = 0
+                                                        if (vData[vOldIndex]) {
+                                                          vNewValue = parseFloat(vData[vOldIndex].sum_act || 0) - (parseFloat(vSplitHours))
+                                                            vData[vOldIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                                        }
+                                                    });
+
+                                                  var dDateTemp = new Date(Ext.Date.format(vChildTask.start_date, 'm/d/Y')),
+                                                  dDateTemp2 = new Date(Ext.Date.format(vChildTask.end_date, 'm/d/Y')),
+                                                  dListofDates = [],
+                                                  nOccurr = Ext.Date.diffDays(dDateTemp, dDateTemp2) + 1;
 
                                                   var dTemp = new Date();
-                  
-                                                  vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est)/nOccurr).toFixed(2));
-                  
-                                                  
-                                                  while(dDateTemp<=dDateTemp2){
-                                                    dInitDate = Ext.Date.format(dDateTemp,'m/d/Y');
-                                                    vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date ===dInitDate  && item.trade == '*');
+
+                                                  vSplitHours = parseFloat((parseFloat(vChildTask.dds_act_est) / nOccurr).toFixed(2));
+
+                                                  while (dDateTemp <= dDateTemp2) {
+                                                    dInitDate = Ext.Date.format(dDateTemp, 'm/d/Y');
+                                                    vNewIndex = vData.findIndex(item => item.supplier_code === vChildTask.dds_act_supplier && item.date === dInitDate && item.trade == '*');
                                                     var vNewValue = 0
-                                                    if (vData[vNewIndex]) {
+                                                      if (vData[vNewIndex]) {
                                                         vNewValue = parseFloat(vData[vNewIndex].sum_act || 0) + (parseFloat(vSplitHours))
-                                                        vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
-                                                    }
-                                                    dTemp = new Date(dDateTemp);
+                                                          vData[vNewIndex].sum_act = parseFloat(new Number(vNewValue + '').toFixed(parseInt(12)))
+                                                      }
+                                                      dTemp = new Date(dDateTemp);
                                                     dListofDates.push(dTemp);
-                                                    dDateTemp.setDate(dDateTemp.getDate()+1);
+                                                    dDateTemp.setDate(dDateTemp.getDate() + 1);
                                                   }
-                                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates",dListofDates);
-                                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours",vSplitHours);
-                                                  
-                                                   
+                                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("dates", dListofDates);
+                                                  Ext.getStore('gantt.taskdatesimpact').getById(vChildTask.id).set("hours", vSplitHours);
+
                                                 }
                                                 EAM.Utils.unmask(Ext.ComponentQuery.query('#ActUpdatePanel1')[0].el);
 
@@ -14468,7 +13689,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                               } else {
                                                 EAM.Utils.unmask(Ext.ComponentQuery.query('#ActUpdatePanel1')[0].el);
                                                 panel.close();
-                                                gantt.refreshTask(vWoNum, true);
+                                                gantt.refreshTask(vTaskId, true);
                                                 //changeFilter()
                                               }
 
@@ -14505,1392 +13726,13 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                                     panel.show();
                                   }
-                                  gantt.refreshTask(vWoNum, true);
+                                  gantt.refreshTask(vTaskId, true);
                                 }
-                                if (b.id == "Update-DeleteActivity_item") {
-                                    console.log('vWoNum', vWoNum);
-                                    //   var dblClickedObject = gantt.getTask(vWoNum);
-
-                                  var actTask = gantt.getTask(vWoNum);
-                                  console.log('actTask', actTask);
-                                    //   var vact = actTask.act_act;
-                                  var indexact = actTask.id.indexOf('#');
-                                  var actnumber = actTask.id.split("#")[1]; //actTask.id.substring(indexact+1,actTask.length);
-                                  var vClassActHrs = (vSplitItem) ? "form-text-readonly" : "";
-
-                                  var vRecordProjPlanning = EAM.Ajax.request({
-                                      url: "BSUDSC.TAB",
-                                      params: {
-                                        "CURRENT_TAB_NAME": "U1",
-                                        "ONLY_DATA_REQUIRED": "true",
-                                        "REFRESH_GRID": "false",
-                                        "SYSTEM_FUNCTION_NAME": "J1PRJ",
-                                        "THROW_EXCEPTION": "false",
-                                        "USER_FUNCTION_NAME": "J1PRJ",
-                                        "eamid": EAM.SessionStorage.getEamId(),
-                                        "wspf_10_plp_projet": 10081,
-                                        "wspf_10_plp_seq": '4090FC6464E2836DE063AE0A0A0AAD04',
-                                        "tenant": EAM.AppData.getTenantId(),
-                                        "ONLY_DATA_REQUIRED" : true,
-                                        "pagemode" : "view",
-                                        "processaction" : "get"
-                                      }
-                                    }).responseData.pageData.values;
-
-                                  var fields = ['plp_activite_Field', 'plp_descat_Field', 'plp_predecesseur_Field', 'plp_parent_Field',
-                                     'plp_avancement_Field', 'plp_buffer_Field', 'plp_chem_Field', 'plp_datedeb_Field', 
-                                     'plp_datefin_Field', 'plp_dateinideb_Field', 'plp_dateinifin_Field', 'plp_datefigdeb_Field', 
-                                     'plp_datefigfin_Field', 'plp_etpil_Field', 'plp_pilote_Field', 'plp_lot_Field', 
-                                     'plp_eotp_Field', 'plp_eotpdesc_Field', 'plp_commentaire_Field'
-                                    ];
-                                
-                                    for (var i = 0; i < fields.length; i++) {
-                                      if (Ext.getCmp(fields[i])) {
-                                        try {
-                                          Ext.getCmp(fields[i]).destroy();
-                                        } catch (err) {}
-                                      }
-                                  }
-
-                                  var vRecordProjPlanningUpd = EAM.Ajax.request({
-                                      url: "BSUDSC.TAB",
-                                      params: {
-                                        "CURRENT_TAB_NAME": "U1",
-                                        "ONLY_DATA_REQUIRED": "true",
-                                        "REFRESH_GRID": "false",
-                                        "SYSTEM_FUNCTION_NAME": "J1PRJ",
-                                        "THROW_EXCEPTION": "false",
-                                        "USER_FUNCTION_NAME": "J1PRJ",
-                                        "eamid": EAM.SessionStorage.getEamId(),
-                                        "wspf_10_plp_projet": 10081,
-                                        "wspf_10_plp_seq": '4090FC6464E2836DE063AE0A0A0AAD04',
-                                        "tenant": EAM.AppData.getTenantId(),
-                                        "ONLY_DATA_REQUIRED" : true,
-                                        "pagemode" : "view",
-                                        "processaction" : "get"
-                                      }
-                                    });
-                                  var PlanningFieldsAttributes = {};
-            
-                                  if(vRecordProjPlanningUpd.success){
-                                    if(EAM.Utils.propertyExists(vRecordProjPlanningUpd,'responseData.pageData.attributes')){
-                                      for (var key in vRecordProjPlanningUpd.responseData.pageData.attributes){
-                    
-                                        PlanningFieldsAttributes[key]= vRecordProjPlanningUpd.responseData.pageData.attributes[key]
-                    
-                                      }
-                                    }
-                    
-                                  }
-
-                                  var vActivitiesGrid = EAM.Ajax.request({
-                                        url: "GRIDDATA",
-                                        params: {
-                                        GRID_NAME: "XUACT1",
-                                        GRID_TYPE: "LOV",
-                                        REQUEST_TYPE: "LOV.HEAD_DATA.STORED",
-                                        usagetype: "lov",
-                                        LOV_ALIAS_NAME_1: "parameter.PROJET",
-                                        LOV_ALIAS_TYPE_1: "number",
-                                        LOV_ALIAS_VALUE_1: "10081",
-                                        }
-                                    });
-                                  var gridData = vActivitiesGrid.responseData.pageData.grid.GRIDRESULT.GRID.DATA;
-                                  var vActivitiesData = [];
-                                  if (gridData.length > 0) {
-                                  var vListofActivities = gridData;
-                                    for (var i = 0; i < vListofActivities.length; i++) {
-                                      vActivitiesData.push({
-                                        id: vListofActivities[i].id,
-                                        activite: vListofActivities[i].activite,
-                                        description: vListofActivities[i].description
-                                      });
-                                    }
-                                    console.log('vActivitiesData', vActivitiesData);
-                                  }
-                                  var activities = Ext.create('Ext.data.Store', {
-                                          id: 'activities',
-                                          fields: ['id', 'activite', 'description'],
-                                          data: vActivitiesData
-                                        });
-
-                                  var vPilotEntitiesGrid = EAM.Ajax.request({
-                                        url: "GRIDDATA",
-                                        params: {
-                                        GRID_NAME: "LVSCHEDGROUP",
-                                        GRID_TYPE: "LOV",
-                                        REQUEST_TYPE: "LOV.HEAD_DATA.STORED",
-                                        usagetype: "lov"
-                                        }
-                                    });
-                                  gridData = vPilotEntitiesGrid.responseData.pageData.grid.GRIDRESULT.GRID.DATA;
-                                  var vEntitiesData = [];
-                                  if (gridData.length > 0) {
-                                  var vListofEntities = gridData;
-                                    for (var i = 0; i < vListofEntities.length; i++) {
-                                      vEntitiesData.push({
-                                        id: vListofEntities[i].id,
-                                        schedgroup: vListofEntities[i].schedgroup,
-                                        description: vListofEntities[i].schedgroupdesc,
-                                        schedgrouporg: vListofEntities[i].schedgrouporg
-                                      });
-                                    }
-                                    console.log('vEntitiesData', vEntitiesData);
-                                  }
-                                  var entities = Ext.create('Ext.data.Store', {
-                                          id: 'entities',
-                                          fields: ['id', 'schedgroup', 'description', 'schedgrouporg'],
-                                          data: vEntitiesData
-                                        });
-                                  
-                                      
-                                  var vPilotGrid = EAM.Ajax.request({
-                                        url: "GRIDDATA",
-                                        params: {
-                                        GRID_NAME: "LVCMOE",
-                                        GRID_TYPE: "LOV",
-                                        REQUEST_TYPE: "LOV.HEAD_DATA.STORED",
-                                        usagetype: "lov"
-                                        }
-                                    });
-                                  gridData = vPilotGrid.responseData.pageData.grid.GRIDRESULT.GRID.DATA;
-                                  var vPilotData = [];
-                                  if (gridData.length > 0) {
-                                  var vListofPilot = gridData;
-                                    for (var i = 0; i < vListofPilot.length; i++) {
-                                      vPilotData.push({
-                                        id: vListofPilot[i].id
-                                      });
-                                    }
-                                    console.log('vPilotData', vPilotData);
-                                  }
-                                  var pilot = Ext.create('Ext.data.Store', {
-                                          id: 'pilot',
-                                          fields: ['id'],
-                                          data: vPilotData
-                                        });
-                                    
-                                  var formData = {
-                                        "CURRENT_TAB_NAME": "HDR",
-                                        "GRID_NAME": "DUMMY",
-                                        "GRID_TYPE": "LOV",
-                                        "LOV_ALIAS_NAME_1": "param.prj_code",
-                                        "LOV_ALIAS_TYPE_1": "number",
-                                        "LOV_ALIAS_VALUE_1": "10081",
-                                        "LOV_TAGNAME": "promptdata1",
-                                        "REQUEST_TYPE": "LOVSQL.HEAD_DATA.STORED",
-                                        "SOURCEPROMPTSEQUENCE": "1",
-                                        "TARGETPROMPTSEQUENCE": "1",
-                                        "TRANSACTIONTYPE": "Z002",
-                                        "USER_FUNCTION_NAME": "DUPLGD",
-                                        "eamid": EAM.SessionStorage.getEamId(),
-                                        "popup": "true",
-                                        "tenant": EAM.AppData.getTenantId(),
-                                        "usagetype": "lov"
-                                    };
-                                    var vdata = Ext.Ajax.request ({
-                                        async: false,
-                                        url: 'LOVPOP',
-                                        params: formData,
-                                        success: function(response) {
-                                            //console.log(response);
-                                        }
-                                    }).responseText;
-
-                                    var vDataResultJson = Ext.JSON.decode(vdata);
-                                    gridData = vDataResultJson.pageData.grid.GRIDRESULT.GRID.DATA;
-                                    var vEOTPdata = [];
-                                    if (gridData.length > 0) {
-                                    var vListofEOTP = gridData;
-                                        for (var i = 0; i < vListofEOTP.length; i++) {
-                                            vEOTPdata.push({
-                                                eotp: vListofEOTP[i].col1,
-                                                eotpdesc: vListofEOTP[i].col2
-                                            });
-                                        }
-                                        console.log('vEOTPdata', vEOTPdata);
-                                    }
-                                    var eotp = Ext.create('Ext.data.Store', {
-                                            id: 'eotp',
-                                            fields: ['eotp', 'eotpdesc'],
-                                            data: vEOTPdata
-                                            });
-            
-            
-                                  if (panel == null) {
-                                    panel = new Ext.Panel({
-                                      title: 'Cadrage',
-                                      frame: true,
-                                      width: 650,
-                                      id: 'ActUpdate_DeletePanel',
-                                      height: 750,
-                                      modal: true,
-                                      closable: true,
-                                      centered: true,
-                                      floating: true,
-                                      layout: 'vbox',
-                                      draggable: true,
-                                      margins: '5 5 5 5',
-                                      layoutConfig: {
-                                        animate: true
-                                      },
-            
-                                      items: [{
-                                          xtype: 'numberfield',
-                                          fieldLabel: 'Activity <span style="color:red"><b>*</b></span>',
-                                          id: 'plp_activite_Field',
-                                          numberFormat: "24",
-                                          value:EAM.utils.Format.number.toClientFormat(vRecordProjPlanning.wspf_10_plp_activite,'number'), 
-                                          readOnly: true,
-                                          currentAttribute: PlanningFieldsAttributes.wspf_10_plp_activite,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                          requiredCls: Ext.baseCSSPrefix + 'form-required-field',
-                                          padding: "5px"
-                                        },{
-                                          xtype: 'textfield',
-                                          fieldLabel: 'Description <span style="color:red"><b>*</b></span>',
-                                          id: 'plp_descat_Field',
-                                          size: "50",
-                                          maxLength: "256",
-                                          padding: "5px",
-                                          value:vRecordProjPlanning.wspf_10_plp_descact, 
-                                          readOnly: true,
-                                          currentAttribute: PlanningFieldsAttributes.wspf_10_plp_descact,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                          requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                                        }, {
-                                          id: "plp_predecesseur_Field",
-                                          name: "plp_predecesseur",
-                                          fieldLabel: 'Predecessor',
-                                          // labelAlign: 'right',
-                                          // fieldAlign: 'left',
-                                          padding: "5px",
-                                          xtype: 'uxcombobox',
-                                          text: 'predecessor',
-                                          value: vRecordProjPlanning.wspf_10_plp_predecesseur,
-                                          store: activities,
-                                          displayField: 'description',
-                                          valueField: 'activite'
-                                        },{
-                                          id: "plp_parent_Field",
-                                          name: "plp_parent",
-                                          fieldLabel: 'Parent',
-                                          // labelAlign: 'right',
-                                          //fieldAlign: left,
-                                          padding: "5px",
-                                          xtype: 'uxcombobox',
-                                          text: 'parent',
-                                          store: activities,
-                                          value: vRecordProjPlanning.wspf_10_plp_parent,
-                                          displayField: 'description',
-                                          valueField: 'activite',
-                                          listeners: {
-                                            change: function (a, b, c) {
-                                              //onScaleChange(b);
-                                            }
-                                          }
-                                        },{
-                                            // This is the container for the two fields
-                                            xtype: 'fieldcontainer',
-                                            layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                                            items: [{
-                                              xtype: 'numberfield',
-                                              fieldLabel: 'Advance',
-                                              id: 'plp_avancement_Field',
-                                              value:EAM.utils.Format.number.toClientFormat(vRecordProjPlanning.wspf_10_plp_avancement,'number'), 
-                                              decimalPrecision: 0, 
-                                              minValue: 0,
-                                              maxValue: 100,
-                                              readOnly: false,
-                                              currentAttribute: PlanningFieldsAttributes.wspf_10_plp_avancement,
-                                              readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                              requiredCls: Ext.baseCSSPrefix + 'form-required-field',
-                                              padding: "5px"
-                                            },{
-                                              xtype: 'numberfield',
-                                              fieldLabel: 'Buffer (days)',
-                                              id: 'plp_buffer_Field',
-                                              readOnly: false,
-                                              value:EAM.utils.Format.number.toClientFormat(vRecordProjPlanning.wspf_10_plp_buffer,'number'), 
-                                              currentAttribute: PlanningFieldsAttributes.wspf_10_plp_buffer,
-                                              readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                              requiredCls: Ext.baseCSSPrefix + 'form-required-field',
-                                              padding: "5px"
-                                            }]
-                                        },{
-                                            xtype: 'checkbox',
-                                            fieldLabel: 'Critical path',
-                                            inputValue: '1',
-                                            id: 'plp_chem_Field',
-                                            // labelAlign: 'right',
-                                            value: vRecordProjPlanning.wspf_10_plp_chem == '-1' ? true : false,
-                                            hidden: false,
-                                            checked: false,
-                                            padding: "5px",
-                                            listeners: {
-                                                change : function(){
-                                                }
-                                            },
-                                            readOnly: PlanningFieldsAttributes.wspf_10_plp_chem=="protected"?true:false,
-                                            currentAttribute: PlanningFieldsAttributes.wspf_10_plp_chem,
-                                             readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                            requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                                            
-                                        },{
-                                          // This is the separate section
-                                          xtype: 'fieldset',
-                                          title: 'Planification', // The title of the section
-                                          collapsible: false,             // Optional: Makes the section collapsible
-                                          defaults: {
-                                              anchor: '100%',            // Fields take 100% of the width
-                                              labelWidth: 100
-                                          },
-                                          layout: 'anchor',              // Layout for fields inside the section
-                                          items: [{
-                                              // This is the container for the two fields
-                                              xtype: 'fieldcontainer',
-                                              layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                                              items: [{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_datedeb_Field',
-                                                name: 'plp_datedeb',
-                                                // labelAlign: 'right',
-                                                value: vRecordProjPlanning.wspf_10_plp_datedeb ? new Date(vRecordProjPlanning.wspf_10_plp_datedeb) : null,
-                                                padding: "5px",
-                                                fieldLabel: 'Start Date',
-                                                margin: '5 0 0 0'
-                                              },{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_datefin_Field',
-                                                name: 'plp_datefin',
-                                                // labelAlign: 'right',
-                                                padding: "5px",
-                                                fieldLabel: 'End Date',
-                                                value: vRecordProjPlanning.wspf_10_plp_datefin ? new Date(vRecordProjPlanning.wspf_10_plp_datefin) : null,
-                                                margin: '5 0 0 0'
-                                              }]
-                                          },{
-                                              // This is the container for the two fields
-                                              xtype: 'fieldcontainer',
-                                              layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                                              items: [{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_dateinideb_Field',
-                                                name: 'plp_dateinideb',
-                                                // labelAlign: 'right',
-                                                padding: "5px",
-                                                fieldLabel: 'CT – Frozen Start',
-                                                value: vRecordProjPlanning.wspf_10_plp_dateinideb ? new Date(vRecordProjPlanning.wspf_10_plp_dateinideb) : null,
-                                                margin: '5 0 0 0'
-                                              },{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_dateinifin_Field',
-                                                name: 'plp_dateinifin',
-                                                // labelAlign: 'right',
-                                                padding: "5px",
-                                                fieldLabel: 'CT – Frozen End',
-                                                value: vRecordProjPlanning.wspf_10_plp_dateinifin ? new Date(vRecordProjPlanning.wspf_10_plp_dateinifin) : null,
-                                                margin: '5 0 0 0'
-                                              }]
-                                          },{
-                                              // This is the container for the two fields
-                                              xtype: 'fieldcontainer',
-                                              layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                                              items: [{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_datefigdeb_Field',
-                                                name: 'plp_datefigdeb',
-                                                // labelAlign: 'right',
-                                                padding: "5px",
-                                                fieldLabel: 'LT – Frozen Start',
-                                                value: vRecordProjPlanning.wspf_10_plp_datefigdeb ? new Date(vRecordProjPlanning.wspf_10_plp_datefigdeb) : null,
-                                                margin: '5 0 0 0'
-                                              },{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_datefigfin_Field',
-                                                name: 'plp_datefigfin',
-                                                // labelAlign: 'right',
-                                                padding: "5px",
-                                                fieldLabel: 'LT – Frozen End',
-                                                value: vRecordProjPlanning.wspf_10_plp_datefigfin ? new Date(vRecordProjPlanning.wspf_10_plp_datefigfin) : null,
-                                                margin: '5 0 0 0'
-                                              }]
-                                          }]
-                                      },{
-                                          // This is the separate section
-                                          xtype: 'fieldset',
-                                          title: 'Autre', // The title of the section
-                                          collapsible: false,             // Optional: Makes the section collapsible
-                                          defaults: {
-                                              anchor: '100%',            // Fields take 100% of the width
-                                              labelWidth: 100
-                                          },
-                                          layout: 'anchor',              // Layout for fields inside the section
-                                          items: [{
-                                            id: "plp_etpil_Field",
-                                            name: "plp_etpil",
-                                            fieldLabel: 'Pilot Entity',
-                                            // labelAlign: 'right',
-                                            //fieldAlign: left,
-                                            padding: "5px",
-                                            xtype: 'uxcombobox',
-                                            text: 'parent',
-                                            value: vRecordProjPlanning.wspf_10_plp_etpil,
-                                            store: entities,
-                                            displayField: 'schedgroup',
-                                            valueField: 'schedgroup',
-                                            listeners: {
-                                              change: function (a, b, c) {
-                                                //onScaleChange(b);
-                                              }
-                                            }
-                                          },{
-                                            id: "plp_pilote_Field",
-                                            name: "plp_pilote",
-                                            fieldLabel: 'Pilot',
-                                            // labelAlign: 'right',
-                                            //fieldAlign: left,
-                                            padding: "5px",
-                                            xtype: 'uxcombobox',
-                                            text: 'parent',
-                                            value: vRecordProjPlanning.wspf_10_plp_pilote,
-                                            store: pilot,
-                                            displayField: 'id',
-                                            valueField: 'id',
-                                            listeners: {
-                                              change: function (a, b, c) {
-                                                //onScaleChange(b);
-                                              }
-                                            }
-                                          },{
-                                          xtype: 'textfield',
-                                          fieldLabel: 'Subdivision',
-                                          id: 'plp_lot_Field',
-                                          size: "50",
-                                          maxLength: "256",
-                                          padding: "5px",
-                                          readOnly: false,
-                                          value: vRecordProjPlanning.wspf_10_plp_lot,
-                                        //   currentAttribute: PlanningFieldsAttributes.udfnote01,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                          requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                                        },{
-                                            // This is the container for the two fields
-                                            xtype: 'fieldcontainer',
-                                            layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                                            items: [{
-                                              id: "plp_eotp_Field",
-                                              name: "plp_eotp",
-                                              fieldLabel: 'EOTP',
-                                              // labelAlign: 'right',
-                                              //fieldAlign: left,
-                                              padding: "5px",
-                                              xtype: 'uxcombobox',
-                                              text: 'parent',
-                                              value: vRecordProjPlanning.wspf_10_plp_eotp,
-                                              store: eotp,
-                                              displayField: 'eotp',
-                                              valueField: 'eotp',
-                                              listeners: {
-                                                    select: function(combo, record) {
-                                                        if(record){
-                                                            var foundObject = vEOTPdata.find(function(item) {
-                                                                return item.eotp === record;
-                                                            });
-                                                        }
-                                                        var descriptionField = combo.up('fieldcontainer').down('#plp_eotpdesc_Field');
-
-                                                        descriptionField.setValue(foundObject ? foundObject.eotpdesc : '');
-                                                    }
-                                              }
-                                            },{
-                                              xtype: 'textfield',
-                                              id: 'plp_eotpdesc_Field',
-                                              size: "30",
-                                              maxLength: "256",
-                                              padding: "5px",
-                                              readOnly: true,
-                                              value: vRecordProjPlanning.wspf_10_plp_eotpdesc,
-                                              hideLabel: true,
-                                            //   currentAttribute: PlanningFieldsAttributes.udfnote01,
-                                              readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                              requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                                            }]
-                                          },{
-                                            // 1. Basic Multi-line Text Field
-                                            xtype: 'textareafield',
-                                            id:'plp_commentaire_Field',
-                                            fieldLabel: 'Commentary',
-                                            value: vRecordProjPlanning.wspf_10_plp_commentaire,
-                                            name: 'commentary',
-                                            anchor: '200%', // Makes it span the full width
-                                            size: "50",
-                                            // 2. Control the height using the 'rows' config
-                                            // This suggests a starting height of 4 lines of text.
-                                            rows: 4
-                                            
-                                            // OR, you could set a fixed pixel height:
-                                            // height: 100 
-                                            
-                                        }]
-                                      }                                            
-                                      ],
-                                      buttons: [{
-                                          text: 'Supprimer',
-                                          margin: '0 0 0 5',
-                                        //   disabled: true,
-                                          handler: function(btn) { 
-                                            /* Delete logic */ 
-                                            var vRecordProjPlanning =EAM.Ajax.request({
-                                                url: "BSUDSC.TAB",
-                                                params: {
-                                                    CURRENT_TAB_NAME: "U1",
-                                                    SYSTEM_FUNCTION_NAME: "J1PRJ",
-                                                    USER_FUNCTION_NAME: "J1PRJ",
-                                                    wspf_10_plp_projet: 10081,
-                                                    wspf_10_plp_seq: '4090FC6464E2836DE063AE0A0A0AAD04',
-                                                    pagemode : "view",
-                                                    processaction: "get",
-                                                    REFRESH_GRID: false,
-                                                    ONLY_DATA_REQUIRED: true
-                                                }
-                                              }).responseData.pageData.values;
-                                            vRecordProjPlanning["processaction"] = "delete"
-                                            vRecordProjPlanning["pagemode"] = "view"
-                                            var vStatus = EAM.Ajax.request({
-                                                url: "BSUDSC.TAB.deleterecord?pageaction=DELETE",
-                                                params: Ext.merge(vRecordProjPlanning, {
-                                                    CURRENT_TAB_NAME: "U1",
-                                                    SYSTEM_FUNCTION_NAME: "JSPROJ",
-                                                    USER_FUNCTION_NAME: "J1PRJ",
-                                                    CHECK_CF_CHANGEFLAG: "true",
-                                                    can_update: "true"
-                                                })
-                                              });
-                                          }
-                                        },{
-                                          text: 'Fermer',
-                                          margin: '0 0 0 5',
-                                          handler: function () {
-                                            panel.close();
-                                          }
-                                        }, {
-                                          text: 'Sauvegarder',
-                                          margin: '0 0 0 5',
-                                          handler: function () {
-                                            EAM.Utils.mask(Ext.ComponentQuery.query('#custom_global_div')[0]);
-                                            setTimeout(
-                                              function () {
-
-                                              var vRecordProjPlanningUpd =EAM.Ajax.request({
-                                                url: "BSUDSC.TAB",
-                                                params: {
-                                                    CURRENT_TAB_NAME: "U1",
-                                                    SYSTEM_FUNCTION_NAME: "J1PRJ",
-                                                    USER_FUNCTION_NAME: "J1PRJ",
-                                                    wspf_10_plp_projet: 10081,
-                                                    wspf_10_plp_seq: '4090FC6464E2836DE063AE0A0A0AAD04',
-                                                    pagemode : "view",
-                                                    processaction: "get",
-                                                    REFRESH_GRID: false,
-                                                    ONLY_DATA_REQUIRED: true
-                                                }
-                                              }).responseData.pageData.values;
-                                              for (var k in vRecordProjPlanningUpd) {
-                                                if (Ext.isObject(vRecordProjPlanningUpd[k])) {
-                                                  vRecordProjPlanningUpd[k] = vRecordProjPlanningUpd[k].selected
-                                                }
-                                              }
-
-                                              if (!Ext.isEmpty(Ext.getCmp('plp_activite_Field').rawValue)) {
-                                                vRecordProjPlanningUpd.wspf_10_plp_activite = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_activite_Field").getValue(),"number")) ;
-                                              } else if (Ext.isEmpty(Ext.getCmp('plp_activite_Field').rawValue)) {
-                                                vRecordProjPlanningUpd.wspf_10_plp_activite = "";
-                                              } else {
-                                                vRecordProjPlanningUpd.wspf_10_plp_activite = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_activite_Field").getValue(),"number")) ;
-                                              }
-                                              if (!Ext.isEmpty(Ext.getCmp('plp_descat_Field').rawValue)) {
-                                                vRecordProjPlanningUpd.wspf_10_plp_descact = Ext.getCmp('plp_descat_Field').rawValue;
-                                              } else if (Ext.isEmpty(Ext.getCmp('plp_descat_Field').rawValue)) {
-                                                vRecordProjPlanningUpd.wspf_10_plp_descact = "";
-                                              } else {
-                                                vRecordProjPlanningUpd.wspf_10_plp_descact = Ext.getCmp('plp_descat_Field').initialValue;
-                                              }
-
-                                                vRecordProjPlanningUpd.wspf_10_plp_predecesseur = Ext.getCmp('plp_predecesseur_Field').getValue() || "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_parent = Ext.getCmp('plp_parent_Field').getValue() || "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_avancement = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_avancement_Field").getValue(),"number")) || 0 ;
-                                                vRecordProjPlanningUpd.wspf_10_plp_buffer = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_buffer_Field").getValue(),"number")) || 0 ;
-                                                // vRecordProjPlanningUpd.wspf_10_plp_chem = Ext.getCmp('plp_chem_Field').getValue() ? '1' : '0';
-                                                if(Ext.getCmp("plp_chem_Field").getValue()){
-                                                    vRecordProjPlanningUpd.wspf_10_plp_chem='-1'
-                                                }
-                                                else{
-                                                    vRecordProjPlanningUpd.wspf_10_plp_chem='0'
-                                                }
-                                                vRecordProjPlanningUpd.wspf_10_plp_datedeb = Ext.getCmp('plp_datedeb_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datedeb_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_datefin = Ext.getCmp('plp_datefin_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datefin_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_dateinideb = Ext.getCmp('plp_dateinideb_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_dateinideb_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_dateinifin = Ext.getCmp('plp_dateinifin_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_dateinifin_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_datefigdeb = Ext.getCmp('plp_datefigdeb_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datefigdeb_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_datefigfin = Ext.getCmp('plp_datefigfin_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datefigfin_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_etpil = Ext.getCmp('plp_etpil_Field').getValue() || "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_pilote = Ext.getCmp('plp_pilote_Field').getValue() || "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_lot = Ext.getCmp('plp_lot_Field').getValue() || "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_eotp = Ext.getCmp('plp_eotp_Field').getValue() || "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_eotpdesc = Ext.getCmp('plp_eotpdesc_Field').getValue() || "";
-                                                vRecordProjPlanningUpd.wspf_10_plp_commentaire = Ext.getCmp('plp_commentaire_Field').getValue() || "";
-
-                                           
-                                              
-
-                                              var vStatusProjPlanningUpd = EAM.Ajax.request({
-                                                url: "BSUDSC.TAB.updaterecord?pageaction=SAVE",
-                                                params: Ext.merge(vRecordProjPlanningUpd, {
-                                                    CURRENT_TAB_NAME: "U1",
-                                                    SYSTEM_FUNCTION_NAME: "JSPROJ",
-                                                    USER_FUNCTION_NAME: "J1PRJ",
-                                                    CHECK_CF_CHANGEFLAG: "true",
-                                                    can_update: "true"
-                                                })
-                                              });
-                                              if (vStatusProjPlanningUpd.success) {
-                                                //must do
-                                                // gantt.getTask(vWoNum).actest = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(),"number")) ;
-                                                // gantt.getTask(vWoNum).dds_act_est = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(),"number")) ;
-                                                // gantt.getTask(vWoNum).dds_act_mrc = Ext.getCmp('act_udfchar01').getValue()==""?gantt.getTask(vWoNum).dds_evt_mrc:Ext.getCmp('act_udfchar01').getValue();
-                                                // gantt.getTask(vWoNum).womrc = Ext.getCmp('act_udfchar01').getValue()==""?gantt.getTask(vWoNum).dds_evt_mrc:Ext.getCmp('act_udfchar01').getValue();
-                                                // gantt.getTask(vWoNum).dds_act_percomplete =parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Percentcplt_Field").getValue(),"number")) ;
-                                                // gantt.refreshTask(vWoNum, true);
-                                                var vData = vSupplierList.data;
-                                                var vChildTask= gantt.getTask(vWoNum);
-                                                console.log('vBoilerList',vBoilerList);
-                                                var vMsg = vBoilerList["woupdate_success_message"];
-                                                console.log('vMsg',vMsg);
-                                                var find = ':param1';
-                                                var re = new RegExp(find, 'g');
-                                                vMsg = vMsg.replace(re, "1");
-                                                find = ':param2';
-                                                re = new RegExp(find, 'g');
-                                                // vMsg = vMsg.replace(re, '1 (' + actTask.parent + ')');
-                                                //parent.EAM.Messaging.showConfirmation(vCounter + " of " + vTotalCounter + " WorkOrder(s) updated successfully.");
-                                                EAM.Messaging.showConfirmation(vMsg);
-                                                EAM.Utils.unmask(Ext.ComponentQuery.query('#ActUpdate_DeletePanel')[0].el);
-                                                panel.close();
-
-                                                //changeFilter()
-                                              } else {
-                                                EAM.Utils.unmask(Ext.ComponentQuery.query('#ActUpdate_DeletePanel')[0].el);
-                                                panel.close();
-                                                gantt.refreshTask(vWoNum, true);
-                                                //changeFilter()
-                                              }
-
-                                            }, 200);
-
-                                          }
-
-                                        }
-                                      ]
-                                    });
-                                    panel.show();
-                                  }
-                                  gantt.refreshTask(vWoNum, true);
-                                }
-
-                                if (b.id == "CreateActivity_item") {
-                                    console.log('vWoNum', vWoNum);
-                                //   var dblClickedObject = gantt.getTask(vWoNum);
-
-                                  var actTask = gantt.getTask(vWoNum);
-                                  console.log('actTask', actTask);
-                                //   var vact = actTask.act_act;
-                                  var indexact = actTask.id.indexOf('#');
-                                  var actnumber = actTask.id.split("#")[1]; //actTask.id.substring(indexact+1,actTask.length);
-                                  var vClassActHrs = (vSplitItem) ? "form-text-readonly" : "";
-
-                                  var vRecordProjPlanning = EAM.Ajax.request({
-                                      url: "BSUDSC.TAB",
-                                      params: {
-                                        "CURRENT_TAB_NAME": "U1",
-                                        "ONLY_DATA_REQUIRED": "true",
-                                        "REFRESH_GRID": "false",
-                                        "SYSTEM_FUNCTION_NAME": "J1PRJ",
-                                        "THROW_EXCEPTION": "false",
-                                        "USER_FUNCTION_NAME": "J1PRJ",
-                                        "eamid": EAM.SessionStorage.getEamId(),
-                                        "wspf_10_plp_projet": 10081,
-                                        "wspf_10_plp_seq": '4090FC6464E2836DE063AE0A0A0AAD04',
-                                        "tenant": EAM.AppData.getTenantId(),
-                                        "ONLY_DATA_REQUIRED" : true,
-                                        "pagemode" : "view",
-                                        "processaction" : "get"
-                                      }
-                                    }).responseData.pageData.values;
-
-                                  var fields = [ 'plp_activite_Field', 'plp_descat_Field', 'plp_predecesseur_Field', 'plp_parent_Field',
-                                     'plp_avancement_Field', 'plp_buffer_Field', 'plp_chem_Field', 'plp_datedeb_Field', 
-                                     'plp_datefin_Field', 'plp_dateinideb_Field', 'plp_dateinifin_Field', 'plp_datefigdeb_Field', 
-                                     'plp_datefigfin_Field', 'plp_etpil_Field', 'plp_pilote_Field', 'plp_lot_Field', 
-                                     'plp_eotp_Field', 'plp_eotpdesc_Field', 'plp_commentaire_Field'
-                                    ];
-                                
-                                    for (var i = 0; i < fields.length; i++) {
-                                      if (Ext.getCmp(fields[i])) {
-                                        try {
-                                          Ext.getCmp(fields[i]).destroy();
-                                        } catch (err) {}
-                                      }
-                                  }
-
-                                  var vRecordProjPlanningUpd = EAM.Ajax.request({
-                                      url: "BSUDSC.TAB",
-                                      params: {
-                                        "CURRENT_TAB_NAME": "U1",
-                                        "ONLY_DATA_REQUIRED": "true",
-                                        "REFRESH_GRID": "false",
-                                        "SYSTEM_FUNCTION_NAME": "J1PRJ",
-                                        "THROW_EXCEPTION": "false",
-                                        "USER_FUNCTION_NAME": "J1PRJ",
-                                        "eamid": EAM.SessionStorage.getEamId(),
-                                        "wspf_10_plp_projet": 10081,
-                                        "wspf_10_plp_seq": '4090FC6464E2836DE063AE0A0A0AAD04',
-                                        "tenant": EAM.AppData.getTenantId(),
-                                        "ONLY_DATA_REQUIRED" : true,
-                                        "pagemode" : "view",
-                                        "processaction" : "get"
-                                      }
-                                    });
-                                  var PlanningFieldsAttributes = {};
-            
-                                  if(vRecordProjPlanningUpd.success){
-                                    if(EAM.Utils.propertyExists(vRecordProjPlanningUpd,'responseData.pageData.attributes')){
-                                      for (var key in vRecordProjPlanningUpd.responseData.pageData.attributes){
-                    
-                                        PlanningFieldsAttributes[key]= vRecordProjPlanningUpd.responseData.pageData.attributes[key]
-                    
-                                      }
-                                    }
-                    
-                                  }
-                                  
-                                    var formData = {
-                                        "CURRENT_TAB_NAME": "HDR",
-                                        "GRID_NAME": "DUMMY",
-                                        "GRID_TYPE": "LOV",
-                                        "LOV_ALIAS_NAME_1": "param.PLP_PROJET",
-                                        "LOV_ALIAS_TYPE_1": "number",
-                                        "LOV_ALIAS_VALUE_1": "10076",
-                                        "LOV_TAGNAME": "promptdata1",
-                                        "REQUEST_TYPE": "LOVSQL.HEAD_DATA.STORED",
-                                        "SOURCEPROMPTSEQUENCE": "1",
-                                        "TARGETPROMPTSEQUENCE": "1",
-                                        "TRANSACTIONTYPE": "Z001",
-                                        "USER_FUNCTION_NAME": "DUPLGD",
-                                        "eamid": EAM.SessionStorage.getEamId(),
-                                        "popup": "true",
-                                        "tenant": EAM.AppData.getTenantId(),
-                                        "usagetype": "lov"
-                                    };
-                                    var vdata = Ext.Ajax.request ({
-                                        async: false,
-                                        url: 'LOVPOP',
-                                        params: formData,
-                                        success: function(response) {
-                                            //console.log(response);
-                                        }
-                                    }).responseText;
-
-                                    var vDataResultJson = Ext.JSON.decode(vdata)
-                                    console.log(vDataResultJson.pageData.grid.GRIDRESULT.GRID.DATA);
-                                    var vMaxActNo = vDataResultJson.pageData.grid.GRIDRESULT.GRID.DATA[0].col1;
-                                    var vActNo = EAM.utils.Format.number.toStandardFormat(vMaxActNo, 'number');
-
-                                  var vActivitiesGrid = EAM.Ajax.request({
-                                        url: "GRIDDATA",
-                                        params: {
-                                        GRID_NAME: "XUACT1",
-                                        GRID_TYPE: "LOV",
-                                        REQUEST_TYPE: "LOV.HEAD_DATA.STORED",
-                                        usagetype: "lov",
-                                        LOV_ALIAS_NAME_1: "parameter.PROJET",
-                                        LOV_ALIAS_TYPE_1: "number",
-                                        LOV_ALIAS_VALUE_1: "10081",
-                                        }
-                                    });
-                                  var gridData = vActivitiesGrid.responseData.pageData.grid.GRIDRESULT.GRID.DATA;
-                                  var vActivitiesData = [];
-                                  if (gridData.length > 0) {
-                                  var vListofActivities = gridData;
-                                    for (var i = 0; i < vListofActivities.length; i++) {
-                                      vActivitiesData.push({
-                                        id: vListofActivities[i].id,
-                                        activite: vListofActivities[i].activite,
-                                        description: vListofActivities[i].description
-                                      });
-                                    }
-                                    console.log('vActivitiesData', vActivitiesData);
-                                  }
-                                  var activities = Ext.create('Ext.data.Store', {
-                                          id: 'activities',
-                                          fields: ['id', 'activite', 'description'],
-                                          data: vActivitiesData
-                                        });
-
-                                  var vPilotEntitiesGrid = EAM.Ajax.request({
-                                        url: "GRIDDATA",
-                                        params: {
-                                        GRID_NAME: "LVSCHEDGROUP",
-                                        GRID_TYPE: "LOV",
-                                        REQUEST_TYPE: "LOV.HEAD_DATA.STORED",
-                                        usagetype: "lov"
-                                        }
-                                    });
-                                  gridData = vPilotEntitiesGrid.responseData.pageData.grid.GRIDRESULT.GRID.DATA;
-                                  var vEntitiesData = [];
-                                  if (gridData.length > 0) {
-                                  var vListofEntities = gridData;
-                                    for (var i = 0; i < vListofEntities.length; i++) {
-                                      vEntitiesData.push({
-                                        id: vListofEntities[i].id,
-                                        schedgroup: vListofEntities[i].schedgroup,
-                                        description: vListofEntities[i].schedgroupdesc,
-                                        schedgrouporg: vListofEntities[i].schedgrouporg
-                                      });
-                                    }
-                                    console.log('vEntitiesData', vEntitiesData);
-                                  }
-                                  var entities = Ext.create('Ext.data.Store', {
-                                          id: 'entities',
-                                          fields: ['id', 'schedgroup', 'description', 'schedgrouporg'],
-                                          data: vEntitiesData
-                                        });
-                                  
-                                      
-                                  var vPilotGrid = EAM.Ajax.request({
-                                        url: "GRIDDATA",
-                                        params: {
-                                        GRID_NAME: "LVCMOE",
-                                        GRID_TYPE: "LOV",
-                                        REQUEST_TYPE: "LOV.HEAD_DATA.STORED",
-                                        usagetype: "lov"
-                                        }
-                                    });
-                                  gridData = vPilotGrid.responseData.pageData.grid.GRIDRESULT.GRID.DATA;
-                                  var vPilotData = [];
-                                  if (gridData.length > 0) {
-                                  var vListofPilot = gridData;
-                                    for (var i = 0; i < vListofPilot.length; i++) {
-                                      vPilotData.push({
-                                        id: vListofPilot[i].id
-                                      });
-                                    }
-                                    console.log('vPilotData', vPilotData);
-                                  }
-                                  var pilot = Ext.create('Ext.data.Store', {
-                                          id: 'pilot',
-                                          fields: ['id'],
-                                          data: vPilotData
-                                        });
-                                    
-                                  var formData = {
-                                        "CURRENT_TAB_NAME": "HDR",
-                                        "GRID_NAME": "DUMMY",
-                                        "GRID_TYPE": "LOV",
-                                        "LOV_ALIAS_NAME_1": "param.prj_code",
-                                        "LOV_ALIAS_TYPE_1": "number",
-                                        "LOV_ALIAS_VALUE_1": "10081",
-                                        "LOV_TAGNAME": "promptdata1",
-                                        "REQUEST_TYPE": "LOVSQL.HEAD_DATA.STORED",
-                                        "SOURCEPROMPTSEQUENCE": "1",
-                                        "TARGETPROMPTSEQUENCE": "1",
-                                        "TRANSACTIONTYPE": "Z002",
-                                        "USER_FUNCTION_NAME": "DUPLGD",
-                                        "eamid": EAM.SessionStorage.getEamId(),
-                                        "popup": "true",
-                                        "tenant": EAM.AppData.getTenantId(),
-                                        "usagetype": "lov"
-                                    };
-                                    var vdata = Ext.Ajax.request ({
-                                        async: false,
-                                        url: 'LOVPOP',
-                                        params: formData,
-                                        success: function(response) {
-                                            //console.log(response);
-                                        }
-                                    }).responseText;
-
-                                    var vDataResultJson = Ext.JSON.decode(vdata);
-                                    gridData = vDataResultJson.pageData.grid.GRIDRESULT.GRID.DATA;
-                                    var vEOTPdata = [];
-                                    if (gridData.length > 0) {
-                                    var vListofEOTP = gridData;
-                                        for (var i = 0; i < vListofEOTP.length; i++) {
-                                            vEOTPdata.push({
-                                                eotp: vListofEOTP[i].col1,
-                                                eotpdesc: vListofEOTP[i].col2
-                                            });
-                                        }
-                                        console.log('vEOTPdata', vEOTPdata);
-                                    }
-                                    var eotp = Ext.create('Ext.data.Store', {
-                                            id: 'eotp',
-                                            fields: ['eotp', 'eotpdesc'],
-                                            data: vEOTPdata
-                                            });
-            
-            
-                                  if (panel == null) {
-                                    panel = new Ext.Panel({
-                                      title: 'Cadrage',
-                                      frame: true,
-                                      width: 650,
-                                      id: 'Act_Insert_Panel',
-                                      height: 750,
-                                      modal: true,
-                                      closable: true,
-                                      centered: true,
-                                      floating: true,
-                                      layout: 'vbox',
-                                      draggable: true,
-                                      margins: '5 5 5 5',
-                                      layoutConfig: {
-                                        animate: true
-                                      },
-            
-                                      items: [{
-                                          xtype: 'numberfield',
-                                          fieldLabel: 'Activity <span style="color:red"><b>*</b></span>',
-                                          id: 'plp_activite_Field',
-                                          numberFormat: "24",
-                                          readOnly: true,
-                                          value: vActNo,
-                                          currentAttribute: PlanningFieldsAttributes.wspf_10_plp_activite,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                          requiredCls: Ext.baseCSSPrefix + 'form-required-field',
-                                          padding: "5px"
-                                        },{
-                                          xtype: 'textfield',
-                                          fieldLabel: 'Description <span style="color:red"><b>*</b></span>',
-                                          id: 'plp_descat_Field',
-                                          size: "50",
-                                          maxLength: "256",
-                                          padding: "5px",
-                                          readOnly: PlanningFieldsAttributes.wspf_10_plp_descact=="protected"?true:false,
-                                          currentAttribute: PlanningFieldsAttributes.wspf_10_plp_descact,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                          requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                                        }, {
-                                          id: "plp_predecesseur_Field",
-                                          name: "plp_predecesseur",
-                                          fieldLabel: 'Predecessor',
-                                          // labelAlign: 'right',
-                                          // fieldAlign: 'left',
-                                          padding: "5px",
-                                          xtype: 'uxcombobox',
-                                          text: 'predecessor',
-                                          store: activities,
-                                          displayField: 'description',
-                                          valueField: 'activite',
-                                          listeners: {
-                                            change: function (a, b, c) {
-                                              //onScaleChange(b);
-                                            }
-                                          }
-                                        },{
-                                          id: "plp_parent_Field",
-                                          name: "plp_parent",
-                                          fieldLabel: 'Parent',
-                                          // labelAlign: 'right',
-                                          //fieldAlign: left,
-                                          padding: "5px",
-                                          xtype: 'uxcombobox',
-                                          text: 'parent',
-                                          store: activities,
-                                          displayField: 'description',
-                                          valueField: 'activite',
-                                          listeners: {
-                                            change: function (a, b, c) {
-                                              //onScaleChange(b);
-                                            }
-                                          }
-                                        },{
-                                            // This is the container for the two fields
-                                            xtype: 'fieldcontainer',
-                                            layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                                            items: [{
-                                              xtype: 'numberfield',
-                                              fieldLabel: 'Advance',
-                                              id: 'plp_avancement_Field',
-                                              decimalPrecision: 0, 
-                                              minValue: 0,
-                                              maxValue: 100,
-                                              value:'', 
-                                              readOnly: PlanningFieldsAttributes.wspf_10_plp_avancement=="protected"?true:false,
-                                              currentAttribute: PlanningFieldsAttributes.wspf_10_plp_avancement,
-                                              readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                              requiredCls: Ext.baseCSSPrefix + 'form-required-field',
-                                              padding: "5px"
-                                            },{
-                                              xtype: 'numberfield',
-                                              fieldLabel: 'Buffer (days)',
-                                              id: 'plp_buffer_Field',
-                                              value: '', 
-                                              readOnly: PlanningFieldsAttributes.wspf_10_plp_buffer=="protected"?true:false,
-                                            //   currentAttribute: PlanningFieldsAttributes.activity,
-                                              readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                              requiredCls: Ext.baseCSSPrefix + 'form-required-field',
-                                              padding: "5px"
-                                            }]
-                                        },{
-                                            xtype: 'checkbox',
-                                            fieldLabel: 'Critical path',
-                                            inputValue: '1',
-                                            id: 'plp_chem_Field',
-                                            // labelAlign: 'right',
-                                            hidden: false,
-                                            checked: false,
-                                            padding: "5px",
-                                            listeners: {
-                                                change : function(){
-                                                }
-                                            },
-                                            readOnly: PlanningFieldsAttributes.wspf_10_plp_chem=="protected"?true:false,
-                                            currentAttribute: PlanningFieldsAttributes.wspf_10_plp_chem,
-                                             readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                            requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                                            
-                                        },{
-                                          // This is the separate section
-                                          xtype: 'fieldset',
-                                          title: 'Planification', // The title of the section
-                                          collapsible: false,             // Optional: Makes the section collapsible
-                                          defaults: {
-                                              anchor: '100%',            // Fields take 100% of the width
-                                              labelWidth: 100
-                                          },
-                                          layout: 'anchor',              // Layout for fields inside the section
-                                          items: [{
-                                              // This is the container for the two fields
-                                              xtype: 'fieldcontainer',
-                                              layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                                              items: [{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_datedeb_Field',
-                                                name: 'plp_datedeb',
-                                                // labelAlign: 'right',
-                                                value: new Date(),
-                                                padding: "5px",
-                                                fieldLabel: 'Start Date',
-                                                margin: '5 0 0 0'
-                                              },{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_datefin_Field',
-                                                name: 'plp_datefin',
-                                                // labelAlign: 'right',
-                                                padding: "5px",
-                                                fieldLabel: 'End Date',
-                                                value: new Date(),
-                                                margin: '5 0 0 0'
-                                              }]
-                                          },{
-                                              // This is the container for the two fields
-                                              xtype: 'fieldcontainer',
-                                              layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                                              items: [{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_dateinideb_Field',
-                                                name: 'plp_dateinideb',
-                                                // labelAlign: 'right',
-                                                padding: "5px",
-                                                fieldLabel: 'CT – Frozen Start',
-                                                value: new Date(),
-                                                margin: '5 0 0 0'
-                                              },{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_dateinifin_Field',
-                                                name: 'plp_dateinifin',
-                                                // labelAlign: 'right',
-                                                padding: "5px",
-                                                fieldLabel: 'CT – Frozen End',
-                                                value: new Date(),
-                                                margin: '5 0 0 0'
-                                              }]
-                                          },{
-                                              // This is the container for the two fields
-                                              xtype: 'fieldcontainer',
-                                              layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                                              items: [{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_datefigdeb_Field',
-                                                name: 'plp_datefigdeb',
-                                                // labelAlign: 'right',
-                                                padding: "5px",
-                                                fieldLabel: 'LT – Frozen Start',
-                                                value: new Date(),
-                                                margin: '5 0 0 0'
-                                              },{
-                                                xtype: 'uxdate',
-                                                anchor: '100%',
-                                                id: 'plp_datefigfin_Field',
-                                                name: 'plp_datefigfin',
-                                                // labelAlign: 'right',
-                                                padding: "5px",
-                                                fieldLabel: 'LT – Frozen End',
-                                                value: new Date(),
-                                                margin: '5 0 0 0'
-                                              }]
-                                          }]
-                                      },{
-                                          // This is the separate section
-                                          xtype: 'fieldset',
-                                          title: 'Autre', // The title of the section
-                                          collapsible: false,             // Optional: Makes the section collapsible
-                                          defaults: {
-                                              anchor: '100%',            // Fields take 100% of the width
-                                              labelWidth: 100
-                                          },
-                                          layout: 'anchor',              // Layout for fields inside the section
-                                          items: [{
-                                            id: "plp_etpil_Field",
-                                            name: "plp_etpil",
-                                            fieldLabel: 'Pilot Entity',
-                                            // labelAlign: 'right',
-                                            //fieldAlign: left,
-                                            padding: "5px",
-                                            xtype: 'uxcombobox',
-                                            text: 'parent',
-                                            store: entities,
-                                            displayField: 'schedgroup',
-                                            valueField: 'schedgroup',
-                                            listeners: {
-                                              change: function (a, b, c) {
-                                                //onScaleChange(b);
-                                              }
-                                            }
-                                          },{
-                                            id: "plp_pilote_Field",
-                                            name: "plp_pilote",
-                                            fieldLabel: 'Pilot',
-                                            // labelAlign: 'right',
-                                            //fieldAlign: left,
-                                            padding: "5px",
-                                            xtype: 'uxcombobox',
-                                            text: 'parent',
-                                            store: pilot,
-                                            displayField: 'id',
-                                            valueField: 'id',
-                                            listeners: {
-                                              change: function (a, b, c) {
-                                                //onScaleChange(b);
-                                              }
-                                            }
-                                          },{
-                                          xtype: 'textfield',
-                                          fieldLabel: 'Subdivision',
-                                          id: 'plp_lot_Field',
-                                          size: "50",
-                                          maxLength: "256",
-                                          padding: "5px",
-                                          readOnly: false,
-                                        //   currentAttribute: PlanningFieldsAttributes.udfnote01,
-                                           readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                          requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                                        },{
-                                            // This is the container for the two fields
-                                            xtype: 'fieldcontainer',
-                                            layout: 'hbox', // 👈 Crucial setting for horizontal arrangement
-                                            items: [{
-                                              id: "plp_eotp_Field",
-                                              name: "plp_eotp",
-                                              fieldLabel: 'EOTP',
-                                              // labelAlign: 'right',
-                                              //fieldAlign: left,
-                                              padding: "5px",
-                                              xtype: 'uxcombobox',
-                                              text: 'parent',
-                                              store: eotp,
-                                              displayField: 'eotp',
-                                              valueField: 'eotp',
-                                              listeners: {
-                                                    select: function(combo, record) {
-                                                        if(record){
-                                                            var foundObject = vEOTPdata.find(function(item) {
-                                                                return item.eotp === record;
-                                                            });
-                                                        }
-                                                        var descriptionField = combo.up('fieldcontainer').down('#plp_eotpdesc_Field');
-
-                                                        descriptionField.setValue(foundObject ? foundObject.eotpdesc : '');
-                                                    }
-                                              }
-                                              },{
-                                              xtype: 'textfield',
-                                              id: 'plp_eotpdesc_Field',
-                                              size: "30",
-                                              maxLength: "256",
-                                              padding: "5px",
-                                              readOnly: true,
-                                              hideLabel: true,
-                                            //   currentAttribute: PlanningFieldsAttributes.udfnote01,
-                                              readOnlyCls: Ext.baseCSSPrefix + "form-text-readonly",
-                                              requiredCls: Ext.baseCSSPrefix + 'form-required-field'
-                                            }]
-                                          },{
-                                            // 1. Basic Multi-line Text Field
-                                            xtype: 'textareafield',
-                                            id:'plp_commentaire_Field',
-                                            fieldLabel: 'Commentary',
-                                            name: 'commentary',
-                                            anchor: '200%', // Makes it span the full width
-                                            size: "50",
-                                            // 2. Control the height using the 'rows' config
-                                            // This suggests a starting height of 4 lines of text.
-                                            rows: 4
-                                            
-                                            // OR, you could set a fixed pixel height:
-                                            // height: 100 
-                                            
-                                        }]
-                                      }                                            
-                                      ],
-                                      buttons: [{
-                                          text: 'Fermer',
-                                          margin: '0 0 0 5',
-                                          handler: function () {
-                                            panel.close();
-                                          }
-                                        }, {
-                                          text: 'Sauvegarder',
-                                          margin: '0 0 0 5',
-                                          handler: function () {
-                                            EAM.Utils.mask(Ext.ComponentQuery.query('#custom_global_div')[0]);
-                                            setTimeout(
-                                              function () {
-
-                                              var vRecordProjPlanning = EAM.Ajax.request({
-                                                url: "BSUDSC.TAB",
-                                                params: {
-                                                    CURRENT_TAB_NAME: "U1",
-                                                    SYSTEM_FUNCTION_NAME: "J1PRJ",
-                                                    USER_FUNCTION_NAME: "J1PRJ"
-                                                }
-                                              }).responseData.pageData.values;
-                                              for (var k in vRecordProjPlanning) {
-                                                if (Ext.isObject(vRecordProjPlanning[k])) {
-                                                  vRecordProjPlanning[k] = vRecordProjPlanning[k].selected
-                                                }
-                                              }
-                                            
-                                              if (!Ext.isEmpty(Ext.getCmp('plp_activite_Field').rawValue)) {
-                                                vRecordProjPlanning.wspf_10_plp_activite = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_activite_Field").getValue(),"number")) ;
-                                              } else if (Ext.isEmpty(Ext.getCmp('plp_activite_Field').rawValue)) {
-                                                vRecordProjPlanning.wspf_10_plp_activite = "";
-                                              } else {
-                                                vRecordProjPlanning.wspf_10_plp_activite = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_activite_Field").getValue(),"number")) ;
-                                              }
-                                              if (!Ext.isEmpty(Ext.getCmp('plp_descat_Field').rawValue)) {
-                                                vRecordProjPlanning.wspf_10_plp_descact = Ext.getCmp('plp_descat_Field').rawValue;
-                                              } else if (Ext.isEmpty(Ext.getCmp('plp_descat_Field').rawValue)) {
-                                                vRecordProjPlanning.wspf_10_plp_descact = "";
-                                              } else {
-                                                vRecordProjPlanning.wspf_10_plp_descact = Ext.getCmp('plp_descat_Field').initialValue;
-                                              }
-
-                                                vRecordProjPlanning.wspf_10_plp_predecesseur = Ext.getCmp('plp_predecesseur_Field').getValue() || "";
-                                                vRecordProjPlanning.wspf_10_plp_parent = Ext.getCmp('plp_parent_Field').getValue() || "";
-                                                vRecordProjPlanning.wspf_10_plp_avancement = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_avancement_Field").getValue(),"number")) || 0 ;
-                                                vRecordProjPlanning.wspf_10_plp_buffer = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("plp_buffer_Field").getValue(),"number")) || 0 ;
-                                                // vRecordProjPlanning.wspf_10_plp_chem = Ext.getCmp('plp_chem_Field').getValue() ? '1' : '0';
-                                                if(Ext.getCmp("plp_chem_Field").getValue()){
-                                                    vRecordProjPlanning.wspf_10_plp_chem='-1'
-                                                }
-                                                else{
-                                                    vRecordProjPlanning.wspf_10_plp_chem='0'
-                                                }
-                                                vRecordProjPlanning.wspf_10_plp_datedeb = Ext.getCmp('plp_datedeb_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datedeb_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanning.wspf_10_plp_datefin = Ext.getCmp('plp_datefin_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datefin_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanning.wspf_10_plp_dateinideb = Ext.getCmp('plp_dateinideb_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_dateinideb_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanning.wspf_10_plp_dateinifin = Ext.getCmp('plp_dateinifin_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_dateinifin_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanning.wspf_10_plp_datefigdeb = Ext.getCmp('plp_datefigdeb_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datefigdeb_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanning.wspf_10_plp_datefigfin = Ext.getCmp('plp_datefigfin_Field').getValue() ? Ext.Date.format(Ext.getCmp('plp_datefigfin_Field').getValue(),'m/d/Y') : "";
-                                                vRecordProjPlanning.wspf_10_plp_etpil = Ext.getCmp('plp_etpil_Field').getValue() || "";
-                                                vRecordProjPlanning.wspf_10_plp_pilote = Ext.getCmp('plp_pilote_Field').getValue() || "";
-                                                vRecordProjPlanning.wspf_10_plp_lot = Ext.getCmp('plp_lot_Field').getValue() || "";
-                                                vRecordProjPlanning.wspf_10_plp_eotp = Ext.getCmp('plp_eotp_Field').getValue() || "";
-                                                vRecordProjPlanning.wspf_10_plp_eotpdesc = Ext.getCmp('plp_eotpdesc_Field').getValue() || "";
-                                                vRecordProjPlanning.wspf_10_plp_commentaire = Ext.getCmp('plp_commentaire_Field').getValue() || "";
-
-
-                                              var vStatus = EAM.Ajax.request({
-                                                url: "BSUDSC.TAB.insertrecord?pageaction=SAVE",
-                                                params: Ext.merge(vRecordProjPlanning, {
-                                                    CURRENT_TAB_NAME: "U1",
-                                                    SYSTEM_FUNCTION_NAME: "JSPROJ",
-                                                    USER_FUNCTION_NAME: "J1PRJ",
-                                                    CHECK_CF_CHANGEFLAG: "true",
-                                                    can_update: "true",
-                                                    wspf_10_plp_projet: 10081,
-                                                    wspf_10_plp_seq: 12345678
-                                                })
-                                              });
-                                              if (vStatus.success) {
-
-                                                // gantt.getTask(vWoNum).actest = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(),"number")) ;
-                                                // gantt.getTask(vWoNum).dds_act_est = parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Est_Hours_Field").getValue(),"number")) ;
-                                                // gantt.getTask(vWoNum).dds_act_mrc = Ext.getCmp('act_udfchar01').getValue()==""?gantt.getTask(vWoNum).dds_evt_mrc:Ext.getCmp('act_udfchar01').getValue();
-                                                // gantt.getTask(vWoNum).womrc = Ext.getCmp('act_udfchar01').getValue()==""?gantt.getTask(vWoNum).dds_evt_mrc:Ext.getCmp('act_udfchar01').getValue();
-                                                // gantt.getTask(vWoNum).dds_act_percomplete =parseFloat(EAM.utils.Format.number.toStandardFormat(Ext.getCmp("Act_Percentcplt_Field").getValue(),"number")) ;
-                                                // gantt.refreshTask(vWoNum, true);
-
-                                                var vMsg = vBoilerList["woupdate_success_message"];
-                                                var find = ':param1';
-                                                var re = new RegExp(find, 'g');
-                                                vMsg = vMsg.replace(re, "1");
-                                                find = ':param2';
-                                                re = new RegExp(find, 'g');
-                                                // vMsg = vMsg.replace(re, '1 (' + actTask.parent + ')');
-                                                //parent.EAM.Messaging.showConfirmation(vCounter + " of " + vTotalCounter + " WorkOrder(s) updated successfully.");
-                                                EAM.Messaging.showConfirmation(vMsg);
-                                                EAM.Utils.unmask(Ext.ComponentQuery.query('#Act_Insert_Panel')[0].el);
-                                                panel.close();
-
-                                                //changeFilter()
-                                              } else {
-                                                EAM.Utils.unmask(Ext.ComponentQuery.query('#Act_Insert_Panel')[0].el);
-                                                panel.close();
-                                                gantt.refreshTask(vWoNum, true);
-                                                //changeFilter()
-                                              }
-
-                                            }, 200);
-
-                                          }
-
-                                        }
-                                      ]
-                                    });
-                                    panel.show();
-                                  }
-                                  gantt.refreshTask(vWoNum, true);
-                                }
-
                                 if (b.id == "Unsplit Activity") {
                                   var vTotDuration = 0;
-                                  var actTaskInit = gantt.getTask(vWoNum);
-                                  var actTask0 = gantt.getTask(vWoNum.split('#')[0] + '#' + vWoNum.split('#')[1] + '#0');
-                                  var actTask = gantt.getTask(vWoNum.split('#')[0] + '#' + vWoNum.split('#')[1] + '#1');
+                                  var actTaskInit = gantt.getTask(vTaskId);
+                                  var actTask0 = gantt.getTask(vTaskId.split('#')[0] + '#' + vTaskId.split('#')[1] + '#0');
+                                  var actTask = gantt.getTask(vTaskId.split('#')[0] + '#' + vTaskId.split('#')[1] + '#1');
                                   var vact = actTask.id.split('#')[1];
                                   var vHrs = actTaskInit.dds_act_est;
                                   var vDurationInit = parseFloat(actTaskInit.dds_act_est) * parseFloat(actTaskInit.dds_act_persons)
@@ -15911,7 +13753,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                   var vMinutes = parseInt(res.start) + parseInt(vHrs * 60);
                                   var dayEnd = new Date(endDay.setMinutes(vMinutes));
                                   var subact = 0;
-                                  var actnumber = actTask.id.split('#')[1]; //actTask.id.substring(indexact+1,actTask.length);
+                                  var projActivity = actTask.id.split('#')[1]; //actTask.id.substring(indexact+1,actTask.length);
 
                                   var vList = [];
                                   //actTask0.$target= actTask.$target
@@ -16037,7 +13879,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                     //dayEnd.setMinutes(dayEnd.getMinutes()+vTotDuration)
                                     dayEnd.setMinutes(dayEnd.getMinutes() + (parseFloat(actTaskInit.dds_act_est) * 60))
                                     var vNewEndT = formatDatewithTime(dayEnd)
-                                      vRecordToInsert["wspf_10_pwa_act"] = actnumber
+                                      vRecordToInsert["wspf_10_pwa_act"] = projActivity
                                       vRecordToInsert["wspf_10_pwa_supplier"] = actTask.dds_act_supplier
                                       vRecordToInsert["wspf_10_pwa_supplier_org"] = "*"
                                       vRecordToInsert["wspf_10_pwa_trade"] = actTask.dds_act_trade
@@ -16050,7 +13892,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                       vRecordToInsert["can_insert"] = ""
                                       vRecordToInsert["can_delete"] = ""
                                       vRecordToInsert["can_update"] = ""
-                                      vRecordToInsert["PKID"] = actTask.id.split('#')[0] + "#" + actnumber.toString() + "#" + subact.toString()
+                                      vRecordToInsert["PKID"] = actTask.id.split('#')[0] + "#" + projActivity.toString() + "#" + subact.toString()
                                       vRecordToInsert["eamid"] = EAM.SessionStorage.getEamId()
                                       vRecordToInsert["tenant"] = EAM.AppData.getTenantId()
                                       vRecordToInsert["wspf_10_pwa_subact"] = subact
@@ -16146,34 +13988,34 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                   if (vEvtUpdated) {
                                     gantt.refreshTask(vParentId)
 
-                                    var vRecordWO = EAM.Ajax.request({
+                                    var vProjectRecord = EAM.Ajax.request({
                                       url: "WSJOBS.HDR",
                                       params: {
                                         SYSTEM_FUNCTION_NAME: "WSJOBS",
                                         USER_FUNCTION_NAME: /*gantt.custom_settings.wo_wsjobs_screen[actTask.dds_evt_jobtype]||*/ "WSJOBS", // "WSJOBS",
                                         CURRENT_TAB_NAME: "HDR",
                                         CHECK_CF_CHANGEFLAG: true,
-                                        workordernum: vParentId,
+                                        projectcode: vParentId,
                                         organization: gantt.getTask(vParentId).organization,
                                         pagemode: "view"
                                       }
                                     }).responseData.pageData.values;
 
-                                    for (var k in vRecordWO) {
-                                      if (Ext.isObject(vRecordWO[k])) {
-                                        vRecordWO[k] = vRecordWO[k].selected
+                                    for (var k in vProjectRecord) {
+                                      if (Ext.isObject(vProjectRecord[k])) {
+                                        vProjectRecord[k] = vProjectRecord[k].selected
                                       }
                                     }
 
-                                    vRecordWO.schedstartdate = Ext.Date.format(new Date(gantt.getTask(vParentId).start_date), 'm/d/Y');
-                                    vRecordWO.schedenddate = Ext.Date.format(new Date(gantt.getTask(vParentId).end_date), 'm/d/Y');
-                                    //vRecordWO.recordid = (Math.floor(vRecordWO.recordid)+1).toString();
+                                    vProjectRecord.schedstartdate = Ext.Date.format(new Date(gantt.getTask(vParentId).start_date), 'm/d/Y');
+                                    vProjectRecord.schedenddate = Ext.Date.format(new Date(gantt.getTask(vParentId).end_date), 'm/d/Y');
+                                    //vProjectRecord.recordid = (Math.floor(vProjectRecord.recordid)+1).toString();
 
-                                    vRecordWO.udfchkbox04 = -1;
+                                    vProjectRecord.udfchkbox04 = -1;
 
                                     var vStatus = EAM.Ajax.request({
                                       url: "WSJOBS.HDR?pageaction=SAVE",
-                                      params: Ext.merge(vRecordWO, {
+                                      params: Ext.merge(vProjectRecord, {
                                         SYSTEM_FUNCTION_NAME: "WSJOBS",
                                         USER_FUNCTION_NAME: /*gantt.custom_settings.wo_wsjobs_screen[gantt.getTask(vParentId).dds_evt_jobtype]||*/ "WSJOBS",
                                         CURRENT_TAB_NAME: "HDR",
@@ -16193,7 +14035,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                 }
                                 if (b.id == "Split Activity") {
                                   // Siva: start of split activity
-                                  var actTask = gantt.getTask(vWoNum);
+                                  var actTask = gantt.getTask(vTaskId);
                                   var children = gantt.getChildren(actTask.id);
                                   if (children.length == 1 || children.length == 0) {
                                     var vact = actTask.dds_act_act;
@@ -16268,7 +14110,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                                 }
                                                 var subact = k + 1;
                                                 var indexact = actTask.id.indexOf('#');
-                                                var actnumber = actTask.id.split('#')[1]; //actTask.id.substring(indexact+1,actTask.length);
+                                                var projActivity = actTask.id.split('#')[1]; //actTask.id.substring(indexact+1,actTask.length);
                                                 vHrsSplit = vHrsSplit + vhrsadd;
                                                 try {
                                                   if (subact == 1) {
@@ -16291,7 +14133,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                                   }
                                                   var vNewDateT = formatDatewithTime(dayStart);
                                                   var vNewEndT = formatDatewithTime(dayEnd)
-                                                    vRecordToInsert["wspf_10_pwa_act"] = actnumber
+                                                    vRecordToInsert["wspf_10_pwa_act"] = projActivity
                                                     vRecordToInsert["wspf_10_pwa_supplier"] = actTask.dds_act_supplier
                                                     vRecordToInsert["wspf_10_pwa_supplier_org"] = "*"
                                                     vRecordToInsert["wspf_10_pwa_trade"] = actTask.dds_act_trade
@@ -16304,7 +14146,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                                     vRecordToInsert["can_insert"] = ""
                                                     vRecordToInsert["can_delete"] = ""
                                                     vRecordToInsert["can_update"] = ""
-                                                    vRecordToInsert["PKID"] = actTask.parent + "#" + actnumber.toString() + "#" + subact.toString()
+                                                    vRecordToInsert["PKID"] = actTask.parent + "#" + projActivity.toString() + "#" + subact.toString()
                                                     vRecordToInsert["eamid"] = EAM.SessionStorage.getEamId()
                                                     vRecordToInsert["tenant"] = EAM.AppData.getTenantId()
                                                     vRecordToInsert["wspf_10_pwa_subact"] = subact
@@ -16326,7 +14168,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                                     });
                                                   /*Create Task*/
                                                   var nTask = gantt.copy(actTask);
-                                                  nTask.id = actTask.parent + "#" + actnumber.toString() + "#" + subact.toString()
+                                                  nTask.id = actTask.parent + "#" + projActivity.toString() + "#" + subact.toString()
                                                     nTask.start_date = new Date(dayStart)
                                                     nTask.end_date = new Date(dayEnd)
                                                     nTask.prev_start = new Date(dayStart)
@@ -16387,7 +14229,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                         var vLastSubAct = gantt.getTask(vLastSplittedId);
                                         //gantt.getTask(gantt.getChildren(actTask.id)[gantt.getChildren(actTask.id).length-1]).$source = gantt.getTask(actTask.id).$source
                                         //gantt.refreshTask(actTask.id)
-                                        /* On attache les pere de l'activite mere à la premiere activite*/
+                                        /* On attache les pere de l'activite mere Ã  la premiere activite*/
                                         var vSourceLinks = actTask.$source;
                                         vSourceLinks.forEach(function (linkId) {
                                           var clone_link = {}
@@ -16404,7 +14246,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                         });
 
                                         actTask.$source = []
-                                        /* On attache les fils de l'activite mere à la derniere activite */
+                                        /* On attache les fils de l'activite mere Ã  la derniere activite */
                                         var vTargetLinks = actTask.$target;
                                         vTargetLinks.forEach(function (linkId) {
                                           var clone_link = {}
@@ -16459,34 +14301,34 @@ Ext.define('EAM.custom.external_DUPLGR', {
                                             }
                                         });
                                         if (vEvtUpdated) {
-                                          var vRecordWO = EAM.Ajax.request({
+                                          var vProjectRecord = EAM.Ajax.request({
                                             url: "WSJOBS.HDR",
                                             params: {
                                               SYSTEM_FUNCTION_NAME: "WSJOBS",
                                               USER_FUNCTION_NAME: /*gantt.custom_settings.wo_wsjobs_screen[actTask.dds_evt_jobtype]||*/ "WSJOBS", // "WSJOBS",
                                               CURRENT_TAB_NAME: "HDR",
                                               CHECK_CF_CHANGEFLAG: true,
-                                              workordernum: gantt.getParent(actTask.id),
+                                              projectcode: gantt.getParent(actTask.id),
                                               organization: gantt.getTask(gantt.getParent(actTask.id)).organization,
                                               pagemode: "view"
                                             }
                                           }).responseData.pageData.values;
 
-                                          for (var k in vRecordWO) {
-                                            if (Ext.isObject(vRecordWO[k])) {
-                                              vRecordWO[k] = vRecordWO[k].selected
+                                          for (var k in vProjectRecord) {
+                                            if (Ext.isObject(vProjectRecord[k])) {
+                                              vProjectRecord[k] = vProjectRecord[k].selected
                                             }
                                           }
 
-                                          vRecordWO.schedstartdate = Ext.Date.format(new Date(gantt.getTask(gantt.getParent(actTask.id)).start_date), 'm/d/Y');
-                                          vRecordWO.schedenddate = Ext.Date.format(new Date(gantt.getTask(gantt.getParent(actTask.id)).end_date), 'm/d/Y');
-                                          //vRecordWO.recordid = (Math.floor(vRecordWO.recordid)+1).toString();
+                                          vProjectRecord.schedstartdate = Ext.Date.format(new Date(gantt.getTask(gantt.getParent(actTask.id)).start_date), 'm/d/Y');
+                                          vProjectRecord.schedenddate = Ext.Date.format(new Date(gantt.getTask(gantt.getParent(actTask.id)).end_date), 'm/d/Y');
+                                          //vProjectRecord.recordid = (Math.floor(vProjectRecord.recordid)+1).toString();
 
-                                          vRecordWO.udfchkbox04 = -1;
+                                          vProjectRecord.udfchkbox04 = -1;
 
                                           var vStatus = EAM.Ajax.request({
                                             url: "WSJOBS.HDR?pageaction=SAVE",
-                                            params: Ext.merge(vRecordWO, {
+                                            params: Ext.merge(vProjectRecord, {
                                               SYSTEM_FUNCTION_NAME: "WSJOBS",
                                               USER_FUNCTION_NAME: /*gantt.custom_settings.wo_wsjobs_screen[actTask.dds_evt_jobtype]||*/ "WSJOBS",
                                               CURRENT_TAB_NAME: "HDR",
@@ -16529,7 +14371,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     document.getElementsByClassName("gantt_tooltip")[0].remove()
                   }
                   var vText = ""
-                    if (task.type == "OP") {
+                    if (task.type == "Activity") {
                       if (task.id.split("#")[2] == 0) {
                         var vDuration = parseFloat(new Number((task.dds_act_est) + '').toFixed(parseInt(12)))
                       } else {
@@ -16538,13 +14380,13 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     }
 
                     if (Ext.getCmp("ShowToolTip").checked) {
-                      if (task.type == "OP") {
+                      if (task.type == "Activity") {
                         var vSupplierDesc = ""
                           if (task.dds_act_supplier_desc) {
                             vSupplierDesc = task.dds_act_supplier_desc
                           }
-                        vText = '<i>' + vBoilerList["tooltip_desc"] + ': </i><b>' + task.desc + '</b>';
-                         //vText += '<br><i>'+vBoilerList["tooltip_specialite"]+':</i><b>' + task.dds_act_trade + '</b>';
+                          vText = '<i>' + vBoilerList["tooltip_desc"] + ': </i><b>' + task.desc + '</b>';
+                        //vText += '<br><i>'+vBoilerList["tooltip_specialite"]+':</i><b>' + task.dds_act_trade + '</b>';
                         vText += '<br><i>' + vBoilerList["tooltip_specialite"] + ': </i><b>' + task.dds_act_trade_desc + '</b>';
                         //vText += '<br><i>'+vBoilerList["tooltip_prestataire"]+':</i><b>' + task.dds_act_supplier + '</b>';
                         vText += '<br><i>' + vBoilerList["tooltip_department"] + ': </i><b>' + task.dds_mrc_desc + '</b>';
@@ -16552,13 +14394,13 @@ Ext.define('EAM.custom.external_DUPLGR', {
                         vText += '<br><i>' + vBoilerList["tooltip_nbagents"] + ': </i><b>' + task.dds_act_persons + '</b>';
                         vText += '<br><i>' + vBoilerList["tooltip_duree"] + ': </i><b>' + vDuration + '</b>';
                         vText += '<br><i>' + vBoilerList["tooltip_remarque"] + ': </i><b>' + task.dds_act_udfnote01 + '</b>';
-                        if(task.delayed_wo){
-                            vText += '<br><i>' + vBoilerList["original_start_date"] + ': </i><b>' + Ext.Date.format(task.original_start_date,EAM.AppData.getAppData().dateformat+' H:i') + '</b>';
-                            vText += '<br><i>' + vBoilerList["original_end_date"] + ': </i><b>' + Ext.Date.format(task.original_end_date,EAM.AppData.getAppData().dateformat+' H:i') + '</b>';
+                        if (task.delayed_wo) {
+                          vText += '<br><i>' + vBoilerList["original_start_date"] + ': </i><b>' + Ext.Date.format(task.original_start_date, EAM.AppData.getAppData().dateformat + ' H:i') + '</b>';
+                          vText += '<br><i>' + vBoilerList["original_end_date"] + ': </i><b>' + Ext.Date.format(task.original_end_date, EAM.AppData.getAppData().dateformat + ' H:i') + '</b>';
                         }
-                        
+
                       }
-                      if (task.type == "WO") {
+                      if (task.type == "Project") {
                         var vPriorityDesc = ""
                           if (task.dds_priority_desc) {
                             vPriorityDesc = task.dds_priority_desc
@@ -16569,11 +14411,11 @@ Ext.define('EAM.custom.external_DUPLGR', {
                         vText += '<br><i>' + vBoilerList["tooltip_service"] + ': </i><b>' + task.dds_mrc_desc + '</b>';
                         vText += '<br><i>' + vBoilerList["tooltip_priorite"] + ': </i><b>' + vPriorityDesc + '</b>';
                         vText += '<br><i>' + vBoilerList["tooltip_statut"] + ': </i><b>' + task.dds_status_desc + '</b>';
-                        vText += '<br><i>' + vBoilerList["tooltip_classe"] + ': </i><b>' + task.dds_class_desc + '</b>';                        
+                        vText += '<br><i>' + vBoilerList["tooltip_classe"] + ': </i><b>' + task.dds_class_desc + '</b>';
                         vText += '<br><i>' + vBoilerList["tooltip_affectea"] + ': </i><b>' + task.dds_person_desc + '</b>';
-                        if(task.delayed_wo){
-                            vText += '<br><i>' + vBoilerList["original_start_date"] + ': </i><b>' + Ext.Date.format(task.original_start_date,EAM.AppData.getAppData().dateformat+' H:i') + '</b>';
-                            vText += '<br><i>' + vBoilerList["original_end_date"] + ': </i><b>' + Ext.Date.format(task.original_end_date,EAM.AppData.getAppData().dateformat+' H:i') + '</b>';
+                        if (task.delayed_wo) {
+                          vText += '<br><i>' + vBoilerList["original_start_date"] + ': </i><b>' + Ext.Date.format(task.original_start_date, EAM.AppData.getAppData().dateformat + ' H:i') + '</b>';
+                          vText += '<br><i>' + vBoilerList["original_end_date"] + ': </i><b>' + Ext.Date.format(task.original_end_date, EAM.AppData.getAppData().dateformat + ' H:i') + '</b>';
                         }
                       }
 
@@ -16643,28 +14485,28 @@ Ext.define('EAM.custom.external_DUPLGR', {
                 gantt.config.duration_step = 1;
                 gantt.attachEvent("onBeforeLinkUpdate", function (id, item) {
                   //any custom logic here
-                  if(WOFieldsAttributes.hasOwnProperty("schedstartdate")){
-                    if(WOFieldsAttributes.schedstartdate=="protected"||WOFieldsAttributes.schedstartdate=="hidden"){
+                  if (WOFieldsAttributes.hasOwnProperty("schedstartdate")) {
+                    if (WOFieldsAttributes.schedstartdate == "protected" || WOFieldsAttributes.schedstartdate == "hidden") {
                       return false;
                     }
                   }
-                  if(WOFieldsAttributes.hasOwnProperty("schedstartdate")&&WOFieldsAttributes.hasOwnProperty("udfdate07")){
-                    if(WOFieldsAttributes.schedstartdate=="protected"||WOFieldsAttributes.schedstartdate=="hidden"||WOFieldsAttributes.udfdate07=="protected"||WOFieldsAttributes.udfdate07=="hidden"){
+                  if (WOFieldsAttributes.hasOwnProperty("schedstartdate") && WOFieldsAttributes.hasOwnProperty("udfdate07")) {
+                    if (WOFieldsAttributes.schedstartdate == "protected" || WOFieldsAttributes.schedstartdate == "hidden" || WOFieldsAttributes.udfdate07 == "protected" || WOFieldsAttributes.udfdate07 == "hidden") {
                       return false;
                     }
                   }
-                  
+
                   return true;
                 });
                 gantt.attachEvent("onBeforeLinkDelete", function (id, item) {
                   //any custom logic here
-                  if(WOFieldsAttributes.hasOwnProperty("schedstartdate")){
-                    if(WOFieldsAttributes.schedstartdate=="protected"||WOFieldsAttributes.schedstartdate=="hidden"){
+                  if (WOFieldsAttributes.hasOwnProperty("schedstartdate")) {
+                    if (WOFieldsAttributes.schedstartdate == "protected" || WOFieldsAttributes.schedstartdate == "hidden") {
                       return false;
                     }
                   }
-                  if(WOFieldsAttributes.hasOwnProperty("schedstartdate")&&WOFieldsAttributes.hasOwnProperty("udfdate07")){
-                    if(WOFieldsAttributes.schedstartdate=="protected"||WOFieldsAttributes.schedstartdate=="hidden"||WOFieldsAttributes.udfdate07=="protected"||WOFieldsAttributes.udfdate07=="hidden"){
+                  if (WOFieldsAttributes.hasOwnProperty("schedstartdate") && WOFieldsAttributes.hasOwnProperty("udfdate07")) {
+                    if (WOFieldsAttributes.schedstartdate == "protected" || WOFieldsAttributes.schedstartdate == "hidden" || WOFieldsAttributes.udfdate07 == "protected" || WOFieldsAttributes.udfdate07 == "hidden") {
                       return false;
                     }
                   }
@@ -16679,7 +14521,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                     var vColorRGB = vColor.replaceAll("rgb(", "").replaceAll(" ", "").replaceAll(")", "").split(",")
                       //var luma = 0.2126 * parseInt(vColorRGB[0]) + 0.7152 *  parseInt(vColorRGB[1])  + 0.0722 *  parseInt(vColorRGB[2]) ;
                       var luma = ((parseInt(vColorRGB[0]) * 299) + (parseInt(vColorRGB[1]) * 587) + (parseInt(vColorRGB[2]) * 114)) / 1000;
-                    if (task.type == "WO") {
+                    if (task.type == "Project") {
                       if (luma > 155) {
                         // pick a different colour
                         return '<b style="color:black;">' + task.text + '</b>';
@@ -16688,38 +14530,34 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       }
 
                     } else {
-                      
-                       
 
-                      if(parseFloat(task.dds_act_percomplete==""?0:task.dds_act_percomplete)>0&&parseFloat(task.dds_act_percomplete==""?0:task.dds_act_percomplete)<=99){
-                          return '<b style="color:black;">' + task.text + '</b>';
+                      if (parseFloat(task.dds_act_percomplete == "" ? 0 : task.dds_act_percomplete) > 0 && parseFloat(task.dds_act_percomplete == "" ? 0 : task.dds_act_percomplete) <= 99) {
+                        return '<b style="color:black;">' + task.text + '</b>';
                       }
-                      if(parseFloat(task.dds_act_percomplete==""?0:task.dds_act_percomplete)==100){
-                          return '<b style="color:black;">' + task.text + '</b>';
+                      if (parseFloat(task.dds_act_percomplete == "" ? 0 : task.dds_act_percomplete) == 100) {
+                        return '<b style="color:black;">' + task.text + '</b>';
                       }
                       if (luma > 155) {
-                          // pick a different colour
-                          return '<b style="color:black;">' + task.text + '</b>';
-                        } else {
-                          return '<b style="color:white;">' + task.text + '</b>';
-                        }
+                        // pick a different colour
+                        return '<b style="color:black;">' + task.text + '</b>';
+                      } else {
+                        return '<b style="color:white;">' + task.text + '</b>';
+                      }
 
-                      
-                      
                     }
                   };
                   gantt.templates.task_class = function (start, end, task) {
-                    var vClass = task.color||"";
-                    if(task.risk_collision=="+"&&task.type=="WO"&&Ext.getCmp("HighLightCollision").checked){
+                    var vClass = task.color || "";
+                    if (task.risk_collision == "+" && task.type == "Project" && Ext.getCmp("HighLightCollision").checked) {
                       vClass += " flash-original";
                     }
-                    if(task.type=="OP"){
-                        if(parseFloat(task.dds_act_percomplete==""?0:task.dds_act_percomplete)>0&&parseFloat(task.dds_act_percomplete==""?0:task.dds_act_percomplete)<=99){
-                            vClass  = " gantt_task_started";
-                        }
-                        if(parseFloat(task.dds_act_percomplete==""?0:task.dds_act_percomplete)==100){
-                            vClass  = " gantt_task_completed";
-                        }
+                    if (task.type == "Activity") {
+                      if (parseFloat(task.dds_act_percomplete == "" ? 0 : task.dds_act_percomplete) > 0 && parseFloat(task.dds_act_percomplete == "" ? 0 : task.dds_act_percomplete) <= 99) {
+                        vClass = " gantt_task_started";
+                      }
+                      if (parseFloat(task.dds_act_percomplete == "" ? 0 : task.dds_act_percomplete) == 100) {
+                        vClass = " gantt_task_completed";
+                      }
 
                     }
                     return vClass.trim();
@@ -16753,7 +14591,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   modes = gantt.config.drag_mode;
 
                   if (state.drag_mode == modes.move || (state.drag_mode == modes.resize && state.drag_from_start)) {
-                    if (task.type == "WO") {
+                    if (task.type == "Project") {
                       if (state.drag_id == task.id) {
                         if (state.drag_mode == modes.move || (state.drag_mode == modes.resize && state.drag_from_start)) {
                           vLastDragedTaskId = task.id;
@@ -16775,7 +14613,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
                       }
                     }
                   } else {
-                    if (task.type == "OP") {
+                    if (task.type == "Activity") {
 
                       if (task.dds_act_percomplete == "") {
                         vText = "(0%)";
@@ -16811,25 +14649,24 @@ Ext.define('EAM.custom.external_DUPLGR', {
                   var state = gantt.getState(),
                   modes = gantt.config.drag_mode;
 
-                  if (task.type == "WO") {
+                  if (task.type == "Project") {
                     if (state.drag_id == task.id) {
                       if (state.drag_mode == modes.move || (state.drag_mode == modes.resize && state.drag_from_start)) {
                         vLastDragedTaskId = task.id;
                         return dateToStr(start);
 
                       }
-                      
-                    } 
-                    else{
+
+                    } else {
                       if (Ext.getCmp("ShowHours").checked) {
                         var vStartTime = ("0" + start.getHours().toString()).slice(-2) + ":" + ("0" + start.getMinutes().toString()).slice(-2)
 
                         return '<b style="font-size:8px">' + vStartTime + "</b>";
                       } else {
-                         
-                          return ""
+
+                        return ""
                       }
-                      
+
                     }
                   } else {
                     if (state.drag_id == task.id) {
@@ -16849,8 +14686,8 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                           return '<b style="font-size:8px">' + vStartTime + "</b>";
                         } else {
-                           
-                            return ""
+
+                          return ""
                         }
                     }
 
@@ -16860,9 +14697,8 @@ Ext.define('EAM.custom.external_DUPLGR', {
 
                 gantt.attachEvent("onGanttReady", function () {
 
-                
                   gantt.render();
-                  
+
                 });
 
               }; // end displayGantt
@@ -16983,7 +14819,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
         var weekScaleTemplate = function (date) {
           var dateToStr = gantt.date.date_to_str("%d %M");
           var endDate = gantt.date.add(gantt.date.add(date, 1, "week"),  - (date.getDay() + 1), "day");
-          return dateToStr(date) + " - " + dateToStr(endDate) +" / " + Ext.Date.format(date,"Y") ;
+          return dateToStr(date) + " - " + dateToStr(endDate) + " / " + Ext.Date.format(date, "Y");
         };
         gantt.config.show_task_cells = true;
         gantt.config.scale_unit = "week";
@@ -17106,7 +14942,7 @@ Ext.define('EAM.custom.external_DUPLGR', {
       gantt.render();
     };
 
-   function addUndo(changetype, id, task,parentId,parentKeyID) {
+    function addUndo(changetype, id, task, parentId, parentKeyID) {
       if (gantt.isTaskExists(task.id)) {
         const OldStartDate = new Date(task.start_date);
         const OldEndDate = new Date(task.end_date);
@@ -17117,16 +14953,16 @@ Ext.define('EAM.custom.external_DUPLGR', {
           task.prev_end.getTime() != gantt.getTask(task.id).end_date.getTime() ||
           task.end_date.getTime() != OldPrevEndDate.getTime()) {
 
-          var vParentKeyId= parentKeyID;
-          if(sessionStorage.getItem("redoactionupdateId")){
-            vParentKeyId= sessionStorage.getItem("redoactionupdateId")
+          var vParentKeyId = parentKeyID;
+          if (sessionStorage.getItem("redoactionupdateId")) {
+            vParentKeyId = sessionStorage.getItem("redoactionupdateId")
           }
 
           Ext.getStore('gantt.undo.store').add({
             type: changetype,
             taskid: id,
             task: JSON.stringify(task),
-            parentTaskId:vParentKeyId 
+            parentTaskId: vParentKeyId
           })
 
           undoStack.push({
@@ -17141,4 +14977,4 @@ Ext.define('EAM.custom.external_DUPLGR', {
       }
     };
   }
-}); //# sourceURL=external_DUPLGD_20200918.js
+}); //# sourceURL=external_DUPLGD_20251015.js
